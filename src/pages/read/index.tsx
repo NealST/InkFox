@@ -1,11 +1,11 @@
 import styles from './index.module.css';
 
-const Home = function() {
+const Read = function() {
   return (
-    <div className={styles.home}>
+    <div className={styles.read}>
       
     </div>
   )
 };
 
-export default Home;
+export default Read;
