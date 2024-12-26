@@ -1,7 +1,7 @@
 // 应用运行时配置
 import { lazy } from 'react';
 import Home from './pages/home';
-
+import i18n from './i18n';
 const Todo = lazy(() => import('./pages/todo'));
 const Read = lazy(() => import('./pages/read'));
 const Collects = lazy(() => import('./pages/collects'))
@@ -11,28 +11,28 @@ export const sceneList = [
   {
     icon: '',
     id: 'home',
-    label: '写作',
+    label: i18n.t('home'),
     path: '/',
     Component: Home
   },
   {
     icon: '',
     id: 'todo',
-    label: '待办',
+    label: i18n.t('todo'),
     path: '/todo',
     Component: Todo,
   },
   {
     icon: '',
     id: 'read',
-    label: '阅读',
+    label: i18n.t('read'),
     path: '/read',
     Component: Read,
   },
   {
     icon: '',
     id: 'collects',
-    label: '收藏',
+    label: i18n.t('collects'),
     path: '/collects',
     Component: Collects,
   }
