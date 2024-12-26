@@ -1,17 +1,18 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, ChangeEvent } from "react";
 import type { ICateItem } from "./types";
 import getCates from "./controllers/get-cates";
 import createCate from "./controllers/create-cate";
-import { useSelectedCate, type IState } from "./controllers/selected-cate";
+import { useSelectedCate, type ICateState } from "./controllers/selected-cate";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@iconify/react";
+import cn from "classnames";
 import styles from "./index.module.css";
 
 const Cates = function () {
   const { t } = useTranslation();
   const [dataSource, setDataSource] = useState([] as ICateItem[]);
   const { name: selectedCate, setName: setSelectedCate } = useSelectedCate(
-    (state: IState) => state
+    (state: ICateState) => state
   );
   const newCateNameRef = useRef("");
 
@@ -41,6 +42,36 @@ const Cates = function () {
       },
     ].concat(dataSource);
     setDataSource(newDataSource);
+    setSelectedCate("");
+  }
+
+  function handleInput(event: ChangeEvent<HTMLInputElement>) {
+    newCateNameRef.current = event.target?.value;
+  }
+
+  function handleBlur() {
+    const newCates = ([] as ICateItem[]).concat(dataSource);
+    const newCateName = newCateNameRef.current;
+    if (!newCateName) {
+      newCates.shift();
+      setDataSource(newCates);
+      setSelectedCate(newCates[0]?.name || "");
+      return;
+    }
+    createCate(newCateName)
+      .then(() => {
+        newCates[0] = {
+          type: "cate",
+          name: newCateName,
+        };
+        setDataSource(newCates);
+        setSelectedCate(newCateName);
+      })
+      .catch(() => {
+        newCates.shift();
+        setDataSource(newCates);
+        setSelectedCate(newCates[0]?.name || "");
+      });
   }
 
   return (
@@ -52,6 +83,41 @@ const Cates = function () {
           style={{ fontSize: "var(--icon-size)", color: "var(--font-color)" }}
           onClick={handleAddCate}
         />
+      </div>
+      <div className={styles.cates_list}>
+        {dataSource.length > 0 &&
+          dataSource.map((item) => {
+            const { name, type } = item;
+            const isSelected = name === selectedCate;
+            return (
+              <div
+                className={cn(
+                  styles.cate_item,
+                  isSelected ? styles.cate_item_selected : ""
+                )}
+                onClick={() => setSelectedCate(name)}
+              >
+                <Icon
+                  icon="mdi-light:folder"
+                  style={{
+                    fontSize: "16px",
+                    color: "var(--font-color)",
+                    marginRight: "6px",
+                  }}
+                />
+                {type === "input" ? (
+                  <input
+                    className={styles.item_input}
+                    type="text"
+                    onChange={handleInput}
+                    onBlur={handleBlur}
+                  />
+                ) : (
+                  <span className={styles.item_name}>{name}</span>
+                )}
+              </div>
+            );
+          })}
       </div>
     </div>
   );

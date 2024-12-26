@@ -1,0 +1,35 @@
+.cates {
+  width: 100%;
+}
+
+.cates_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;  
+}
+
+.header_label {
+    color: var(--font-color);
+    font-size: 14px;
+}
+
+.cates_list {
+    padding-left: 15px;
+}
+
+.cate_item {
+    list-style: none;
+    margin-bottom: 8px;
+}
+
+.item_input {
+
+}
+
+.item_name {
+    font-size: 16px;
+    color: var(--font-color);
+}

@@ -9,28 +9,28 @@ const Collects = lazy(() => import('./pages/collects'))
 // 应用的场景类型
 export const sceneList = [
   {
-    icon: '',
+    icon: 'mdi-light:monitor',
     id: 'home',
     label: i18n.t('home'),
     path: '/',
     Component: Home
   },
   {
-    icon: '',
+    icon: 'icons8:todo-list',
     id: 'todo',
     label: i18n.t('todo'),
     path: '/todo',
     Component: Todo,
   },
   {
-    icon: '',
+    icon: 'arcticons:readera',
     id: 'read',
     label: i18n.t('read'),
     path: '/read',
     Component: Read,
   },
   {
-    icon: '',
+    icon: 'ep:collection-tag',
     id: 'collects',
     label: i18n.t('collects'),
     path: '/collects',
