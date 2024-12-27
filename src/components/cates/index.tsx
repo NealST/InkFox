@@ -77,7 +77,7 @@ const Cates = function () {
   return (
     <div className={styles.cates}>
       <div className={styles.cates_header}>
-        <span className={styles.header_label}>{t("folders")}</span>
+        <span className={styles.header_label}>{t("cates")}</span>
         <Icon
           icon="mdi-light:folder-plus"
           style={{ fontSize: "var(--icon-size)", color: "var(--font-color)" }}

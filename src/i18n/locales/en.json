@@ -1,7 +1,9 @@
 {
   "todo": "todo",
-  "home": "start",
+  "start": "start",
   "read": "read",
   "collects": "collects",
-  "folders": "folders"
+  "cates": "Categories",
+  "folders": "folders",
+  "home": "home"
 }

@@ -1,7 +1,9 @@
 {
   "todo": "待办",
-  "home": "开始",
+  "start": "开始",
   "read": "阅读",
   "collects": "收藏",
-  "folders": "目录"
+  "cates": "分类",
+  "folders": "目录",
+  "home": "首页"
 }

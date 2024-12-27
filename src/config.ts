@@ -10,8 +10,8 @@ const Collects = lazy(() => import('./pages/collects'))
 export const sceneList = [
   {
     icon: 'mdi-light:monitor',
-    id: 'home',
-    label: i18n.t('home'),
+    id: 'start',
+    label: i18n.t('start'),
     path: '/',
     Component: Home
   },
