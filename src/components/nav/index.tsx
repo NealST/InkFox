@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import cn from "classnames";
-import { Icon } from "@iconify/react";
 import styles from "./index.module.css";
 import { sceneList } from "@/config";
 
@@ -11,7 +10,7 @@ const Nav = function () {
   return (
     <div className={styles.nav}>
       {sceneList.map((item) => {
-        const { id, icon, label, path } = item;
+        const { id, icon: Icon, label, path } = item;
         const isSelected = selectedNav === id;
         return (
           <div
@@ -22,7 +21,7 @@ const Nav = function () {
             key={id}
             onClick={() => setSelectedNav(id)}
           >
-            <Icon icon={icon} width="24" height="24" style={{marginRight: '8px'}} />
+            <Icon style={{marginRight: '8px'}} />
             <Link to={path}>{label}</Link>
           </div>
         );

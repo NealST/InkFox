@@ -1,36 +1,38 @@
 // 应用运行时配置
 import { lazy } from 'react';
-import Home from './pages/home';
+import Notes from './pages/notes';
 import i18n from './i18n';
+import { Notebook, ListTodo, BookOpen, Heart } from 'lucide-react';
+
 const Todo = lazy(() => import('./pages/todo'));
 const Read = lazy(() => import('./pages/read'));
-const Collects = lazy(() => import('./pages/collects'))
+const Collects = lazy(() => import('./pages/collects'));
 
 // 应用的场景类型
 export const sceneList = [
   {
-    icon: 'mdi-light:monitor',
-    id: 'start',
-    label: i18n.t('start'),
+    icon: Notebook,
+    id: 'notes',
+    label: i18n.t('notes'),
     path: '/',
-    Component: Home
+    Component: Notes
   },
   {
-    icon: 'icons8:todo-list',
+    icon: ListTodo,
     id: 'todo',
     label: i18n.t('todo'),
     path: '/todo',
     Component: Todo,
   },
   {
-    icon: 'arcticons:readera',
+    icon: BookOpen,
     id: 'read',
     label: i18n.t('read'),
     path: '/read',
     Component: Read,
   },
   {
-    icon: 'ep:collection-tag',
+    icon: Heart,
     id: 'collects',
     label: i18n.t('collects'),
     path: '/collects',

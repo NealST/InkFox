@@ -4,7 +4,7 @@ import getCates from "./controllers/get-cates";
 import createCate from "./controllers/create-cate";
 import { useSelectedCate, type ICateState } from "./controllers/selected-cate";
 import { useTranslation } from "react-i18next";
-import { Icon } from "@iconify/react";
+import { ChevronDown, SquarePlus, Folder, FolderInput } from "lucide-react";
 import cn from "classnames";
 import styles from "./index.module.css";
 
@@ -78,18 +78,10 @@ const Cates = function () {
     <div className={styles.cates}>
       <div className={styles.cates_header}>
         <div className={styles.header_label}>
-          <Icon
-            icon="fluent:caret-down-16-filled"
-            width="20"
-            height="20"
-            style={{ marginRight: "8px" }}
-          />
+          <ChevronDown style={{ marginRight: "8px" }} />
           <span className={styles.label_text}>{t("cates")}</span>
         </div>
-        <Icon
-          icon="f7:plus-app-fill"
-          width="24"
-          height="24"
+        <SquarePlus
           style={{ color: "var(--theme-color)" }}
           onClick={handleAddCate}
         />
@@ -99,6 +91,7 @@ const Cates = function () {
           dataSource.map((item) => {
             const { name, type } = item;
             const isSelected = name === selectedCate;
+            const FolderIcon = type === "input" ? FolderInput : Folder;
             return (
               <div
                 className={cn(
@@ -107,10 +100,8 @@ const Cates = function () {
                 )}
                 onClick={() => setSelectedCate(name)}
               >
-                <Icon
-                  icon="mdi-light:folder"
+                <FolderIcon
                   style={{
-                    fontSize: "16px",
                     color: "var(--font-color)",
                     marginRight: "6px",
                   }}

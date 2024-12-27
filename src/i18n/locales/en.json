@@ -1,9 +1,9 @@
 {
-  "todo": "todo",
-  "start": "start",
-  "read": "read",
-  "collects": "collects",
+  "todo": "Todo",
+  "notes": "Notes",
+  "read": "Read",
+  "collects": "Collects",
   "cates": "Categories",
-  "folders": "folders",
-  "home": "home"
+  "folders": "Folders",
+  "home": "Home"
 }
