@@ -41,7 +41,7 @@
 }
 
 .sidebar {
-  width: 150px;
+  width: 280px;
   height: 100vh;
   background-color: var(--nav-bg-color);
 }

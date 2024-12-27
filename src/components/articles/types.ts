@@ -1,4 +1,8 @@
+export type FileType = 'group' | 'file';
+
 export interface IArticleItem {
-  type: string;
+  type: FileType;
   name: string;
+  action?: string;
+  children?: IArticleItem[];
 }

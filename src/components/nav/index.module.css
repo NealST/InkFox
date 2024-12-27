@@ -1,4 +1,11 @@
 .nav {
-  padding-left: 10px;
+  padding-top: 10px;
+  padding-left: 16px;
   margin-bottom: 20px;
+}
+
+.nav_item {
+  display: flex;
+  flex-direction: row;
+  color: var(--font-color);
 }

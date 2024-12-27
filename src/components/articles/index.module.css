@@ -1,0 +1,28 @@
+.articles {
+    padding-top: 10px;
+    width: 200px;
+    height: 100vh;
+    background-color: var(--nav-bg-color);
+}
+
+.articles_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 60px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.articles_home {
+  width: 100%;
+  margin-bottom: 10px;
+
+}
+
+.articles_dir {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
