@@ -77,10 +77,20 @@ const Cates = function () {
   return (
     <div className={styles.cates}>
       <div className={styles.cates_header}>
-        <span className={styles.header_label}>{t("cates")}</span>
+        <div className={styles.header_label}>
+          <Icon
+            icon="fluent:caret-down-16-filled"
+            width="20"
+            height="20"
+            style={{ marginRight: "8px" }}
+          />
+          <span className={styles.label_text}>{t("cates")}</span>
+        </div>
         <Icon
-          icon="mdi-light:folder-plus"
-          style={{ fontSize: "var(--icon-size)", color: "var(--font-color)" }}
+          icon="f7:plus-app-fill"
+          width="24"
+          height="24"
+          style={{ color: "var(--theme-color)" }}
           onClick={handleAddCate}
         />
       </div>

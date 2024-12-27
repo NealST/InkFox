@@ -22,7 +22,7 @@ const Nav = function () {
             key={id}
             onClick={() => setSelectedNav(id)}
           >
-            <Icon icon={icon} width="24" height="24" />
+            <Icon icon={icon} width="24" height="24" style={{marginRight: '8px'}} />
             <Link to={path}>{label}</Link>
           </div>
         );

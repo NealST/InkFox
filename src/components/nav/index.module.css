@@ -1,11 +1,24 @@
 .nav {
   padding-top: 10px;
-  padding-left: 16px;
   margin-bottom: 20px;
 }
 
 .nav_item {
   display: flex;
   flex-direction: row;
+  align-items: center;
   color: var(--font-color);
+  margin-bottom: 8px;
+  height: 30px;
+  padding-left: 6px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.nav_item_selected {
+  background-color: var(--item-select-bg-color);
+}
+
+.nav_item:hover {
+  background-color: var(--item-select-bg-color);
 }
