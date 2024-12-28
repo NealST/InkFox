@@ -20,15 +20,33 @@
 }
 
 .cates_list {
-  padding-left: 15px;
+  padding-left: 22px;
+  margin-top: 8px;
 }
 
 .cate_item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 30px;
   list-style: none;
   margin-bottom: 8px;
+  border-radius: var(--border-radius);
+  padding-left: 8px;
+  cursor: pointer;
+}
+
+.cate_item:hover {
+  background-color: var(--item-select-bg-color);
+}
+
+.cate_item_selected {
+  background-color: var(--item-select-bg-color);
 }
 
 .item_input {
+  color: var(--font-color);
+  height: 24px;
 }
 
 .item_name {

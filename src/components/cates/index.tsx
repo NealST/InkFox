@@ -5,6 +5,7 @@ import createCate from "./controllers/create-cate";
 import { useSelectedCate, type ICateState } from "./controllers/selected-cate";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, SquarePlus, Folder, FolderInput } from "lucide-react";
+import { Input } from "../ui/input";
 import cn from "classnames";
 import styles from "./index.module.css";
 
@@ -17,7 +18,7 @@ const Cates = function () {
   const newCateNameRef = useRef("");
 
   useEffect(() => {
-    getCates("notes").then((ret) => {
+    getCates().then((ret) => {
       console.log("cates ret", ret);
       if (ret.length === 0) {
         return;
@@ -45,11 +46,11 @@ const Cates = function () {
     setSelectedCate("");
   }
 
-  function handleInput(event: ChangeEvent<HTMLInputElement>) {
+  function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     newCateNameRef.current = event.target?.value;
   }
 
-  function handleBlur() {
+  function handleInputBlur() {
     const newCates = ([] as ICateItem[]).concat(dataSource);
     const newCateName = newCateNameRef.current;
     if (!newCateName) {
@@ -66,11 +67,13 @@ const Cates = function () {
         };
         setDataSource(newCates);
         setSelectedCate(newCateName);
+        newCateNameRef.current = '';
       })
       .catch(() => {
         newCates.shift();
         setDataSource(newCates);
         setSelectedCate(newCates[0]?.name || "");
+        newCateNameRef.current = '';
       });
   }
 
@@ -88,7 +91,7 @@ const Cates = function () {
       </div>
       <div className={styles.cates_list}>
         {dataSource.length > 0 &&
-          dataSource.map((item) => {
+          dataSource.map((item, index) => {
             const { name, type } = item;
             const isSelected = name === selectedCate;
             const FolderIcon = type === "input" ? FolderInput : Folder;
@@ -98,20 +101,21 @@ const Cates = function () {
                   styles.cate_item,
                   isSelected ? styles.cate_item_selected : ""
                 )}
+                key={index}
                 onClick={() => setSelectedCate(name)}
               >
                 <FolderIcon
                   style={{
                     color: "var(--font-color)",
-                    marginRight: "6px",
+                    marginRight: "8px",
                   }}
                 />
                 {type === "input" ? (
-                  <input
+                  <Input
                     className={styles.item_input}
                     type="text"
-                    onChange={handleInput}
-                    onBlur={handleBlur}
+                    onInput={handleInputChange}
+                    onBlur={handleInputBlur}
                   />
                 ) : (
                   <span className={styles.item_name}>{name}</span>

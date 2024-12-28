@@ -35,16 +35,16 @@ const Articles = function () {
     getArticles(selectedCate).then((ret) => {
       setDataSource(ret);
     });
-  }, []);
+  }, [selectedCate]);
 
   return (
     <div className={styles.articles}>
       <div className={styles.articles_header}>
-        <span>
+        <div className={styles.header_label}>
           <Folder />
           <span className={styles.header_title}>{selectedCate}</span>
-        </span>
-        <SquarePlus />
+        </div>
+        <SquarePlus style={{color: 'var(--theme-color)'}} />
       </div>
       <div
         className={styles.articles_home}
@@ -54,16 +54,20 @@ const Articles = function () {
         <span className={styles.home_text}>{t("home")}</span>
       </div>
       <div className={styles.articles_dir}>
-        <span>
-          <ListTree />
+        <div className={styles.dir_left}>
+          <ListTree style={{marginRight: '8px'}} />
           <span className={styles.dir_text}>{t("folders")}</span>
-        </span>
-        <span>
-          <Locate />
+        </div>
+        <div className={styles.dir_right}>
+          <Locate style={{marginRight: '6px'}} />
           {isCollapseAll ? <ArrowDownNarrowWide /> : <ArrowUpNarrowWide />}
-        </span>
+        </div>
       </div>
-      <div className={styles.articles_groups}></div>
+      <div className={styles.articles_groups}>
+        {
+            
+        }
+      </div>
     </div>
   );
 };

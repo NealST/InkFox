@@ -4,12 +4,12 @@ import { create } from 'zustand';
 
 export interface IArticleState {
   name: string;
-  setSelectedArticle: (newName: string) => void;
+  setName: (newName: string) => void;
 }
 
 export const useSelectedArticle = create<IArticleState>(set => ({
   name: '',
-  setSelectedArticle: (newName: string) => {
+  setName: (newName: string) => {
     set({name: newName});
   },
 }));

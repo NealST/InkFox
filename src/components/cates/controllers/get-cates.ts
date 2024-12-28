@@ -1,12 +1,13 @@
 // get cate list in notes
-
+import getAppPath from "@/utils/get-app-path";
+import ensureDir from "@/utils/ensure-dir";
 import { readDir } from "@tauri-apps/plugin-fs";
-import getCatesPath from "./get-cates-path";
-import type { NavTypes } from '@/constants';
 
-const getCates = async function(navType: NavTypes) {
+const getCates = async function() {
   try {
-    const notesPath = await getCatesPath(navType);
+    const appPath = await getAppPath();
+    const notesPath = `${appPath}/notes`;
+    await ensureDir(notesPath);
     const entries = await readDir(notesPath);
     return entries;
   } catch (e) {

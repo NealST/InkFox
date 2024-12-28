@@ -29,17 +29,26 @@ const getArticleListForDir = async function(dirPath: string): Promise<IArticleIt
   return ret;
 }
 
-const getArticles = async function(selectedCate: string): Promise<IArticleItem[]> {
-  if (!selectedCate) {
+const getArticles = async function(parentPath: string): Promise<IArticleItem[]> {
+  if (!parentPath) {
     return [] as IArticleItem[];
   }
-  const notesPath = await getNavPath('notes');
-  const catePath = await path.join(notesPath, selectedCate);
-  const isCateExists = await exists(catePath);
-  if (!isCateExists) {
+  const isParentExists = await exists(parentPath);
+  if (!isParentExists) {
     return [] as IArticleItem[];
   }
-  const ret = await getArticleListForDir(catePath);
+  const entries = await readDir(parentPath);
+  if (entries.length === 0) {
+    return [] as IArticleItem[];
+  }
+  const ret: IArticleItem[] = [];
+  entries.forEach(item => {
+    const {isFile, name} = item;
+    ret.push({
+      type: isFile ? 'file' : 'group',
+      name,
+    });
+  });
   return ret;
 };
 
