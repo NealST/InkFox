@@ -4,5 +4,5 @@ export interface IArticleItem {
   type: FileType;
   name: string;
   action?: string;
-  children?: IArticleItem[];
+  path: string;
 }
