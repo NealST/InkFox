@@ -1,14 +1,17 @@
 import { create } from '@tauri-apps/plugin-fs';
 import { mkdir } from '@tauri-apps/plugin-fs';
+import { createTimeStamp } from './create-timestamp';
+import i18n from '@/i18n';
 
-export const createArticleFile = async function(parentPath: string, articleName: string) {
-  const file = await create(`${parentPath}/${articleName}.md`);
+// create a untitled file by default
+export const createFile = async function(parentPath: string) {
+  const file = await create(`${parentPath}/${createTimeStamp(i18n.t('untitled'))}.md`);
   await file.write(new TextEncoder().encode(''));
   await file.close();
   return true;
 }
 
-export const createArticleGroup = async function(parentPath: string, groupName: string) {
+export const createGroup = async function(parentPath: string, groupName: string) {
   const ret = await mkdir(`${parentPath}/${groupName}`);
   return ret;
 };

@@ -1,41 +1,49 @@
 import { useEffect, useState } from "react";
-import type { IArticleItem } from "./types";
-import getArticles from "./controllers/get-articles";
-import createArticle from "./controllers/create-article";
-import {
-  useSelectedArticle,
-  type IArticleState,
-} from "./controllers/selected-article";
 import {
   useSelectedCate,
   type ICateState,
 } from "../cates/controllers/selected-cate";
 import {
-  ChevronDown,
   SquarePlus,
   Folder,
-  FolderInput,
   House,
   ListTree,
   Locate,
   ArrowDownNarrowWide,
   ArrowUpNarrowWide,
+  File,
+  Group,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import ArticleList from "./article-list";
+import getNavPath from "@/utils/get-nav-path";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
 import styles from "./index.module.css";
 
 const Articles = function () {
   const selectedCate = useSelectedCate((state: ICateState) => state.name);
   const { t } = useTranslation();
-  const [dataSource, setDataSource] = useState([] as IArticleItem[]);
   const [activeNav, setActiveNav] = useState("home");
   const [isCollapseAll, setCollapseAll] = useState(false);
+  const [parentCatePath, setParentCatePath] = useState('');
 
   useEffect(() => {
-    getArticles(selectedCate).then((ret) => {
-      setDataSource(ret);
+    getNavPath('notes').then(ret => {
+      setParentCatePath(`${ret}/${selectedCate}`);
     });
   }, [selectedCate]);
+
+  function handleAddFile() {
+
+  }
+
+  function handleAddGroup() {
+
+  }
 
   return (
     <div className={styles.articles}>
@@ -44,7 +52,21 @@ const Articles = function () {
           <Folder />
           <span className={styles.header_title}>{selectedCate}</span>
         </div>
-        <SquarePlus style={{color: 'var(--theme-color)'}} />
+        <HoverCard>
+          <HoverCardTrigger>
+            <SquarePlus style={{color: 'var(--theme-color)', cursor: 'pointer'}} />
+          </HoverCardTrigger>
+          <HoverCardContent className={styles.articles_add_hover}>
+            <div className={styles.articles_add_item} onClick={handleAddFile}>
+              <File />
+              <span className={styles.add_item_text}>{t('doc')}</span>
+            </div>
+            <div className={styles.articles_add_item} onClick={handleAddGroup}>
+              <Group />
+              <span className={styles.add_item_text}>{t('group')}</span>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
       </div>
       <div
         className={styles.articles_home}
@@ -63,11 +85,7 @@ const Articles = function () {
           {isCollapseAll ? <ArrowDownNarrowWide /> : <ArrowUpNarrowWide />}
         </div>
       </div>
-      <div className={styles.articles_groups}>
-        {
-            
-        }
-      </div>
+      <ArticleList parentPath={parentCatePath} />
     </div>
   );
 };

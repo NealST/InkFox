@@ -5,5 +5,8 @@
   "collects": "Collects",
   "cates": "Categories",
   "folders": "Folders",
-  "home": "Home"
+  "home": "Home",
+  "doc": "document",
+  "group": "group",
+  "untitled": "untitled"
 }
