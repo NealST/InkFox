@@ -21,24 +21,32 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card"
+} from "@/components/ui/hover-card";
+import type { IArticleItem } from './types';
+import { createFile, createGroup } from './controllers/create-article';
 import styles from "./index.module.css";
 
 const Articles = function () {
   const selectedCate = useSelectedCate((state: ICateState) => state.name);
   const { t } = useTranslation();
-  const [activeNav, setActiveNav] = useState("home");
+  const [activePath, setActivePath] = useState("home");
   const [isCollapseAll, setCollapseAll] = useState(false);
   const [parentCatePath, setParentCatePath] = useState('');
+  const [articleDatas, setArticleDatas] = useState([] as IArticleItem[]);
 
   useEffect(() => {
     getNavPath('notes').then(ret => {
-      setParentCatePath(`${ret}/${selectedCate}`);
+      const selectedCatePath = `${ret}/${selectedCate}`;
+      setParentCatePath(selectedCatePath);
+
+      
     });
   }, [selectedCate]);
 
   function handleAddFile() {
-
+    createFile(parentCatePath).then(() => {
+      
+    })
   }
 
   function handleAddGroup() {
@@ -70,7 +78,7 @@ const Articles = function () {
       </div>
       <div
         className={styles.articles_home}
-        onClick={() => setActiveNav("home")}
+        onClick={() => setActivePath("home")}
       >
         <House />
         <span className={styles.home_text}>{t("home")}</span>
@@ -85,7 +93,7 @@ const Articles = function () {
           {isCollapseAll ? <ArrowDownNarrowWide /> : <ArrowUpNarrowWide />}
         </div>
       </div>
-      <ArticleList parentPath={parentCatePath} />
+      <ArticleList parentPath={parentCatePath} data={articleDatas} />
     </div>
   );
 };

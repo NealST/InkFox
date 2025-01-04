@@ -1,5 +1,5 @@
 import type { IArticleItem } from "./types";
-import { useEffect, useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, ChangeEvent } from "react";
 import { Input } from "../ui/input";
 import {
   Group,
@@ -26,18 +26,13 @@ import styles from "./index.module.css";
 
 interface IProps {
   parentPath: string;
+  data: IArticleItem[];
 }
 
 const ArticleList = function (props: IProps) {
-  const { parentPath } = props;
-  const [dataSource, setDataSource] = useState([] as IArticleItem[]);
+  const { data, parentPath } = props;
+  const [dataSource, setDataSource] = useState(data);
   const newArticleNameRef = useRef("");
-
-  useEffect(() => {
-    getArticles(parentPath).then((ret) => {
-      setDataSource(ret);
-    });
-  }, [parentPath]);
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     newArticleNameRef.current = event.target.value;
@@ -56,7 +51,6 @@ const ArticleList = function (props: IProps) {
         newArticles[0] = {
           type: "group",
           name: newArticleName,
-          path: `${parentPath}/${newArticleName}`,
         };
         setDataSource(newArticles);
         // setSelectedArticle(newArticleName);
@@ -73,8 +67,9 @@ const ArticleList = function (props: IProps) {
     <div className={styles.article_list}>
       {dataSource.length > 0 &&
         dataSource.map((item, index) => {
-          const { type, name, action, path } = item;
+          const { type, name, action, children } = item;
           const theKey = name || index;
+          const thePath = [parentPath, name].join('/');
           if (action) {
             return (
               <div className={styles.article_input} key={theKey}>
@@ -111,7 +106,11 @@ const ArticleList = function (props: IProps) {
                   </div>
                 </div>
                 <CollapsibleContent>
-                  <ArticleList parentPath={path} />
+                  {
+                    children && children.length > 0 && (
+                      <ArticleList data={children} parentPath={thePath} />
+                    )
+                  }
                 </CollapsibleContent>
               </Collapsible>
             </div>
