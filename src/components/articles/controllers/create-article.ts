@@ -1,11 +1,10 @@
 import { create } from '@tauri-apps/plugin-fs';
 import { mkdir } from '@tauri-apps/plugin-fs';
-import { createTimeStamp } from './create-timestamp';
 import i18n from '@/i18n';
 
 // create a untitled file by default
 export const createFile = async function(parentPath: string) {
-  const file = await create(`${parentPath}/${createTimeStamp(i18n.t('untitled'))}.md`);
+  const file = await create(`${parentPath}/${i18n.t('untitled')}.md`);
   await file.write(new TextEncoder().encode(''));
   await file.close();
   return true;

@@ -6,7 +6,8 @@
   "cates": "Categories",
   "folders": "Folders",
   "home": "Home",
-  "doc": "document",
-  "group": "group",
-  "untitled": "untitled"
+  "doc": "Document",
+  "group": "Group",
+  "untitled": "Untitled",
+  "newgroup": "New Group"
 }

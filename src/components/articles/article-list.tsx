@@ -17,22 +17,27 @@ import {
   useSelectedArticle,
   IArticleState,
 } from "./controllers/selected-article";
+import { useDataSource, IDataSourceState } from './controllers/datasource-state';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { useTranslation } from "react-i18next";
 import styles from "./index.module.css";
 
 interface IProps {
   parentPath: string;
-  data: IArticleItem[];
+  dataSource: IArticleItem[];
 }
 
 const ArticleList = function (props: IProps) {
-  const { data, parentPath } = props;
-  const [dataSource, setDataSource] = useState(data);
+  const { dataSource, parentPath } = props;
   const newArticleNameRef = useRef("");
+  const setDataSource = useDataSource(
+    (state: IDataSourceState) => state.setDataSource
+  );
+  const { t } = useTranslation();
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     newArticleNameRef.current = event.target.value;
@@ -40,17 +45,13 @@ const ArticleList = function (props: IProps) {
 
   function handleInputBlur() {
     const newArticles = ([] as IArticleItem[]).concat(dataSource);
-    const newArticleName = newArticleNameRef.current;
-    if (!newArticleName) {
-      newArticles.shift();
-      setDataSource(newArticles);
-      return;
-    }
-    createGroup(parentPath, newArticleName)
+    const articleName = newArticleNameRef.current || t("newgroup");
+    // todo: 处理 key 值推进策略以及数据更新策略
+    createGroup(parentPath, articleName)
       .then(() => {
         newArticles[0] = {
           type: "group",
-          name: newArticleName,
+          name: articleName,
         };
         setDataSource(newArticles);
         // setSelectedArticle(newArticleName);
@@ -69,6 +70,7 @@ const ArticleList = function (props: IProps) {
         dataSource.map((item, index) => {
           const { type, name, action, children } = item;
           const theKey = name || index;
+          // todo: 处理文件 ID 生成策略
           const thePath = [parentPath, name].join('/');
           if (action) {
             return (
@@ -108,7 +110,7 @@ const ArticleList = function (props: IProps) {
                 <CollapsibleContent>
                   {
                     children && children.length > 0 && (
-                      <ArticleList data={children} parentPath={thePath} />
+                      <ArticleList dataSource={children} parentPath={thePath} />
                     )
                   }
                 </CollapsibleContent>
