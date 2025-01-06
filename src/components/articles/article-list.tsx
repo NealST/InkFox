@@ -1,5 +1,5 @@
 import type { IArticleItem } from "./types";
-import { useState, useRef, ChangeEvent } from "react";
+import { useRef, ChangeEvent } from "react";
 import { Input } from "../ui/input";
 import {
   Group,
@@ -8,7 +8,6 @@ import {
   Plus,
   ChevronsUpDown,
 } from "lucide-react";
-import getArticles from "./controllers/get-articles";
 import {
   createFile,
   createGroup,
@@ -24,18 +23,21 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { useTranslation } from "react-i18next";
+import { uid } from 'uid';
+import immerArticles from "./controllers/immer-articles";
 import styles from "./index.module.css";
 
 interface IProps {
   parentPath: string;
+  parentKey: string;
   dataSource: IArticleItem[];
 }
 
 const ArticleList = function (props: IProps) {
-  const { dataSource, parentPath } = props;
+  const { dataSource, parentPath, parentKey } = props;
   const newArticleNameRef = useRef("");
-  const setDataSource = useDataSource(
-    (state: IDataSourceState) => state.setDataSource
+  const { dataSource: globalDataSource, setDataSource } = useDataSource(
+    (state: IDataSourceState) => state
   );
   const { t } = useTranslation();
 
@@ -44,37 +46,30 @@ const ArticleList = function (props: IProps) {
   }
 
   function handleInputBlur() {
-    const newArticles = ([] as IArticleItem[]).concat(dataSource);
     const articleName = newArticleNameRef.current || t("newgroup");
-    // todo: 处理 key 值推进策略以及数据更新策略
     createGroup(parentPath, articleName)
       .then(() => {
-        newArticles[0] = {
+        const newArticles = immerArticles(globalDataSource, `${parentKey}[0]`, 'replace', {
           type: "group",
           name: articleName,
-        };
+          id: uid(),
+        });
         setDataSource(newArticles);
         // setSelectedArticle(newArticleName);
         newArticleNameRef.current = "";
       })
-      .catch(() => {
-        newArticles.shift();
-        setDataSource(newArticles);
-        newArticleNameRef.current = "";
-      });
   }
 
   return (
     <div className={styles.article_list}>
       {dataSource.length > 0 &&
         dataSource.map((item, index) => {
-          const { type, name, action, children } = item;
-          const theKey = name || index;
-          // todo: 处理文件 ID 生成策略
+          const { type, name, action, id, children } = item;
           const thePath = [parentPath, name].join('/');
+          const theKey = `${parentKey}[${index}]`;
           if (action) {
             return (
-              <div className={styles.article_input} key={theKey}>
+              <div className={styles.article_input} key={id}>
                 <Group />
                 <Input
                   className={styles.item_input}
@@ -85,7 +80,7 @@ const ArticleList = function (props: IProps) {
             );
           }
           return type === "file" ? (
-            <div className={styles.article_file} key={theKey}>
+            <div className={styles.article_file} key={id}>
               <div className={styles.file_left}>
                 <File />
                 <span className={styles.file_name}>{name}</span>
@@ -93,7 +88,7 @@ const ArticleList = function (props: IProps) {
               <EllipsisVertical />
             </div>
           ) : (
-            <div className={styles.article_group} key={theKey}>
+            <div className={styles.article_group} key={id}>
               <Collapsible>
                 <div className={styles.group_header}>
                   <div className={styles.group_header_label}>
@@ -110,7 +105,7 @@ const ArticleList = function (props: IProps) {
                 <CollapsibleContent>
                   {
                     children && children.length > 0 && (
-                      <ArticleList dataSource={children} parentPath={thePath} />
+                      <ArticleList dataSource={children} parentPath={thePath} parentKey={`${theKey}.children`} />
                     )
                   }
                 </CollapsibleContent>

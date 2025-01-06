@@ -23,12 +23,13 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import type { IArticleItem } from "./types";
-import { createFile, createGroup } from "./controllers/create-article";
+import { createFile } from "./controllers/create-article";
 import getArticles from "./controllers/get-articles";
 import {
   useDataSource,
   IDataSourceState,
 } from "./controllers/datasource-state";
+import { uid } from "uid";
 import styles from "./index.module.css";
 
 const Articles = function () {
@@ -59,6 +60,7 @@ const Articles = function () {
           {
             type: "file",
             name: t("untitled"),
+            id: uid(),
           } as IArticleItem,
         ].concat(dataSource)
       );
@@ -73,6 +75,7 @@ const Articles = function () {
           type: "group",
           name: defaultGroupName,
           action: "input",
+          id: uid(),
         } as IArticleItem,
       ].concat(dataSource)
     );
@@ -120,7 +123,11 @@ const Articles = function () {
           {isCollapseAll ? <ArrowDownNarrowWide /> : <ArrowUpNarrowWide />}
         </div>
       </div>
-      <ArticleList parentPath={parentCatePath} dataSource={dataSource} />
+      <ArticleList
+        parentPath={parentCatePath}
+        parentKey=""
+        dataSource={dataSource}
+      />
     </div>
   );
 };
