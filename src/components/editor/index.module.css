@@ -1,0 +1,15 @@
+.editor {
+  flex: 1;
+  position: relative;
+  background-color: var(--editor-bg-color);
+}
+
+.editor_main {
+  width: 100%;
+  height: 100vh;
+  padding-top: 94px;
+  display: flex;
+  flex-direction: row;
+  padding-left: 16px;
+  padding-right: 16px;
+}

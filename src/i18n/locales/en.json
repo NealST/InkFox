@@ -9,5 +9,10 @@
   "doc": "Document",
   "group": "Group",
   "untitled": "Untitled",
-  "newgroup": "New Group"
+  "newgroup": "New Group",
+  "wordcount": "Word Count",
+  "presentation": "Presentation",
+  "focusmode": "Focus Mode",
+  "export": "Export",
+  "delete": "Delete"
 }

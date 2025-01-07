@@ -9,5 +9,10 @@
   "doc": "文档",
   "group": "分组",
   "untitled": "未命名",
-  "newgroup": "新分组"
+  "newgroup": "新分组",
+  "wordcount": "字数",
+  "presentation": "演示",
+  "focusmode": "专注模式",
+  "export": "导出",
+  "delete": "删除"
 }
