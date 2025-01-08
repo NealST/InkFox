@@ -14,5 +14,15 @@
   "presentation": "演示",
   "focusmode": "专注模式",
   "export": "导出",
-  "delete": "删除"
+  "delete": "删除",
+  "bodytext": "正文",
+  "headline1": "标题 1",
+  "headline2": "标题 2",
+  "headline3": "标题 3",
+  "headline4": "标题 4",
+  "headline5": "标题 5",
+  "headline6": "标题 6",
+  "superscript": "上标",
+  "subscript": "下标",
+  "inlinecode": "行内代码"
 }
