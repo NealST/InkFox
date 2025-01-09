@@ -24,5 +24,7 @@
   "headline6": "标题 6",
   "superscript": "上标",
   "subscript": "下标",
-  "inlinecode": "行内代码"
+  "inlinecode": "行内代码",
+  "indentincrease": "增加缩进",
+  "indentdecrease": "减少缩进"
 }

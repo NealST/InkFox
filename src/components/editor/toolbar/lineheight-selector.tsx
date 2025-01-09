@@ -7,42 +7,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, FileText } from "lucide-react";
 
-const sizeOptions = [
-  "12",
-  "13",
-  "14",
-  "15",
-  "16",
-  "19",
-  "22",
-  "24",
-  "29",
-  "32",
-  "40",
-  "48",
-];
+const heightOptions = ["1", "1.15", "1.5", "2", "2.5", "3"];
 
-const FontsizeSelector = function () {
-  const [selectedSize, setSelectedSize] = useState("12");
+const LineHeightSelector = function () {
+  const [selectedHeight, setSelectedHeight] = useState("1");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
-          {selectedSize}px
+          <FileText />
           <ChevronsUpDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-30">
         <DropdownMenuRadioGroup
-          value={selectedSize}
-          onValueChange={setSelectedSize}
+          value={selectedHeight}
+          onValueChange={setSelectedHeight}
         >
-          {sizeOptions.map((item) => {
+          {heightOptions.map((item) => {
             return (
               <DropdownMenuRadioItem key={item} value={item}>
-                {item}px
+                {item}
               </DropdownMenuRadioItem>
             );
           })}
@@ -52,4 +39,4 @@ const FontsizeSelector = function () {
   );
 };
 
-export default FontsizeSelector;
+export default LineHeightSelector;

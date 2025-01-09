@@ -24,5 +24,7 @@
   "headline6": "Headline Level 6",
   "superscript": "superscript",
   "subscript": "subscript",
-  "inlinecode": "Inline Code"
+  "inlinecode": "Inline Code",
+  "indentincrease": "Increase Indent",
+  "indentdecrease": "Decrease Indent"
 }

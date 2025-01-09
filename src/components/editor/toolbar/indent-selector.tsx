@@ -7,72 +7,43 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import {
-  ChevronsUpDown,
-  Hash,
-  Heading1,
-  Heading2,
-  Heading3,
-  Heading4,
-  Heading5,
-  Heading6,
-} from "lucide-react";
+import { ChevronsUpDown, IndentIncrease, IndentDecrease } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import styles from "./index.module.css";
 
-const headerOptions = [
+const indentOptions = [
   {
-    id: "bodytext",
-    Icon: Hash,
+    id: "indentincrease",
+    Icon: IndentIncrease,
   },
   {
-    id: "headline1",
-    Icon: Heading1,
-  },
-  {
-    id: "headline2",
-    Icon: Heading2,
-  },
-  {
-    id: "headline3",
-    Icon: Heading3,
-  },
-  {
-    id: "headline4",
-    Icon: Heading4,
-  },
-  {
-    id: "headline5",
-    Icon: Heading5,
-  },
-  {
-    id: "headline6",
-    Icon: Heading6,
+    id: "indentdecrease",
+    Icon: IndentDecrease,
   },
 ];
 
-const HeaderSelector = function () {
-  const [selectedHeaderId, setSelectedHeaderId] = useState("bodytext");
+const IndentSelector = function () {
+  const [selectedIndent, setSelectedIndent] = useState("");
   const { t } = useTranslation();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
-          {t(selectedHeaderId)}
+          <IndentIncrease />
           <ChevronsUpDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuRadioGroup
-          value={selectedHeaderId}
-          onValueChange={setSelectedHeaderId}
+          value={selectedIndent}
+          onValueChange={setSelectedIndent}
         >
-          {headerOptions.map((item) => {
+          {indentOptions.map((item) => {
             const { id, Icon } = item;
             return (
               <DropdownMenuRadioItem key={id} value={id}>
-                <span className={styles.head_item}>
+                <span className={styles.indent_item}>
                   <Icon />
                   {t(id)}
                 </span>
@@ -85,4 +56,4 @@ const HeaderSelector = function () {
   );
 };
 
-export default HeaderSelector;
+export default IndentSelector;
