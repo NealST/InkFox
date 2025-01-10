@@ -26,5 +26,9 @@
   "subscript": "下标",
   "inlinecode": "行内代码",
   "indentincrease": "增加缩进",
-  "indentdecrease": "减少缩进"
+  "indentdecrease": "减少缩进",
+  "alignleft": "向左对齐",
+  "aligncenter": "居中对齐",
+  "alignright": "向右对齐",
+  "alignjustify": "两边对齐"
 }

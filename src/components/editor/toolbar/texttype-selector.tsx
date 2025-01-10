@@ -53,9 +53,9 @@ const TextTypeSelector = function () {
             const { id, Icon } = item;
             return (
               <DropdownMenuRadioItem key={id} value={id}>
-                <span className={styles.type_item}>
+                <span className={styles.menu_item}>
                   <Icon size={16} />
-                  {t(id)}
+                  <span className={styles.menu_item_text}>{t(id)}</span>
                 </span>
               </DropdownMenuRadioItem>
             );

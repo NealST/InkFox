@@ -26,5 +26,9 @@
   "subscript": "subscript",
   "inlinecode": "Inline Code",
   "indentincrease": "Increase Indent",
-  "indentdecrease": "Decrease Indent"
+  "indentdecrease": "Decrease Indent",
+  "alignleft": "Align Left",
+  "aligncenter": "Align Center",
+  "alignright": "Align Right",
+  "alignjustify": "Align Justify"
 }

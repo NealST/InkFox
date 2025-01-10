@@ -14,6 +14,8 @@ import {
   AlignRight,
   AlignJustify,
 } from "lucide-react";
+import { useTranslation } from 'react-i18next';
+import styles from './index.module.css';
 
 const alignOptions = [
   {
@@ -36,6 +38,7 @@ const alignOptions = [
 
 const AlignmentSelector = function () {
   const [selectedAlign, setSelectedAlign] = useState("");
+  const { t } = useTranslation();
 
   return (
     <DropdownMenu>
@@ -54,7 +57,10 @@ const AlignmentSelector = function () {
             const { id, Icon } = item;
             return (
               <DropdownMenuRadioItem key={id} value={id}>
-                <Icon />
+                <span className={styles.menu_item}>
+                  <Icon size={16} />
+                  <span className={styles.menu_item_text}>{t(id)}</span>
+                </span>
               </DropdownMenuRadioItem>
             );
           })}

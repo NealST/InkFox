@@ -32,7 +32,7 @@ const Toolbar = function () {
     <div className={styles.toolbar}>
       <div className={cn(styles.tool_group, styles.tool_plus)}>
         <Button variant="ghost">
-          <SquarePlus size={16} />
+          <SquarePlus size={16} style={{color: 'var(--theme-color)'}} />
         </Button>
       </div>
       <div className={cn(styles.tool_group, styles.tool_action)}>
