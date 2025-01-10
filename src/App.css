@@ -46,6 +46,10 @@
   box-sizing: border-box !important;
 }
 
+#root {
+  background-color: var(--editor-bg-color);
+}
+
 .container {
   width: 100%;
   height: 100%;
@@ -53,6 +57,7 @@
   flex-direction: row;
   padding-left: 0;
   padding-right: 0;
+  max-width: none;
 }
 
 .sidebar {

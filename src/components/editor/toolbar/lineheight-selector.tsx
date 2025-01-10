@@ -17,8 +17,8 @@ const LineHeightSelector = function () {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
-          <FileText />
-          <ChevronsUpDown />
+          <FileText size={16} />
+          <ChevronsUpDown size={16} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-30">

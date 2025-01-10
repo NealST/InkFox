@@ -10,6 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 import styles from "./index.module.css";
 
 const Header = function () {
@@ -48,12 +49,12 @@ const Header = function () {
         {actions.map((item) => {
           const { id, Icon } = item;
           return (
-            <TooltipProvider>
+            <TooltipProvider key={id}>
               <Tooltip>
                 <TooltipTrigger>
-                  <div className={styles.action_item} key={id}>
-                    <Icon style={{ color: "var(--font-color)" }} />
-                  </div>
+                  <Button variant="ghost">
+                    <Icon size={24} />
+                  </Button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>{t(id)}</p>

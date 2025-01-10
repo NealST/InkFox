@@ -40,8 +40,8 @@ const TextTypeSelector = function () {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
-          <Type />
-          <ChevronsUpDown />
+          <Type size={16} />
+          <ChevronsUpDown size={16} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -54,7 +54,7 @@ const TextTypeSelector = function () {
             return (
               <DropdownMenuRadioItem key={id} value={id}>
                 <span className={styles.type_item}>
-                  <Icon />
+                  <Icon size={16} />
                   {t(id)}
                 </span>
               </DropdownMenuRadioItem>

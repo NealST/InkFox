@@ -41,8 +41,8 @@ const AlignmentSelector = function () {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
-          <AlignLeft />
-          <ChevronsUpDown />
+          <AlignLeft size={16} />
+          <ChevronsUpDown size={16} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-30">

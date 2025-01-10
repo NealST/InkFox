@@ -31,7 +31,7 @@ const FontsizeSelector = function () {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
           {selectedSize}px
-          <ChevronsUpDown />
+          <ChevronsUpDown size={16} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-30">

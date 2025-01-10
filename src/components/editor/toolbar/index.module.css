@@ -1,0 +1,29 @@
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: absolute;
+  top: 52px;
+  height: 42px;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.tool_group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: var(--font-color);
+  font-size: 16px;
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--boder-color);
+  margin-left: 10px;
+}

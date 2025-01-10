@@ -30,8 +30,8 @@ const IndentSelector = function () {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
-          <IndentIncrease />
-          <ChevronsUpDown />
+          <IndentIncrease size={16} />
+          <ChevronsUpDown size={16} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -44,7 +44,7 @@ const IndentSelector = function () {
             return (
               <DropdownMenuRadioItem key={id} value={id}>
                 <span className={styles.indent_item}>
-                  <Icon />
+                  <Icon size={16} />
                   {t(id)}
                 </span>
               </DropdownMenuRadioItem>

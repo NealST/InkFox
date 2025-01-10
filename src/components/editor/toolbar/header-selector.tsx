@@ -60,7 +60,7 @@ const HeaderSelector = function () {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
           {t(selectedHeaderId)}
-          <ChevronsUpDown />
+          <ChevronsUpDown size={16} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -73,7 +73,7 @@ const HeaderSelector = function () {
             return (
               <DropdownMenuRadioItem key={id} value={id}>
                 <span className={styles.head_item}>
-                  <Icon />
+                  <Icon size={16} />
                   {t(id)}
                 </span>
               </DropdownMenuRadioItem>
