@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   useSelectedArticle,
   type IArticleState,
@@ -11,37 +12,44 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import { useTitle, type ITitleState } from "../content/title";
 import styles from "./index.module.css";
 
 const Header = function () {
   const selectedArticleName = useSelectedArticle(
     (state: IArticleState) => state.name
   );
+  const latestTitle = useTitle((state: ITitleState) => state.name);
   const { t } = useTranslation();
 
-  const actions = [
-    {
-      id: "presentation",
-      Icon: Presentation,
-    },
-    {
-      id: "focusmode",
-      Icon: Focus,
-    },
-    {
-      id: "export",
-      Icon: ArrowRightFromLine,
-    },
-    {
-      id: "delete",
-      Icon: Trash2,
-    },
-  ];
+  const actions = useMemo(
+    () => [
+      {
+        id: "presentation",
+        Icon: Presentation,
+      },
+      {
+        id: "focusmode",
+        Icon: Focus,
+      },
+      {
+        id: "export",
+        Icon: ArrowRightFromLine,
+      },
+      {
+        id: "delete",
+        Icon: Trash2,
+      },
+    ],
+    []
+  );
 
   return (
     <div className={styles.header}>
       <div className={styles.header_info}>
-        <span className={styles.info_title}>{selectedArticleName}</span>
+        <span className={styles.info_title}>
+          {latestTitle || selectedArticleName}
+        </span>
         <span className={styles.info_savetime}></span>
         <span className={styles.info_count}>{t("wordcount")}: 0</span>
       </div>
