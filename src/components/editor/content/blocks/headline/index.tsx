@@ -8,6 +8,7 @@ import {
 import getKeyboardKey from "../../controllers/get-keyborad-key";
 import { createHeading, createParagraph } from "../../controllers/create-block";
 import cn from "classnames";
+import debounce from "@/utils/debounce";
 import styles from "./index.module.css";
 
 const prefixReg = /^(\#*)/;
@@ -20,7 +21,7 @@ const HeadLine = function (props: IBlockProps) {
     (state: IContentState) => state
   );
   const level = data.meta.level;
-  const text = data.text?.trim() || "";
+  const text = data.text?.replace(prefixReg, "").trim() || "";
 
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
 
@@ -29,30 +30,43 @@ const HeadLine = function (props: IBlockProps) {
     if (!contentDom) {
       return;
     }
-    const textContent = contentDom.textContent;
-    const modeMatch = textContent?.match(modeReg);
-    if (!modeMatch) {
-      return;
+    const textContent = contentDom.textContent || "";
+    if (modeReg.test(textContent)) {
+      const modeMatch = textContent.match(modeReg);
+      const theLevel = modeMatch?.[1].length;
+      if (theLevel !== level) {
+        setDataSource(
+          getUpdatedState(
+            dataSource,
+            {
+              name: "heading",
+              meta: {
+                level: theLevel,
+              },
+              text: textContent || "",
+            },
+            blockIndex
+          )
+        );
+        return;
+      }
     }
-    const theLevel = modeMatch[1].length;
-    if (theLevel !== level) {
+
+    if (textContent !== text) {
       setDataSource(
         getUpdatedState(
           dataSource,
           {
-            name: "atx-heading",
+            name: "heading",
             meta: {
-              level: theLevel,
+              level,
             },
             text: textContent || "",
           },
           blockIndex
         )
       );
-      return;
     }
-    // in case that place equal # before the title
-    contentDom.innerHTML = contentDom.innerHTML.replace(prefixReg, "").trim();
   }
 
   function handleKeydown(event: KeyboardEvent) {
@@ -103,7 +117,7 @@ const HeadLine = function (props: IBlockProps) {
         role="heading"
         aria-level={level}
         contentEditable
-        onInput={handleInput}
+        onInput={debounce(handleInput)}
         onKeyDown={handleKeydown}
       >
         {text}
