@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown, FileText } from "lucide-react";
+import styles from './index.module.css';
 
 const heightOptions = ["1", "1.15", "1.5", "2", "2.5", "3"];
 
@@ -16,7 +17,7 @@ const LineHeightSelector = function () {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <FileText size={16} />
           <ChevronsUpDown size={16} />
         </Button>

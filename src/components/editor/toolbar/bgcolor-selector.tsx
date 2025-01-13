@@ -3,6 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button';
 import { HexColorPicker, HexColorInput } from 'react-colorful';
 import { Palette, ChevronsUpDown } from 'lucide-react';
+import styles from './index.module.css';
 
 const BgColorSelector = function() {
   const [color, setColor] = useState('');
@@ -10,7 +11,7 @@ const BgColorSelector = function() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <Palette size={16} />
           <ChevronsUpDown size={16} />
         </Button>

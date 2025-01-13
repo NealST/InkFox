@@ -39,7 +39,7 @@ const TextTypeSelector = function () {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <Type size={16} />
           <ChevronsUpDown size={16} />
         </Button>

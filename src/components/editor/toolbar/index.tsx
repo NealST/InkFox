@@ -31,37 +31,37 @@ const Toolbar = function () {
   return (
     <div className={styles.toolbar}>
       <div className={cn(styles.tool_group, styles.tool_plus)}>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <SquarePlus size={16} style={{color: 'var(--theme-color)'}} />
         </Button>
       </div>
       <div className={cn(styles.tool_group, styles.tool_action)}>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <Undo2 size={16} />
         </Button>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <Redo2 size={16} />
         </Button>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <PaintRoller size={16} />
         </Button>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <Eraser size={16} />
         </Button>
       </div>
       <div className={cn(styles.tool_group, styles.tool_edit)}>
         <HeaderSelector />
         <FontsizeSelector />
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <Bold size={16} />
         </Button>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <Italic size={16} />
         </Button>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <Strikethrough size={16} />
         </Button>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <Underline size={16} />
         </Button>
         <TextTypeSelector />
@@ -72,26 +72,26 @@ const Toolbar = function () {
       </div>
       <div className={cn(styles.tool_group, styles.tool_format)}>
         <AlignmentSelector />
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <List size={16} />
         </Button>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <ListOrdered size={16} />
         </Button>
         <IndentSelector />
         <LineHeightSelector />
       </div>
       <div className={cn(styles.tool_group, styles.tool_others)}>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <SquareCheck size={16} />
         </Button>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <Link size={16} />
         </Button>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <Quote size={16} />
         </Button>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <Minus size={16} />
         </Button>
       </div>

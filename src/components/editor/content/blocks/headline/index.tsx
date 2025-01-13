@@ -81,7 +81,7 @@ const HeadLine = function (props: IBlockProps) {
       const updatedDataSource = getUpdatedState(
         dataSource,
         {
-          name: "atx-heading",
+          name: "heading",
           meta: {
             level,
           },

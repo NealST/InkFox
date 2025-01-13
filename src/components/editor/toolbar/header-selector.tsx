@@ -58,7 +58,7 @@ const HeaderSelector = function () {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           {t(selectedHeaderId)}
           <ChevronsUpDown size={16} />
         </Button>

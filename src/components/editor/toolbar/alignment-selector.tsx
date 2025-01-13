@@ -43,7 +43,7 @@ const AlignmentSelector = function () {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           <AlignLeft size={16} />
           <ChevronsUpDown size={16} />
         </Button>

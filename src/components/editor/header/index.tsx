@@ -19,7 +19,7 @@ const Header = function () {
   const selectedArticleName = useSelectedArticle(
     (state: IArticleState) => state.name
   );
-  const latestTitle = useTitle((state: ITitleState) => state.name);
+  const latestTitle = useTitle((state: ITitleState) => state.title);
   const { t } = useTranslation();
 
   const actions = useMemo(

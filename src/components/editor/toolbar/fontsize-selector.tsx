@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
+import styles from './index.module.css';
 
 const sizeOptions = [
   "12",
@@ -29,7 +30,7 @@ const FontsizeSelector = function () {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">
+        <Button className={styles.tool_button} variant="ghost">
           {selectedSize}px
           <ChevronsUpDown size={16} />
         </Button>

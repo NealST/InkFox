@@ -9,23 +9,23 @@ import {
 import styles from "./index.module.css";
 
 export interface ITitleState {
-  name: string;
-  setName: (newName: string) => void;
+  title: string;
+  setTitle: (newName: string) => void;
 }
 
 export const useTitle = create<ITitleState>((set) => ({
-  name: "",
-  setName: (newName: string) => {
-    set({ name: newName });
+  title: "",
+  setTitle: (newTitle: string) => {
+    set({ title: newTitle });
   },
 }));
 
 const Title = function () {
   const { t } = useTranslation();
-  const setTitle = useTitle((state: ITitleState) => state.setName);
   const selectedArticleName = useSelectedArticle(
     (state: IArticleState) => state.name
   );
+  const { title, setTitle } = useTitle((state: ITitleState) => state);
 
   useEffect(() => {
     setTitle(selectedArticleName);
@@ -39,8 +39,9 @@ const Title = function () {
     <div className={styles.title}>
       <Input
         type="text"
+        className={styles.title_input}
         placeholder={t("untitled")}
-        value={selectedArticleName}
+        value={title}
         onChange={handleChange}
       />
     </div>
