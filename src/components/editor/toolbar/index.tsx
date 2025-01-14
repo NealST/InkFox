@@ -25,21 +25,39 @@ import LineHeightSelector from "./lineheight-selector";
 import FontColorSelector from "./fontcolor-selector";
 import BgColorSelector from "./bgcolor-selector";
 import { Button } from "@/components/ui/button";
+import {
+  useContentState,
+  type IContentState,
+} from "../content/controllers/datasource-state";
 import styles from "./index.module.css";
 
 const Toolbar = function () {
+  const { undoArr, redoArr, setDataSource } = useContentState(
+    (state: IContentState) => state
+  );
+
   return (
     <div className={styles.toolbar}>
       <div className={cn(styles.tool_group, styles.tool_plus)}>
         <Button className={styles.tool_button} variant="ghost">
-          <SquarePlus size={16} style={{color: 'var(--theme-color)'}} />
+          <SquarePlus size={16} style={{ color: "var(--theme-color)" }} />
         </Button>
       </div>
       <div className={cn(styles.tool_group, styles.tool_action)}>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button
+          className={styles.tool_button}
+          onClick={() => setDataSource([], true)}
+          disabled={undoArr.length === 1}
+          variant="ghost"
+        >
           <Undo2 size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button
+          className={styles.tool_button}
+          onClick={() => setDataSource([], false, true)}
+          disabled={redoArr.length === 0}
+          variant="ghost"
+        >
           <Redo2 size={16} />
         </Button>
         <Button className={styles.tool_button} variant="ghost">
