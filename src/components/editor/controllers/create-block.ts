@@ -1,5 +1,5 @@
 // create a block
-import type { IBlockStateItem } from "../blocks/types";
+import type { IBlockStateItem } from "../content/blocks/types";
 import { uid } from 'uid';
 import { produce } from 'immer';
 

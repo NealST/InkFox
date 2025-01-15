@@ -28,7 +28,7 @@ import { Button } from "@/components/ui/button";
 import {
   useContentState,
   type IContentState,
-} from "../content/controllers/datasource-state";
+} from "../controllers/datasource-state";
 import styles from "./index.module.css";
 
 const Toolbar = function () {

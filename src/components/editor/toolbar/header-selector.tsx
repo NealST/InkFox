@@ -18,6 +18,14 @@ import {
   Heading6,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import {
+  useContentState,
+  type IContentState,
+} from "../controllers/datasource-state";
+import getBlockIndexForContentDom from "../controllers/get-contentDom-blockIndex";
+import getUpdatedState from "../controllers/update-block";
+import { transformChildren2Html } from "../controllers/format";
+import type { IBlockStateItem } from "../content/blocks/types";
 import styles from "./index.module.css";
 
 const headerOptions = [
@@ -53,7 +61,42 @@ const headerOptions = [
 
 const HeaderSelector = function () {
   const [selectedHeaderId, setSelectedHeaderId] = useState("bodytext");
+  const { dataSource, setDataSource } = useContentState(
+    (state: IContentState) => state
+  );
   const { t } = useTranslation();
+
+  function handleChange(newHeaderId: string) {
+    const { anchorNode } = document.getSelection() as Selection;
+    if (!anchorNode) {
+      return;
+    }
+    const anchorBlockIndex = getBlockIndexForContentDom(anchorNode);
+    const anchorBlock = dataSource[anchorBlockIndex];
+    const isBodyText = newHeaderId === "bodytext";
+    const newBlockInfo: IBlockStateItem = {
+      name: isBodyText ? "paragraph" : "heading",
+    };
+    if (isBodyText) {
+      newBlockInfo.children = [
+        {
+          name: "plain",
+          text: anchorBlock.text,
+        },
+      ];
+    } else {
+      newBlockInfo.meta = {
+        level: newHeaderId.replace("headline", ""),
+      };
+      // transform paragraph to heading
+      if (anchorBlock.name === "paragraph") {
+        newBlockInfo.text =
+          anchorBlock.children?.map((item) => item.text).join("") || "";
+      }
+    }
+    setSelectedHeaderId(newHeaderId);
+    setDataSource(getUpdatedState(dataSource, newBlockInfo, anchorBlockIndex));
+  }
 
   return (
     <DropdownMenu>
@@ -66,7 +109,7 @@ const HeaderSelector = function () {
       <DropdownMenuContent className="w-56">
         <DropdownMenuRadioGroup
           value={selectedHeaderId}
-          onValueChange={setSelectedHeaderId}
+          onValueChange={handleChange}
         >
           {headerOptions.map((item) => {
             const { id, Icon } = item;

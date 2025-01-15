@@ -1,6 +1,6 @@
 // format markdown utils
 
-import type { IBlockStateItem } from "../blocks/types";
+import type { IBlockStateItem } from "../content/blocks/types";
 
 const getStrongHtml = function (text: string) {
   return `<strong class="ink-content-item ink-strong">${text}</strong>`;
@@ -169,6 +169,17 @@ export const transfromChild2Html = function (child: IBlockStateItem) {
   }
   return retHtml;
 };
+
+export const transformChildren2Html = function(children: IBlockStateItem[]) {
+  if (children.length === 0) {
+    return "";
+  }
+  return children
+    .map((item) => {
+      return transfromChild2Html(item);
+    })
+    .join("");
+}
 
 export type CursorInfo = {
   childIndex: number;

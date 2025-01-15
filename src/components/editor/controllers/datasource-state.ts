@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { uid } from "uid";
-import type { IBlockStateItem } from "../blocks/types";
-import { defaultState } from "../mock/data";
+import type { IBlockStateItem } from "../content/blocks/types";
+import { defaultState } from "../content/mock/data";
 
 const initState = defaultState.map((item) => ({
   ...item,

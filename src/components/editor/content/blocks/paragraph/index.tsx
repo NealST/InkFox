@@ -2,20 +2,20 @@ import { useRef, RefObject, KeyboardEvent } from "react";
 import cn from "classnames";
 import debounce from "@/utils/debounce";
 import type { IBlockProps, IBlockStateItem } from "../types";
-import getUpdatedState from "../../controllers/update-block";
-import { createParagraph } from "../../controllers/create-block";
+import getUpdatedState from "../../../controllers/update-block";
+import { createParagraph } from "../../../controllers/create-block";
 import {
-  transfromChild2Html,
+  transformChildren2Html,
   md2StateRules,
   getNewChildren,
   type RuleKeys,
-} from "../../controllers/format";
+} from "../../../controllers/format";
 import {
   useContentState,
   type IContentState,
-} from "../../controllers/datasource-state";
-import getKeyboardKey from "../../controllers/get-keyborad-key";
-import getChildIndexInParagraph from "../../controllers/get-child-index";
+} from "../../../controllers/datasource-state";
+import getKeyboardKey from "../../../controllers/get-keyborad-key";
+import getChildIndexInParagraph from "../../../controllers/get-child-index";
 import styles from "./index.module.css";
 
 const Paragraph = function (props: IBlockProps) {
@@ -32,17 +32,6 @@ const Paragraph = function (props: IBlockProps) {
     // the offset in this child
     childOffset: 0,
   });
-
-  function transformChildren2Html(children: IBlockStateItem[]) {
-    if (children.length === 0) {
-      return "";
-    }
-    return children
-      .map((item) => {
-        return transfromChild2Html(item);
-      })
-      .join("");
-  }
 
   function checkForUpdate(content: string | undefined) {
     if (!content) {
@@ -188,7 +177,7 @@ const Paragraph = function (props: IBlockProps) {
   return (
     <p className={cn(styles.paragraph, "paragraph")}>
       <span
-        className={styles.paragraph_content}
+        className={cn(styles.paragraph_content, 'block-content')}
         ref={contentRef}
         role="doc-part"
         contentEditable
@@ -196,6 +185,7 @@ const Paragraph = function (props: IBlockProps) {
         onKeyDown={handleKeydown}
         onClick={getCursorInfo}
         dangerouslySetInnerHTML={{ __html: contentHtml }}
+        data-blockindex={blockIndex}
       ></span>
     </p>
   );

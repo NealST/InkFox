@@ -3,7 +3,7 @@ import cn from "classnames";
 import {
   useContentState,
   type IContentState,
-} from "./controllers/datasource-state";
+} from "../controllers/datasource-state";
 import blockMap from "./blocks";
 import styles from "./index.module.css";
 import "github-markdown-css/github-markdown.css";
