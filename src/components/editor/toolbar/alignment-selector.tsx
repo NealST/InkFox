@@ -15,6 +15,7 @@ import {
   AlignJustify,
 } from "lucide-react";
 import { useTranslation } from 'react-i18next';
+import type { ISelectorProps } from './types';
 import styles from './index.module.css';
 
 const alignOptions = [
@@ -36,14 +37,15 @@ const alignOptions = [
   },
 ];
 
-const AlignmentSelector = function () {
+const AlignmentSelector = function (props: ISelectorProps) {
+  const { disabled } = props;
   const [selectedAlign, setSelectedAlign] = useState("");
   const { t } = useTranslation();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <AlignLeft size={16} />
           <ChevronsUpDown size={16} />
         </Button>

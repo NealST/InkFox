@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown, IndentIncrease, IndentDecrease } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import type { ISelectorProps } from './types';
 import styles from "./index.module.css";
 
 const indentOptions = [
@@ -22,14 +23,15 @@ const indentOptions = [
   },
 ];
 
-const IndentSelector = function () {
+const IndentSelector = function (props: ISelectorProps) {
+  const { disabled } = props;
   const [selectedIndent, setSelectedIndent] = useState("");
   const { t } = useTranslation();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <IndentIncrease size={16} />
           <ChevronsUpDown size={16} />
         </Button>

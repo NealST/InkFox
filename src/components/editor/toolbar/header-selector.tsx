@@ -24,8 +24,8 @@ import {
 } from "../controllers/datasource-state";
 import getBlockIndexForContentDom from "../controllers/get-contentDom-blockIndex";
 import getUpdatedState from "../controllers/update-block";
-import { transformChildren2Html } from "../controllers/format";
 import type { IBlockStateItem } from "../content/blocks/types";
+import type { ISelectorProps } from './types';
 import styles from "./index.module.css";
 
 const headerOptions = [
@@ -59,7 +59,8 @@ const headerOptions = [
   },
 ];
 
-const HeaderSelector = function () {
+const HeaderSelector = function(props: ISelectorProps) {
+  const { disabled } = props;
   const [selectedHeaderId, setSelectedHeaderId] = useState("bodytext");
   const { dataSource, setDataSource } = useContentState(
     (state: IContentState) => state
@@ -101,7 +102,7 @@ const HeaderSelector = function () {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           {t(selectedHeaderId)}
           <ChevronsUpDown size={16} />
         </Button>

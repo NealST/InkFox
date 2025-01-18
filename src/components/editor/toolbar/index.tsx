@@ -29,17 +29,19 @@ import {
   useContentState,
   type IContentState,
 } from "../controllers/datasource-state";
+import { useToolbarDisabled, type IToolbarDisable } from '../controllers/toolbar-disable';
 import styles from "./index.module.css";
 
 const Toolbar = function () {
   const { undoArr, redoArr, setDataSource } = useContentState(
     (state: IContentState) => state
   );
+  const disabled = useToolbarDisabled((state: IToolbarDisable) => state.disabled);
 
   return (
     <div className={styles.toolbar}>
       <div className={cn(styles.tool_group, styles.tool_plus)}>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button disabled={disabled} className={styles.tool_button} variant="ghost">
           <SquarePlus size={16} style={{ color: "var(--theme-color)" }} />
         </Button>
       </div>
@@ -47,7 +49,7 @@ const Toolbar = function () {
         <Button
           className={styles.tool_button}
           onClick={() => setDataSource([], true)}
-          disabled={undoArr.length === 1}
+          disabled={disabled || undoArr.length === 1}
           variant="ghost"
         >
           <Undo2 size={16} />
@@ -55,61 +57,61 @@ const Toolbar = function () {
         <Button
           className={styles.tool_button}
           onClick={() => setDataSource([], false, true)}
-          disabled={redoArr.length === 0}
+          disabled={disabled || redoArr.length === 0}
           variant="ghost"
         >
           <Redo2 size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <PaintRoller size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <Eraser size={16} />
         </Button>
       </div>
       <div className={cn(styles.tool_group, styles.tool_edit)}>
-        <HeaderSelector />
-        <FontsizeSelector />
-        <Button className={styles.tool_button} variant="ghost">
+        <HeaderSelector disabled={disabled} />
+        <FontsizeSelector disabled={disabled} />
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <Bold size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <Italic size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <Strikethrough size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <Underline size={16} />
         </Button>
-        <TextTypeSelector />
+        <TextTypeSelector disabled={disabled} />
       </div>
       <div className={cn(styles.tool_group, styles.tool_colors)}>
-        <FontColorSelector />
-        <BgColorSelector />
+        <FontColorSelector disabled={disabled} />
+        <BgColorSelector disabled={disabled} />
       </div>
       <div className={cn(styles.tool_group, styles.tool_format)}>
-        <AlignmentSelector />
-        <Button className={styles.tool_button} variant="ghost">
+        <AlignmentSelector disabled={disabled} />
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <List size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <ListOrdered size={16} />
         </Button>
-        <IndentSelector />
-        <LineHeightSelector />
+        <IndentSelector disabled={disabled}/>
+        <LineHeightSelector disabled={disabled}/>
       </div>
       <div className={cn(styles.tool_group, styles.tool_others)}>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <SquareCheck size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <Link size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <Quote size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <Minus size={16} />
         </Button>
       </div>

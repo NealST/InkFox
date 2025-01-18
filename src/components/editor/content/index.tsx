@@ -5,6 +5,10 @@ import {
   type IContentState,
 } from "../controllers/datasource-state";
 import blockMap from "./blocks";
+import {
+  useToolbarDisabled,
+  type IToolbarDisable,
+} from "../controllers/toolbar-disable";
 import styles from "./index.module.css";
 import "github-markdown-css/github-markdown.css";
 
@@ -14,11 +18,21 @@ const Content = function () {
   const dataSource = useContentState(
     (state: IContentState) => state.dataSource
   );
+  const setToolbarDisabled = useToolbarDisabled(
+    (state: IToolbarDisable) => state.setDisabled
+  );
+
+  function handleFocus() {
+    setToolbarDisabled(false);
+  }
 
   return (
     <div className={styles.content}>
       <Title />
-      <div className={cn(styles.content_body, "markdown-body")}>
+      <div
+        className={cn(styles.content_body, "markdown-body")}
+        onFocus={handleFocus}
+      >
         {dataSource.map((item, index) => {
           const { name, id } = item;
           const Com = blockMap[name as BlockKey];

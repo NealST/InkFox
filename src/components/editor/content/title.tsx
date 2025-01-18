@@ -6,6 +6,10 @@ import {
   useSelectedArticle,
   type IArticleState,
 } from "@/components/articles/controllers/selected-article";
+import {
+  useToolbarDisabled,
+  type IToolbarDisable,
+} from "../controllers/toolbar-disable";
 import styles from "./index.module.css";
 
 export interface ITitleState {
@@ -25,6 +29,9 @@ const Title = function () {
   const selectedArticleName = useSelectedArticle(
     (state: IArticleState) => state.name
   );
+  const setToolbarDisabled = useToolbarDisabled(
+    (state: IToolbarDisable) => state.setDisabled
+  );
   const { title, setTitle } = useTitle((state: ITitleState) => state);
 
   useEffect(() => {
@@ -35,6 +42,11 @@ const Title = function () {
     setTitle(e.target.value);
   }
 
+  function handleFocus() {
+    // disable the toolbar when title input get focus
+    setToolbarDisabled(true);
+  }
+
   return (
     <div className={styles.title}>
       <Input
@@ -43,6 +55,7 @@ const Title = function () {
         placeholder={t("untitled")}
         value={title}
         onChange={handleChange}
+        onFocus={handleFocus}
       />
     </div>
   );

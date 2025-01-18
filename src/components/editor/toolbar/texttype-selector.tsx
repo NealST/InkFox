@@ -15,6 +15,7 @@ import {
   CodeXml,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import type { ISelectorProps } from './types';
 import styles from "./index.module.css";
 
 const typeOptions = [
@@ -32,14 +33,15 @@ const typeOptions = [
   },
 ];
 
-const TextTypeSelector = function () {
+const TextTypeSelector = function (props: ISelectorProps) {
+  const { disabled } = props;
   const [selectedType, setSelectedType] = useState("");
   const { t } = useTranslation();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className={styles.tool_button} variant="ghost">
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <Type size={16} />
           <ChevronsUpDown size={16} />
         </Button>
