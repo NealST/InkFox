@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
 import type { ISelectorProps } from './types';
+import { getSelectionRange } from '../controllers/selection-range';
 import styles from './index.module.css';
 
 const sizeOptions = [
@@ -29,6 +30,12 @@ const sizeOptions = [
 const FontsizeSelector = function(props: ISelectorProps) {
   const { disabled } = props;
   const [selectedSize, setSelectedSize] = useState("12");
+
+  function handleChange(newValue: string) {
+    
+    setSelectedSize(newValue);
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -40,7 +47,7 @@ const FontsizeSelector = function(props: ISelectorProps) {
       <DropdownMenuContent className="w-30">
         <DropdownMenuRadioGroup
           value={selectedSize}
-          onValueChange={setSelectedSize}
+          onValueChange={handleChange}
         >
           {sizeOptions.map((item) => {
             return (

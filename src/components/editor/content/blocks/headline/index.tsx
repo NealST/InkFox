@@ -6,7 +6,10 @@ import {
   type IContentState,
 } from "../../../controllers/datasource-state";
 import getKeyboardKey from "../../../controllers/get-keyborad-key";
-import { createHeading, createParagraph } from "../../../controllers/create-block";
+import {
+  createHeading,
+  createParagraph,
+} from "../../../controllers/create-block";
 import cn from "classnames";
 import debounce from "@/utils/debounce";
 import styles from "./index.module.css";
@@ -112,15 +115,18 @@ const HeadLine = function (props: IBlockProps) {
   return (
     <Tag className={cn(styles.headline, "atx-heading")}>
       <span
-        className={cn(styles.headline_text, 'block-content')}
+        className={cn(
+          styles.headline_text,
+          "block-content",
+          `block-content-${blockIndex}`
+        )}
         ref={contentRef}
         contentEditable
         onInput={debounce(handleInput)}
         onKeyDown={handleKeydown}
-        dangerouslySetInnerHTML={{__html: text}}
+        dangerouslySetInnerHTML={{ __html: text }}
         data-blockindex={blockIndex}
-      >
-      </span>
+      ></span>
     </Tag>
   );
 };

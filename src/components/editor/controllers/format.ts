@@ -138,7 +138,7 @@ export const md2StateRules = {
 
 export type RuleKeys = keyof typeof md2StateRules;
 
-export const transfromChild2Html = function (child: IBlockStateItem) {
+export const transfromChild2Html = function(child: IBlockStateItem) {
   const { name, text = "", url = "" } = child;
   let retHtml = "";
   switch (name) {
@@ -175,7 +175,7 @@ export const transformChildren2Html = function(children: IBlockStateItem[]) {
     return "";
   }
   return children
-    .map((item) => {
+    .map((item, index) => {
       return transfromChild2Html(item);
     })
     .join("");
@@ -186,7 +186,7 @@ export type CursorInfo = {
   childOffset: number;
 };
 
-export const getNewChildren = function (
+export const getNewChildren = function(
   oldChildren: IBlockStateItem[],
   cursorInfo: CursorInfo,
   newState: IBlockStateItem

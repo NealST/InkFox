@@ -1,7 +1,7 @@
 // narrowing Note type to Element.
 import getTextContent from "./get-text-content";
 
-const getNodeOffsetInParagraph = function (
+const getNodeOffsetInParagraph = function(
   node: Node,
   paragraph: HTMLElement
 ): number {
@@ -22,7 +22,7 @@ const getNodeOffsetInParagraph = function (
     : offset + getNodeOffsetInParagraph(node.parentNode!, paragraph);
 };
 
-const getChildIndexInParagraph = function(node: Node, paragraph: HTMLElement): number {
+const getChildIndex = function(node: Node, paragraph: HTMLElement): number {
   if (node === paragraph) return 0;
   
   let index = 0;
@@ -40,4 +40,4 @@ const getChildIndexInParagraph = function(node: Node, paragraph: HTMLElement): n
   return index;
 }
 
-export default getChildIndexInParagraph;
+export default getChildIndex;

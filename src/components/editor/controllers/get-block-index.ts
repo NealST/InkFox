@@ -6,7 +6,7 @@ function isBlockContentDom(node: Node) {
   return isElement(node) && node.classList.contains('block-content');
 }
 
-const getBlockIndexForContentDom = function(node: Node):number {
+const getBlockIndex = function(node: Node):number {
   let curNode = node;
   if (isBlockContentDom(curNode)) {
     return Number((curNode as HTMLElement).dataset.blockindex);
@@ -18,4 +18,4 @@ const getBlockIndexForContentDom = function(node: Node):number {
   return Number((curNode as HTMLElement).dataset.blockindex);
 }
 
-export default getBlockIndexForContentDom;
+export default getBlockIndex;
