@@ -1,5 +1,3 @@
-
-
 export interface IBlockStateItem {
   name: string;
   meta?: any;

@@ -1,6 +1,9 @@
 // format markdown utils
 
 import type { IBlockStateItem } from "../content/blocks/types";
+import type { IRange } from './selection-range';
+import { useContentState, type IContentState } from './datasource-state';
+import { produce } from 'immer';
 
 const getStrongHtml = function (text: string) {
   return `<strong class="ink-content-item ink-strong">${text}</strong>`;
@@ -175,7 +178,7 @@ export const transformChildren2Html = function(children: IBlockStateItem[]) {
     return "";
   }
   return children
-    .map((item, index) => {
+    .map((item) => {
       return transfromChild2Html(item);
     })
     .join("");
@@ -220,3 +223,79 @@ export const getNewChildren = function(
   newChildren.splice(childIndex, 1, preAnchorState, newState, afterAnchorState);
   return newChildren;
 };
+
+export const formatTargetByRange = function(range: IRange, formatCb: (child: IBlockStateItem) => IBlockStateItem) {
+  const {
+    startBlockIndex,
+    startChildIndex,
+    startChildOffset,
+    endBlockIndex,
+    endChildIndex,
+    endChildOffset,
+    isCollapsed
+  } = range;
+  if (isCollapsed) {
+    return
+  }
+  const { dataSource, setDataSource } = useContentState((state: IContentState) => state);
+  const newDataSource = produce(dataSource, (draft) => {
+    const startBlock = dataSource[startBlockIndex];
+    const startChild = startBlock.children?.[startChildIndex];
+    const startChildText = startChild?.text;
+    // if format happens in the same block
+    if (startBlockIndex === endBlockIndex) {
+      if (startChildIndex === endChildIndex) {
+        if (startChildOffset === 0 && endChildOffset === startChildText?.length) {
+          // @ts-ignore
+          draft[startBlockIndex].children[startChildIndex] = formatCb(startChild);
+          return
+        }
+        if (startChildOffset === 0) {
+          draft[startBlockIndex].children?.splice(startChildIndex, 0, formatCb({
+            // @ts-ignore
+            name: startChild?.name,
+            text: startChildText?.slice(startChildOffset, endChildOffset)
+          }));
+          // @ts-ignore
+          draft[startBlockIndex].children[startChildIndex + 1] = {
+            // @ts-ignore
+            name: startChild?.name,
+            text: startChildText?.slice(endChildOffset)
+          }
+          return
+        }
+        if (endChildOffset === startChildText?.length) {
+          draft[startBlockIndex].children?.splice(startChildIndex + 1, 0, formatCb({
+            // @ts-ignore
+            name: startChild?.name,
+            text: startChildText?.slice(startChildOffset, endChildOffset)
+          }));
+          // @ts-ignore
+          draft[startBlockIndex].children[startChildIndex] = {
+            // @ts-ignore
+            name: startChild?.name,
+            text: startChildText?.slice(0, startChildOffset)
+          }
+          return
+        }
+        // @ts-ignore
+        draft[startBlockIndex].children[startChildIndex] = {
+          // @ts-ignore
+          name: startChild?.name,
+          text: startChildText?.slice(0, startChildOffset)
+        };
+        draft[startBlockIndex].children?.splice(startChildIndex + 1, 0, formatCb({
+          // @ts-ignore
+          name: startChild?.name,
+          text: startChildText?.slice(startChildOffset, endChildOffset)
+        }));
+        draft[startBlockIndex].children?.splice(startChildIndex + 2, 0, formatCb({
+          // @ts-ignore
+          name: startChild?.name,
+          text: startChildText?.slice(endChildOffset)
+        }));
+      }
+    }
+  });
+  setDataSource(newDataSource); 
+}

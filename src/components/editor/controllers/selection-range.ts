@@ -1,14 +1,21 @@
 // manage the state of selection range
 import getBlockIndex from "./get-block-index";
 import getChildIndex from "./get-child-index";
+import { create } from "zustand";
 
-interface IRange {
+export interface IRange {
   startBlockIndex: number;
   endBlockIndex: number;
   startChildIndex: number;
   endChildIndex: number;
   startChildOffset: number;
   endChildOffset: number;
+  isCollapsed: boolean;
+}
+
+export interface ISelectionRange {
+  range: IRange;
+  setRange: (newRange: IRange) => void;
 }
 
 const defaultRange = {
@@ -18,9 +25,10 @@ const defaultRange = {
   endChildIndex: 0,
   startChildOffset: 0,
   endChildOffset: 0,
+  isCollapsed: true,
 };
 
-export const getSelectionRange = function(): IRange {
+export const getSelectionRange = function (): IRange {
   const { anchorNode, anchorOffset, focusNode, focusOffset, isCollapsed } =
     document.getSelection() as Selection;
   if (!anchorNode) {
@@ -42,6 +50,7 @@ export const getSelectionRange = function(): IRange {
       endBlockIndex: startBlockIndex,
       endChildIndex: startChildIndex,
       endChildOffset: anchorOffset,
+      isCollapsed,
     };
   }
   const endBlockIndex = getBlockIndex(focusNode as Node);
@@ -56,5 +65,13 @@ export const getSelectionRange = function(): IRange {
     endBlockIndex: endBlockIndex,
     endChildIndex: endChildIndex,
     endChildOffset: focusOffset,
+    isCollapsed,
   };
 };
+
+export const useSelectionRange = create<ISelectionRange>((set) => ({
+  range: getSelectionRange(),
+  setRange: (newRange: IRange) => {
+    set({ range: newRange });
+  },
+}));

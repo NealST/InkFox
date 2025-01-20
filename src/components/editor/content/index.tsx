@@ -9,6 +9,11 @@ import {
   useToolbarDisabled,
   type IToolbarDisable,
 } from "../controllers/toolbar-disable";
+import {
+  useSelectionRange,
+  getSelectionRange,
+  type ISelectionRange,
+} from '../controllers/selection-range';
 import styles from "./index.module.css";
 import "github-markdown-css/github-markdown.css";
 
@@ -21,9 +26,14 @@ const Content = function () {
   const setToolbarDisabled = useToolbarDisabled(
     (state: IToolbarDisable) => state.setDisabled
   );
+  const setSelectionRange = useSelectionRange((state: ISelectionRange) => state.setRange);
 
   function handleFocus() {
     setToolbarDisabled(false);
+  }
+
+  function handleMouseUp() {
+    setSelectionRange(getSelectionRange());
   }
 
   return (
@@ -32,6 +42,7 @@ const Content = function () {
       <div
         className={cn(styles.content_body, "markdown-body")}
         onFocus={handleFocus}
+        onMouseUp={handleMouseUp}
       >
         {dataSource.map((item, index) => {
           const { name, id } = item;

@@ -1,4 +1,4 @@
-import { useRef, RefObject, MutableRefObject, KeyboardEvent } from "react";
+import { useRef, RefObject, KeyboardEvent } from "react";
 import cn from "classnames";
 import debounce from "@/utils/debounce";
 import type { IBlockProps, IBlockStateItem } from "../types";
@@ -9,14 +9,16 @@ import {
   md2StateRules,
   getNewChildren,
   type RuleKeys,
-  type CursorInfo,
 } from "../../../controllers/format";
 import {
   useContentState,
   type IContentState,
 } from "../../../controllers/datasource-state";
 import getKeyboardKey from "../../../controllers/get-keyborad-key";
-import { getSelectionRange } from '../../../controllers/selection-range';
+import {
+  useSelectionRange,
+  ISelectionRange,
+} from "../../../controllers/selection-range";
 import styles from "./index.module.css";
 
 const Paragraph = function (props: IBlockProps) {
@@ -27,10 +29,9 @@ const Paragraph = function (props: IBlockProps) {
   const { dataSource, setDataSource } = useContentState(
     (state: IContentState) => state
   );
-  const cursorRef: MutableRefObject<CursorInfo> = useRef({
-    childIndex: 0,
-    childOffset: 0
-  });
+  const selectionRange = useSelectionRange(
+    (state: ISelectionRange) => state.range
+  );
 
   function checkForUpdate(content: string | undefined) {
     if (!content) {
@@ -55,7 +56,10 @@ const Paragraph = function (props: IBlockProps) {
                   ...data,
                   children: getNewChildren(
                     children,
-                    cursorRef.current,
+                    {
+                      childIndex: selectionRange.startChildIndex,
+                      childOffset: selectionRange.startChildOffset,
+                    },
                     stateItem
                   ),
                 },
@@ -78,7 +82,8 @@ const Paragraph = function (props: IBlockProps) {
     const pressKey = getKeyboardKey(event);
     if (pressKey === "Enter") {
       event.preventDefault();
-      const { childIndex, childOffset } = cursorRef.current;
+      const { startChildIndex: childIndex, startChildOffset: childOffset } =
+        selectionRange;
       const childState = children[childIndex];
       const { text } = childState;
       if (childOffset === text?.length) {
@@ -158,14 +163,6 @@ const Paragraph = function (props: IBlockProps) {
     }
   }
 
-  function handleClick() {
-    const { startChildIndex, startChildOffset } = getSelectionRange();
-    cursorRef.current = {
-      childIndex: startChildIndex,
-      childOffset: startChildOffset
-    };
-  }
-
   return (
     <p className={cn(styles.paragraph, "paragraph")}>
       <span
@@ -179,7 +176,6 @@ const Paragraph = function (props: IBlockProps) {
         contentEditable
         onInput={debounce(handleInput)}
         onKeyDown={handleKeydown}
-        onClick={handleClick}
         dangerouslySetInnerHTML={{ __html: contentHtml }}
         data-blockindex={blockIndex}
       ></span>
