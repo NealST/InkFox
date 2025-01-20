@@ -1,9 +1,9 @@
 // format markdown utils
 
 import type { IBlockStateItem } from "../content/blocks/types";
-import type { IRange } from './selection-range';
-import { useContentState, type IContentState } from './datasource-state';
-import { produce } from 'immer';
+import type { IRange } from "./selection-range";
+import { useContentState, type IContentState } from "./datasource-state";
+import { produce } from "immer";
 
 const getStrongHtml = function (text: string) {
   return `<strong class="ink-content-item ink-strong">${text}</strong>`;
@@ -119,10 +119,10 @@ export const md2StateRules = {
     },
     toState(matches: RegExpMatchArray) {
       return {
-        name: 'underline',
+        name: "underline",
         text: matches[1],
       };
-    }
+    },
   },
   mark: {
     beginReg: /&lt;mark&gt;/,
@@ -132,16 +132,16 @@ export const md2StateRules = {
     },
     toState(matches: RegExpMatchArray) {
       return {
-        name: 'mark',
+        name: "mark",
         text: matches[1],
       };
-    }
-  }
+    },
+  },
 };
 
 export type RuleKeys = keyof typeof md2StateRules;
 
-export const transfromChild2Html = function(child: IBlockStateItem) {
+export const transfromChild2Html = function (child: IBlockStateItem) {
   const { name, text = "", url = "" } = child;
   let retHtml = "";
   switch (name) {
@@ -173,7 +173,7 @@ export const transfromChild2Html = function(child: IBlockStateItem) {
   return retHtml;
 };
 
-export const transformChildren2Html = function(children: IBlockStateItem[]) {
+export const transformChildren2Html = function (children: IBlockStateItem[]) {
   if (children.length === 0) {
     return "";
   }
@@ -182,14 +182,14 @@ export const transformChildren2Html = function(children: IBlockStateItem[]) {
       return transfromChild2Html(item);
     })
     .join("");
-}
+};
 
 export type CursorInfo = {
   childIndex: number;
   childOffset: number;
 };
 
-export const getNewChildren = function(
+export const getNewChildren = function (
   oldChildren: IBlockStateItem[],
   cursorInfo: CursorInfo,
   newState: IBlockStateItem
@@ -224,7 +224,10 @@ export const getNewChildren = function(
   return newChildren;
 };
 
-export const formatTargetByRange = function(range: IRange, formatCb: (child: IBlockStateItem) => IBlockStateItem) {
+export const formatTargetByRange = function (
+  range: IRange,
+  formatCb: (child: IBlockStateItem) => IBlockStateItem
+) {
   const {
     startBlockIndex,
     startChildIndex,
@@ -232,70 +235,284 @@ export const formatTargetByRange = function(range: IRange, formatCb: (child: IBl
     endBlockIndex,
     endChildIndex,
     endChildOffset,
-    isCollapsed
+    isCollapsed,
   } = range;
   if (isCollapsed) {
-    return
+    return;
   }
-  const { dataSource, setDataSource } = useContentState((state: IContentState) => state);
+  const { dataSource, setDataSource } = useContentState(
+    (state: IContentState) => state
+  );
   const newDataSource = produce(dataSource, (draft) => {
     const startBlock = dataSource[startBlockIndex];
     const startChild = startBlock.children?.[startChildIndex];
     const startChildText = startChild?.text;
+    const endBlock = dataSource[endBlockIndex];
+    const endChild = endBlock.children?.[endChildIndex];
+    const endChildText = endChild?.text;
+    const isStartAtBoundary =
+      startChildOffset === 0 || startChildOffset === startChildText?.length;
+    const isEndAtBoundary =
+      endChildOffset === 0 || endChildOffset === endChildText?.length;
     // if format happens in the same block
     if (startBlockIndex === endBlockIndex) {
       if (startChildIndex === endChildIndex) {
-        if (startChildOffset === 0 && endChildOffset === startChildText?.length) {
+        if (
+          startChildOffset === 0 &&
+          endChildOffset === startChildText?.length
+        ) {
           // @ts-ignore
-          draft[startBlockIndex].children[startChildIndex] = formatCb(startChild);
-          return
+          draft[startBlockIndex].children[startChildIndex] =
+            // @ts-ignore
+            formatCb(startChild);
+          return;
         }
         if (startChildOffset === 0) {
-          draft[startBlockIndex].children?.splice(startChildIndex, 0, formatCb({
-            // @ts-ignore
-            name: startChild?.name,
-            text: startChildText?.slice(startChildOffset, endChildOffset)
-          }));
           // @ts-ignore
-          draft[startBlockIndex].children[startChildIndex + 1] = {
+          draft[startBlockIndex].children[startChildIndex] = formatCb({
             // @ts-ignore
             name: startChild?.name,
-            text: startChildText?.slice(endChildOffset)
-          }
-          return
+            text: startChildText?.slice(startChildOffset, endChildOffset),
+          });
+          draft[startBlockIndex].children?.splice(startChildIndex + 1, 0, {
+            // @ts-ignore
+            name: startChild?.name,
+            text: startChildText?.slice(endChildOffset),
+          });
+          return;
         }
         if (endChildOffset === startChildText?.length) {
-          draft[startBlockIndex].children?.splice(startChildIndex + 1, 0, formatCb({
-            // @ts-ignore
-            name: startChild?.name,
-            text: startChildText?.slice(startChildOffset, endChildOffset)
-          }));
           // @ts-ignore
           draft[startBlockIndex].children[startChildIndex] = {
             // @ts-ignore
             name: startChild?.name,
-            text: startChildText?.slice(0, startChildOffset)
-          }
-          return
+            text: startChildText?.slice(0, startChildOffset),
+          };
+          draft[startBlockIndex].children?.splice(
+            startChildIndex + 1,
+            0,
+            formatCb({
+              // @ts-ignore
+              name: startChild?.name,
+              text: startChildText?.slice(startChildOffset, endChildOffset),
+            })
+          );
+          return;
         }
         // @ts-ignore
         draft[startBlockIndex].children[startChildIndex] = {
           // @ts-ignore
           name: startChild?.name,
-          text: startChildText?.slice(0, startChildOffset)
+          text: startChildText?.slice(0, startChildOffset),
         };
-        draft[startBlockIndex].children?.splice(startChildIndex + 1, 0, formatCb({
+        draft[startBlockIndex].children?.splice(
+          startChildIndex + 1,
+          0,
+          formatCb({
+            // @ts-ignore
+            name: startChild?.name,
+            text: startChildText?.slice(startChildOffset, endChildOffset),
+          })
+        );
+        draft[startBlockIndex].children?.splice(startChildIndex + 2, 0, {
           // @ts-ignore
           name: startChild?.name,
-          text: startChildText?.slice(startChildOffset, endChildOffset)
-        }));
-        draft[startBlockIndex].children?.splice(startChildIndex + 2, 0, formatCb({
+          text: startChildText?.slice(endChildOffset),
+        });
+        return;
+      }
+      if (isStartAtBoundary && isEndAtBoundary) {
+        const leftChildIndex =
+          startChildOffset === 0 ? startChildIndex : startChildIndex + 1;
+        const rightChildIndex =
+          endChildOffset === 0 ? endChildIndex - 1 : endChildIndex;
+        for (let i = leftChildIndex; i <= rightChildIndex; i++) {
+          // @ts-ignore
+          draft[startBlockIndex].children[i] = formatCb(
+            // @ts-ignore
+            dataSource[startBlockIndex].children[i]
+          );
+        }
+        return;
+      }
+      if (isStartAtBoundary) {
+        const leftChildIndex =
+          startChildOffset === 0 ? startChildIndex : startChildIndex + 1;
+        for (let i = leftChildIndex; i < endChildIndex; i++) {
+          // @ts-ignore
+          draft[startBlockIndex].children[i] = formatCb(
+            // @ts-ignore
+            dataSource[startBlockIndex].children[i]
+          );
+        }
+        // @ts-ignore
+        draft[startBlockIndex].children[endChildIndex] = formatCb({
+          // @ts-ignore
+          name: endChild?.name,
+          text: endChildText?.slice(0, endChildOffset),
+        });
+        draft[startBlockIndex].children?.splice(endChildIndex + 1, 0, {
+          // @ts-ignore
+          name: endChild?.name,
+          text: endChildText?.slice(endChildOffset),
+        });
+        return;
+      }
+      if (isEndAtBoundary) {
+        const rightChildIndex =
+          endChildOffset === 0 ? endChildIndex - 1 : endChildIndex;
+        for (let i = startChildIndex + 1; i <= rightChildIndex; i++) {
+          // @ts-ignore
+          draft[startBlockIndex].children[i] = formatCb(
+            // @ts-ignore
+            dataSource[startBlockIndex].children[i]
+          );
+        }
+        // @ts-ignore
+        draft[startBlockIndex].children[startChildIndex] = {
           // @ts-ignore
           name: startChild?.name,
-          text: startChildText?.slice(endChildOffset)
-        }));
+          text: startChildText?.slice(0, startChildOffset),
+        };
+        draft[startBlockIndex].children?.splice(
+          startChildIndex + 1,
+          0,
+          formatCb({
+            // @ts-ignore
+            name: startChild?.name,
+            text: startChildText?.slice(startChildOffset),
+          })
+        );
+        return;
+      }
+      if (endChildIndex - startChildIndex > 1) {
+        const leftChildIndex = startChildIndex + 1;
+        const rightChildIndex = endChildIndex - 1;
+        for (let i = leftChildIndex; i <= rightChildIndex; i++) {
+          // @ts-ignore
+          draft[startBlockIndex].children[i] = formatCb(
+            // @ts-ignore
+            dataSource[startBlockIndex].children[i]
+          );
+        }
+      }
+      // @ts-ignore
+      draft[startBlockIndex].children[startChildIndex] = {
+        // @ts-ignore
+        name: startChild?.name,
+        text: startChildText?.slice(0, startChildOffset),
+      };
+      draft[startBlockIndex].children?.splice(
+        startChildIndex + 1,
+        0,
+        formatCb({
+          // @ts-ignore
+          name: startChild?.name,
+          text: startChildText?.slice(startChildOffset),
+        })
+      );
+      // @ts-ignore
+      draft[startBlockIndex].children[endChildIndex + 1] = formatCb({
+        // @ts-ignore
+        name: endChild?.name,
+        text: endChildText?.slice(0, endChildOffset),
+      });
+      draft[startBlockIndex].children?.splice(endChildIndex + 2, 0, {
+        // @ts-ignore
+        name: endChild?.name,
+        text: endChildText?.slice(endChildOffset),
+      });
+      return;
+    }
+    if (endBlockIndex - startBlockIndex > 1) {
+      const leftBlockIndex = startBlockIndex + 1;
+      const rightBlockIndex = endBlockIndex - 1;
+      for (let i = leftBlockIndex; i <= rightBlockIndex; i++) {
+        const theBlock = dataSource[i];
+        if (!theBlock.children) {
+          continue;
+        }
+        for (let j = 0; j < theBlock.children.length; j++) {
+          // @ts-ignore
+          draft[i].children[j] = formatCb(dataSource[i].children[j]);
+        }
       }
     }
+    if (!startBlock.children && !endBlock.children) {
+      return;
+    }
+    const startChildrenLen = startBlock.children?.length;
+    const formatStartChildIndex = startChildIndex + 1;
+    // @ts-ignore
+    if (formatStartChildIndex <= startChildrenLen - 1) {
+      // @ts-ignore
+      for (let i = formatStartChildIndex; i < startChildrenLen; i++) {
+        // @ts-ignore
+        draft[startBlockIndex].children[i] = formatCb(
+          // @ts-ignore
+          dataSource[startBlockIndex].children[i]
+        );
+      }
+    }
+    if (startChildOffset === 0) {
+      // @ts-ignore
+      draft[startBlockIndex].children[startChildIndex] = formatCb(
+        // @ts-ignore
+        dataSource[startBlockIndex].children[startChildIndex]
+      );
+    }
+    // @ts-ignore
+    if (startChildOffset > 0 && startChildOffset < startChildText?.length) {
+      // @ts-ignore
+      draft[startBlockIndex].children[startChildIndex] = {
+        // @ts-ignore
+        name: startChild?.name,
+        text: startChildText?.slice(0, startChildOffset),
+      };
+      draft[startBlockIndex].children?.splice(
+        startChildIndex + 1,
+        0,
+        formatCb({
+          // @ts-ignore
+          name: startChild?.name,
+          text: startChildText?.slice(startChildOffset),
+        })
+      );
+    }
+
+    const formatEndChildIndex = endChildIndex - 1;
+    // @ts-ignore
+    if (formatEndChildIndex >= 0) {
+      // @ts-ignore
+      for (let i = 0; i <= formatEndChildIndex; i++) {
+        // @ts-ignore
+        draft[endBlockIndex].children[i] = formatCb(
+          // @ts-ignore
+          dataSource[endBlockIndex].children[i]
+        );
+      }
+    }
+    if (endChildOffset === endChildText?.length) {
+      // @ts-ignore
+      draft[endBlockIndex].children[endChildIndex] = formatCb(
+        // @ts-ignore
+        dataSource[endBlockIndex].children[endChildIndex]
+      );
+    }
+    // @ts-ignore
+    if (endChildOffset > 0 && endChildOffset < endChildText?.length) {
+      // @ts-ignore
+      draft[endBlockIndex].children[endChildIndex] = formatCb({
+        // @ts-ignore
+        name: endChild?.name,
+        text: endChildText?.slice(0, endChildOffset),
+      });
+      draft[endBlockIndex].children?.splice(endChildIndex + 1, 0, {
+        // @ts-ignore
+        name: endChild?.name,
+        text: endChildText?.slice(endChildOffset),
+      });
+    }
   });
-  setDataSource(newDataSource); 
-}
+  setDataSource(newDataSource);
+};
