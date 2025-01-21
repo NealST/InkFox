@@ -244,10 +244,10 @@ export const formatTargetByRange = function (
     (state: IContentState) => state
   );
   const newDataSource = produce(dataSource, (draft) => {
-    const startBlock = dataSource[startBlockIndex];
+    const startBlock = draft[startBlockIndex];
     const startChild = startBlock.children?.[startChildIndex];
     const startChildText = startChild?.text;
-    const endBlock = dataSource[endBlockIndex];
+    const endBlock = draft[endBlockIndex];
     const endChild = endBlock.children?.[endChildIndex];
     const endChildText = endChild?.text;
     const isStartAtBoundary =
@@ -330,7 +330,7 @@ export const formatTargetByRange = function (
           // @ts-ignore
           draft[startBlockIndex].children[i] = formatCb(
             // @ts-ignore
-            dataSource[startBlockIndex].children[i]
+            draft[startBlockIndex].children[i]
           );
         }
         return;
@@ -342,7 +342,7 @@ export const formatTargetByRange = function (
           // @ts-ignore
           draft[startBlockIndex].children[i] = formatCb(
             // @ts-ignore
-            dataSource[startBlockIndex].children[i]
+            draft[startBlockIndex].children[i]
           );
         }
         // @ts-ignore
@@ -365,7 +365,7 @@ export const formatTargetByRange = function (
           // @ts-ignore
           draft[startBlockIndex].children[i] = formatCb(
             // @ts-ignore
-            dataSource[startBlockIndex].children[i]
+            draft[startBlockIndex].children[i]
           );
         }
         // @ts-ignore
@@ -392,7 +392,7 @@ export const formatTargetByRange = function (
           // @ts-ignore
           draft[startBlockIndex].children[i] = formatCb(
             // @ts-ignore
-            dataSource[startBlockIndex].children[i]
+            draft[startBlockIndex].children[i]
           );
         }
       }
@@ -428,13 +428,13 @@ export const formatTargetByRange = function (
       const leftBlockIndex = startBlockIndex + 1;
       const rightBlockIndex = endBlockIndex - 1;
       for (let i = leftBlockIndex; i <= rightBlockIndex; i++) {
-        const theBlock = dataSource[i];
+        const theBlock = draft[i];
         if (!theBlock.children) {
           continue;
         }
         for (let j = 0; j < theBlock.children.length; j++) {
           // @ts-ignore
-          draft[i].children[j] = formatCb(dataSource[i].children[j]);
+          draft[i].children[j] = formatCb(draft[i].children[j]);
         }
       }
     }
@@ -450,7 +450,7 @@ export const formatTargetByRange = function (
         // @ts-ignore
         draft[startBlockIndex].children[i] = formatCb(
           // @ts-ignore
-          dataSource[startBlockIndex].children[i]
+          draft[startBlockIndex].children[i]
         );
       }
     }
@@ -458,7 +458,7 @@ export const formatTargetByRange = function (
       // @ts-ignore
       draft[startBlockIndex].children[startChildIndex] = formatCb(
         // @ts-ignore
-        dataSource[startBlockIndex].children[startChildIndex]
+        draft[startBlockIndex].children[startChildIndex]
       );
     }
     // @ts-ignore
@@ -488,7 +488,7 @@ export const formatTargetByRange = function (
         // @ts-ignore
         draft[endBlockIndex].children[i] = formatCb(
           // @ts-ignore
-          dataSource[endBlockIndex].children[i]
+          draft[endBlockIndex].children[i]
         );
       }
     }
@@ -496,7 +496,7 @@ export const formatTargetByRange = function (
       // @ts-ignore
       draft[endBlockIndex].children[endChildIndex] = formatCb(
         // @ts-ignore
-        dataSource[endBlockIndex].children[endChildIndex]
+        draft[endBlockIndex].children[endChildIndex]
       );
     }
     // @ts-ignore

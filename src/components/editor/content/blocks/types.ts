@@ -4,7 +4,7 @@ export interface IBlockStateItem {
   text?: string;
   url?: string;
   id?: string;
-  styles?: string[];
+  style?: string;
   children?: IBlockStateItem[];
 }
 

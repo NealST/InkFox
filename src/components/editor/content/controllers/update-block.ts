@@ -1,4 +1,4 @@
-import type { IBlockStateItem } from "../content/blocks/types";
+import type { IBlockStateItem } from "../blocks/types";
 import { produce } from "immer";
 
 const getUpdatedState = function (
