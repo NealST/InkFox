@@ -10,9 +10,10 @@ import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
 import type { ISelectorProps } from './types';
 import { useSelectionRange, type ISelectionRange } from '../controllers/selection-range';
-import { formatTargetByRange } from '../controllers/format';
+import { getFormatedContentByRange } from '../controllers/format';
 import type { IBlockStateItem } from "../content/blocks/types";
 import { produce } from 'immer';
+import { useContentState, type IContentState } from "../controllers/datasource-state";
 import styles from './index.module.css';
 
 const sizeOptions = [
@@ -39,6 +40,7 @@ const processFontSizeStyle = function(style: string | undefined, newValue: strin
   if (modeReg.test(style)) {
     return style.replace(modeReg, newFontSizeStyle);
   }
+  console.log('result style', style + newFontSizeStyle);
   return style + newFontSizeStyle;
 }
 
@@ -46,14 +48,17 @@ const FontsizeSelector = function(props: ISelectorProps) {
   const { disabled } = props;
   const [selectedSize, setSelectedSize] = useState("12");
   const selectionRange = useSelectionRange((state: ISelectionRange) => state.range);
+  const { dataSource, setDataSource } = useContentState(
+    (state: IContentState) => state
+  );
 
   function handleChange(newValue: string) {
     setSelectedSize(newValue);
-    formatTargetByRange(selectionRange, (child: IBlockStateItem) => {
+    setDataSource(getFormatedContentByRange(dataSource, selectionRange, (child: IBlockStateItem) => {
       return produce(child, draft => {
         draft.style = processFontSizeStyle(draft.style, newValue);
       });
-    });
+    }));
   }
 
   return (

@@ -2,39 +2,38 @@
 
 import type { IBlockStateItem } from "../content/blocks/types";
 import type { IRange } from "./selection-range";
-import { useContentState, type IContentState } from "./datasource-state";
 import { produce } from "immer";
 
-const getStrongHtml = function (text: string) {
-  return `<strong class="ink-content-item ink-strong">${text}</strong>`;
+const getStrongHtml = function (text: string, style = '') {
+  return `<strong class="ink-content-item ink-strong" style="${style}">${text}</strong>`;
 };
 
-const getEmHtml = function (text: string) {
-  return `<em class="ink-content-item ink-em">${text}</em>`;
+const getEmHtml = function (text: string, style = '') {
+  return `<em class="ink-content-item ink-em" style="${style}">${text}</em>`;
 };
 
-const getInlineCodeHtml = function (text: string) {
-  return `<code class="ink-content-item ink-inline-code">${text}</code>`;
+const getInlineCodeHtml = function (text: string, style = '') {
+  return `<code class="ink-content-item ink-inline-code" style="${style}">${text}</code>`;
 };
 
 const getImageHtml = function (imgUrl: string) {
   return `<img class="ink-content-item ink-image" src="${imgUrl}"></img>`;
 };
 
-const getLinkHtml = function (label: string, url: string) {
-  return `<a class="ink-content-item ink-link" href="${url}">${label}</a>`;
+const getLinkHtml = function (label: string, url: string, style = '') {
+  return `<a class="ink-content-item ink-link" href="${url}" style="${style}">${label}</a>`;
 };
 
-const getPlainHtml = function (text: string) {
-  return `<span class="ink-content-item ink-plain">${text}</span>`;
+const getPlainHtml = function (text: string, style = '') {
+  return `<span class="ink-content-item ink-plain" style="${style}">${text}</span>`;
 };
 
-const getUnderlineHtml = function (text: string) {
-  return `<u class="ink-content-item ink-underline">${text}</u>`;
+const getUnderlineHtml = function (text: string, style = '') {
+  return `<u class="ink-content-item ink-underline" style="${style}">${text}</u>`;
 };
 
-const getMarkHtml = function (text: string) {
-  return `<mark class="ink-content-item ink-mark">${text}</mark>`;
+const getMarkHtml = function (text: string, style = '') {
+  return `<mark class="ink-content-item ink-mark" style="${style}">${text}</mark>`;
 };
 
 export const md2StateRules = {
@@ -142,29 +141,29 @@ export const md2StateRules = {
 export type RuleKeys = keyof typeof md2StateRules;
 
 export const transfromChild2Html = function (child: IBlockStateItem) {
-  const { name, text = "", url = "" } = child;
+  const { name, text = "", url = "", style } = child;
   let retHtml = "";
   switch (name) {
     case "strong":
-      retHtml = getStrongHtml(text);
+      retHtml = getStrongHtml(text, style);
       break;
     case "em":
-      retHtml = getEmHtml(text);
+      retHtml = getEmHtml(text, style);
       break;
     case "plain":
-      retHtml = getPlainHtml(text);
+      retHtml = getPlainHtml(text, style);
       break;
     case "underline":
-      retHtml = getUnderlineHtml(text);
+      retHtml = getUnderlineHtml(text, style);
       break;
     case "mark":
-      retHtml = getMarkHtml(text);
+      retHtml = getMarkHtml(text, style);
       break;
     case "link":
-      retHtml = getLinkHtml(text, url);
+      retHtml = getLinkHtml(text, url, style);
       break;
     case "code":
-      retHtml = getInlineCodeHtml(text);
+      retHtml = getInlineCodeHtml(text, style);
       break;
     case "image":
       retHtml = getImageHtml(url);
@@ -224,7 +223,8 @@ export const getNewChildren = function (
   return newChildren;
 };
 
-export const formatTargetByRange = function (
+export const getFormatedContentByRange = function (
+  dataSource: IBlockStateItem[],
   range: IRange,
   formatCb: (child: IBlockStateItem) => IBlockStateItem
 ) {
@@ -238,11 +238,8 @@ export const formatTargetByRange = function (
     isCollapsed,
   } = range;
   if (isCollapsed) {
-    return;
+    return dataSource;
   }
-  const { dataSource, setDataSource } = useContentState(
-    (state: IContentState) => state
-  );
   const newDataSource = produce(dataSource, (draft) => {
     const startBlock = draft[startBlockIndex];
     const startChild = startBlock.children?.[startChildIndex];
@@ -514,5 +511,5 @@ export const formatTargetByRange = function (
       });
     }
   });
-  setDataSource(newDataSource);
+  return newDataSource;
 };
