@@ -40,7 +40,6 @@ const processFontSizeStyle = function(style: string | undefined, newValue: strin
   if (modeReg.test(style)) {
     return style.replace(modeReg, newFontSizeStyle);
   }
-  console.log('result style', style + newFontSizeStyle);
   return style + newFontSizeStyle;
 }
 
