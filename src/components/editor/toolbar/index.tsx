@@ -15,6 +15,7 @@ import {
   Link,
   Quote,
   Minus,
+  CodeXml,
 } from "lucide-react";
 import HeaderSelector from "./header-selector";
 import FontsizeSelector from "./fontsize-selector";
@@ -32,7 +33,7 @@ import {
 import { useToolbarDisabled, type IToolbarDisable } from '../controllers/toolbar-disable';
 import styles from "./index.module.css";
 
-const Toolbar = function () {
+const Toolbar = function() {
   const { undoArr, redoArr, setDataSource } = useContentState(
     (state: IContentState) => state
   );
@@ -83,6 +84,9 @@ const Toolbar = function () {
         </Button>
         <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
           <Underline size={16} />
+        </Button>
+        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
+          <CodeXml size={16} />
         </Button>
         <TextTypeSelector disabled={disabled} />
       </div>

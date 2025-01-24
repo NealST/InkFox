@@ -12,7 +12,6 @@ import {
   Type,
   Superscript,
   Subscript,
-  CodeXml,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { ISelectorProps } from './types';
@@ -27,13 +26,9 @@ const typeOptions = [
     id: "subscript",
     Icon: Subscript,
   },
-  {
-    id: "inlinecode",
-    Icon: CodeXml,
-  },
 ];
 
-const TextTypeSelector = function (props: ISelectorProps) {
+const TextTypeSelector = function(props: ISelectorProps) {
   const { disabled } = props;
   const [selectedType, setSelectedType] = useState("");
   const { t } = useTranslation();
