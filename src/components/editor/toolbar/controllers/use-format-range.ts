@@ -24,17 +24,31 @@ export const useFormatRange = function () {
   };
 };
 
+export const processStyle = function (
+  oldStyle: string,
+  newStyleItem: string,
+  modeReg: RegExp
+) {
+  if (!oldStyle) {
+    return newStyleItem;
+  }
+  if (modeReg.test(oldStyle)) {
+    return oldStyle.replace(modeReg, newStyleItem);
+  }
+  return oldStyle + newStyleItem;
+};
+
 export const formatBold = function (child: IBlockStateItem) {
   return {
     ...child,
-    name: "strong",
+    style: processStyle(child.style || '', `font-weight:600;`, /font-weight:(.*?);/)
   };
 };
 
 export const formatItalic = function (child: IBlockStateItem) {
   return {
     ...child,
-    name: "em",
+    style: processStyle(child.style || '', `font-style:italic;`, /font-style:(.*?);/)
   };
 };
 
@@ -45,16 +59,16 @@ export const formatStrikeThrough = function (child: IBlockStateItem) {
   };
 };
 
-export const formatUnderline = function(child: IBlockStateItem) {
+export const formatUnderline = function (child: IBlockStateItem) {
   return {
     ...child,
-    name: 'underline'
-  }
-}
+    name: "underline",
+  };
+};
 
-export const formatInlineCode = function(child: IBlockStateItem) {
+export const formatInlineCode = function (child: IBlockStateItem) {
   return {
     ...child,
-    name: 'code'
-  }
-}
+    name: "code",
+  };
+};

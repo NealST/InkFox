@@ -30,7 +30,14 @@ import {
   useContentState,
   type IContentState,
 } from "../controllers/datasource-state";
-import { useFormatRange } from "./controllers/use-format-range";
+import {
+  useFormatRange, 
+  formatBold,
+  formatInlineCode,
+  formatItalic,
+  formatStrikeThrough,
+  formatUnderline
+} from "./controllers/use-format-range";
 import { useToolbarDisabled, type IToolbarDisable } from '../controllers/toolbar-disable';
 import styles from "./index.module.css";
 
@@ -39,6 +46,7 @@ const Toolbar = function() {
     (state: IContentState) => state
   );
   const disabled = useToolbarDisabled((state: IToolbarDisable) => state.disabled);
+  const formatRange = useFormatRange();
 
   return (
     <div className={styles.toolbar}>
@@ -76,21 +84,42 @@ const Toolbar = function() {
         <FontsizeSelector disabled={disabled} />
         <Button
           className={styles.tool_button} 
-          variant="ghost" 
+          variant="ghost"
+          onClick={() => formatRange(formatBold)}
           disabled={disabled}
         >
           <Bold size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
+        <Button 
+          className={styles.tool_button} 
+          variant="ghost"
+          onClick={() => formatRange(formatItalic)}
+          disabled={disabled}
+        >
           <Italic size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
+        <Button
+          className={styles.tool_button} 
+          variant="ghost"
+          onClick={() => formatRange(formatStrikeThrough)}
+          disabled={disabled}
+        >
           <Strikethrough size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
+        <Button 
+          className={styles.tool_button} 
+          variant="ghost"
+          onClick={() => formatRange(formatUnderline)}
+          disabled={disabled}
+        >
           <Underline size={16} />
         </Button>
-        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
+        <Button 
+          className={styles.tool_button} 
+          variant="ghost"
+          onClick={() => formatRange(formatInlineCode)}
+          disabled={disabled}
+        >
           <CodeXml size={16} />
         </Button>
         <TextTypeSelector disabled={disabled} />
