@@ -1,6 +1,6 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 mod read_dir_recursive;
-use std::io;
+
 use std::path::Path;
 use read_dir_recursive::{DirectoryInfo, read_dir_recursive};
 
