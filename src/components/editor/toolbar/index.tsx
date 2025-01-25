@@ -30,6 +30,7 @@ import {
   useContentState,
   type IContentState,
 } from "../controllers/datasource-state";
+import { useFormatRange } from "./controllers/use-format-range";
 import { useToolbarDisabled, type IToolbarDisable } from '../controllers/toolbar-disable';
 import styles from "./index.module.css";
 
@@ -73,7 +74,11 @@ const Toolbar = function() {
       <div className={cn(styles.tool_group, styles.tool_edit)}>
         <HeaderSelector disabled={disabled} />
         <FontsizeSelector disabled={disabled} />
-        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
+        <Button
+          className={styles.tool_button} 
+          variant="ghost" 
+          disabled={disabled}
+        >
           <Bold size={16} />
         </Button>
         <Button className={styles.tool_button} variant="ghost" disabled={disabled}>

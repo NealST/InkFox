@@ -8,13 +8,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
-import type { ISelectorProps } from './types';
-import { useSelectionRange, type ISelectionRange } from '../controllers/selection-range';
-import { getFormatedContentByRange } from '../controllers/format';
+import type { ISelectorProps } from "./types";
 import type { IBlockStateItem } from "../content/blocks/types";
-import { produce } from 'immer';
-import { useContentState, type IContentState } from "../controllers/datasource-state";
-import styles from './index.module.css';
+import { useFormatRange } from "./controllers/use-format-range";
+import styles from "./index.module.css";
 
 const sizeOptions = [
   "12",
@@ -31,7 +28,10 @@ const sizeOptions = [
   "48",
 ];
 
-const processFontSizeStyle = function(style: string | undefined, newValue: string) {
+const processFontSizeStyle = function (
+  style: string | undefined,
+  newValue: string
+) {
   const newFontSizeStyle = `font-size:${newValue}px;`;
   if (!style) {
     return newFontSizeStyle;
@@ -41,29 +41,31 @@ const processFontSizeStyle = function(style: string | undefined, newValue: strin
     return style.replace(modeReg, newFontSizeStyle);
   }
   return style + newFontSizeStyle;
-}
+};
 
-const FontsizeSelector = function(props: ISelectorProps) {
+const FontsizeSelector = function (props: ISelectorProps) {
   const { disabled } = props;
   const [selectedSize, setSelectedSize] = useState("12");
-  const selectionRange = useSelectionRange((state: ISelectionRange) => state.range);
-  const { dataSource, setDataSource } = useContentState(
-    (state: IContentState) => state
-  );
+  const formatRange = useFormatRange();
 
   function handleChange(newValue: string) {
     setSelectedSize(newValue);
-    setDataSource(getFormatedContentByRange(dataSource, selectionRange, (child: IBlockStateItem) => {
-      return produce(child, draft => {
-        draft.style = processFontSizeStyle(draft.style, newValue);
-      });
-    }));
+    formatRange((child: IBlockStateItem) => {
+      return {
+        ...child,
+        style: processFontSizeStyle(child.style, newValue),
+      }
+    });
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className={styles.tool_button} variant="ghost" disabled={disabled}>
+        <Button
+          className={styles.tool_button}
+          variant="ghost"
+          disabled={disabled}
+        >
           {selectedSize}px
           <ChevronsUpDown size={16} />
         </Button>

@@ -4,15 +4,15 @@ import type { IBlockStateItem } from "../content/blocks/types";
 import type { IRange } from "./selection-range";
 import { produce } from "immer";
 
-const getStrongHtml = function (text: string, style = '') {
+const getStrongHtml = function (text: string, style = "") {
   return `<strong class="ink-content-item ink-strong" style="${style}">${text}</strong>`;
 };
 
-const getEmHtml = function (text: string, style = '') {
+const getEmHtml = function (text: string, style = "") {
   return `<em class="ink-content-item ink-em" style="${style}">${text}</em>`;
 };
 
-const getInlineCodeHtml = function (text: string, style = '') {
+const getInlineCodeHtml = function (text: string, style = "") {
   return `<code class="ink-content-item ink-inline-code" style="${style}">${text}</code>`;
 };
 
@@ -20,20 +20,24 @@ const getImageHtml = function (imgUrl: string) {
   return `<img class="ink-content-item ink-image" src="${imgUrl}"></img>`;
 };
 
-const getLinkHtml = function (label: string, url: string, style = '') {
+const getLinkHtml = function (label: string, url: string, style = "") {
   return `<a class="ink-content-item ink-link" href="${url}" style="${style}">${label}</a>`;
 };
 
-const getPlainHtml = function (text: string, style = '') {
+const getPlainHtml = function (text: string, style = "") {
   return `<span class="ink-content-item ink-plain" style="${style}">${text}</span>`;
 };
 
-const getUnderlineHtml = function (text: string, style = '') {
+const getUnderlineHtml = function (text: string, style = "") {
   return `<u class="ink-content-item ink-underline" style="${style}">${text}</u>`;
 };
 
-const getMarkHtml = function (text: string, style = '') {
+const getMarkHtml = function (text: string, style = "") {
   return `<mark class="ink-content-item ink-mark" style="${style}">${text}</mark>`;
+};
+
+const getDelHtml = function (text: string, style = "") {
+  return `<del class="ink-content-item ink-del" style="${style}">${text}</del>`;
 };
 
 export const md2StateRules = {
@@ -65,6 +69,21 @@ export const md2StateRules = {
       const theText = matches[2] || matches[3];
       return {
         name: "em",
+        text: theText.trim(),
+      };
+    },
+  },
+  strike_through: {
+    beginReg: /(~~)/,
+    reg: /(~~)(?=\S)([\s\S]*?[^\s\\])(~)\1(?!(~))/,
+    toHtml(matches: RegExpMatchArray) {
+      const theText = matches[2] || matches[3];
+      return getDelHtml(theText.trim());
+    },
+    toState(matches: RegExpMatchArray) {
+      const theText = matches[2] || matches[3];
+      return {
+        name: "del",
         text: theText.trim(),
       };
     },
@@ -140,36 +159,27 @@ export const md2StateRules = {
 
 export type RuleKeys = keyof typeof md2StateRules;
 
+const childName2HtmlMap: {
+  [key: string]: (text: string, style: string) => string;
+} = {
+  strong: (text: string, style: string) => getStrongHtml(text, style),
+  em: (text: string, style: string) => getEmHtml(text, style),
+  del: (text: string, style: string) => getDelHtml(text, style),
+  plain: (text: string, style: string) => getPlainHtml(text, style),
+  underline: (text: string, style: string) => getUnderlineHtml(text, style),
+  mark: (text: string, style: string) => getMarkHtml(text, style),
+  code: (text: string, style: string) => getInlineCodeHtml(text, style),
+};
+
 export const transfromChild2Html = function (child: IBlockStateItem) {
   const { name, text = "", url = "", style } = child;
-  let retHtml = "";
-  switch (name) {
-    case "strong":
-      retHtml = getStrongHtml(text, style);
-      break;
-    case "em":
-      retHtml = getEmHtml(text, style);
-      break;
-    case "plain":
-      retHtml = getPlainHtml(text, style);
-      break;
-    case "underline":
-      retHtml = getUnderlineHtml(text, style);
-      break;
-    case "mark":
-      retHtml = getMarkHtml(text, style);
-      break;
-    case "link":
-      retHtml = getLinkHtml(text, url, style);
-      break;
-    case "code":
-      retHtml = getInlineCodeHtml(text, style);
-      break;
-    case "image":
-      retHtml = getImageHtml(url);
-      break;
+  if (name === "image") {
+    return getImageHtml(url);
   }
-  return retHtml;
+  if (name === "link") {
+    return getLinkHtml(text, url, style);
+  }
+  return childName2HtmlMap[name](text, style || "");
 };
 
 export const transformChildren2Html = function (children: IBlockStateItem[]) {
