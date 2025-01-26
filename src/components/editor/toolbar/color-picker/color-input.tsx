@@ -6,6 +6,8 @@ import type { ValueType } from "./input";
 import { Color } from "@rc-component/color-picker";
 import { ColorFormat, getIntColorValue } from "./controller";
 import type { RGB, HSB } from "@rc-component/color-picker";
+import cn from 'classnames';
+import styles from './index.module.css';
 
 type ColorInputProps = {
   format: ColorFormat;
@@ -39,7 +41,7 @@ export default function ColorInput(props: ColorInputProps) {
 
   const renderHexInput = () => {
     return (
-      <div className="rcs-panel-input-type rcs-panel-input-hex">
+      <div className={cn(styles.rcs_panel_input_type, styles.rcs_panel_input_hex)}>
         <Input value={hexValue} prefix="#" onChange={handleHexChange} />
       </div>
     );
@@ -59,7 +61,7 @@ export default function ColorInput(props: ColorInputProps) {
 
   const renderRGBInput = () => {
     return (
-      <div className="rcs-panel-input-type rcs-panel-input-rgb">
+      <div className={cn(styles.rcs_panel_input_type, styles.rcs_panel_input_rgb)}>
         <InputNumber
           value={rgbValue?.r}
           min={0}
@@ -107,12 +109,12 @@ export default function ColorInput(props: ColorInputProps) {
 
   const renderHSBInput = () => {
     return (
-      <div className="rcs-panel-input-type rcs-panel-input-hsb">
+      <div className={cn(styles.rcs_panel_input_type, styles.rcs_panel_input_hsb)}>
         <InputNumber
           value={hsbValue?.h}
           min={0}
           max={360}
-          className="rc-input-number-affix-wrapper"
+          className={styles.rc_input_number_affix_wrapper}
           onChange={(v) => {
             handleHsbChange(v, "h");
           }}
@@ -142,7 +144,7 @@ export default function ColorInput(props: ColorInputProps) {
   const renderAlpha = () => {
     const alpha = value?.a || 1;
     return (
-      <div className="rcs-panel-input-alpha">
+      <div className={styles.rcs_panel_input_alpha}>
         <InputNumber
           suffix="%"
           style={{ width: 48 }}
@@ -168,9 +170,9 @@ export default function ColorInput(props: ColorInputProps) {
   }, [value]);
 
   return (
-    <div className="rcs-panel-input">
+    <div className={styles.rcs_panel_input}>
       <TypeSelect value={colorType} onChange={handleColorTypeChange} />
-      <div className="rcs-panel-input-types">
+      <div className={styles.rcs_panel_input_types}>
         {colorType === "HEX" && renderHexInput()}
         {colorType === "RGB" && renderRGBInput()}
         {colorType === "HSB" && renderHSBInput()}

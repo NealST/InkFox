@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import ColorPicker from "@rc-component/color-picker";
+import RcColorPicker from "@rc-component/color-picker";
 import { Color, getColorStringByFormat, hasValue } from "./controller";
 import type { ColorFormat } from "./controller";
 import ColorInput from "./color-input";
 import PresetColors from "./preset-colors";
+import styles from './index.module.css';
+import '@rc-component/color-picker/assets/index.css';
 
 export interface ComponentProps {
   format?: ColorFormat;
@@ -18,7 +20,7 @@ const handleColor = (c: string | Color) => {
   return c;
 };
 
-export default function Base(props: ComponentProps) {
+export default function ColorPicker(props: ComponentProps) {
   const { format = "rgb", value, onChange, panelRender } = props;
   const [color, setColor] = useState<Color>();
 
@@ -38,12 +40,12 @@ export default function Base(props: ComponentProps) {
   }, [value]);
 
   return (
-    <ColorPicker
+    <RcColorPicker
       value={color}
       onChange={handleChange}
       panelRender={(innerPanel: React.ReactElement) => {
         const panel = (
-          <div className="rcs-panel rcs">
+          <div className={styles.rcs_panel}>
             {innerPanel}
             <ColorInput format={format} value={color} onChange={handleChange} />
             <PresetColors value={value} onChange={handlePresetChange} />

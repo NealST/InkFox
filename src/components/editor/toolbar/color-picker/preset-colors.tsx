@@ -1,4 +1,5 @@
 import { Color } from './controller';
+import styles from './index.module.css';
 
 const colors = [
   '#9AC1F0', '#72FA93', '#A0E548', '#E45F2B', '#F6C445',
@@ -20,11 +21,11 @@ export default function PresetColors (props: PresetColorsProps) {
   const c = value ? new Color(value) : null;
 
   return (
-    <div className="rcs-preset-colors">
+    <div className={styles.rcs_preset_colors}>
       {
         presetColors.map((color: string) => (
           <div
-            className="rsc-preset-color"
+            className={styles.rsc_preset_color}
             style={{ 
               background: color,
               borderColor: color === c?.toHexString?.()?.toUpperCase?.() ? 'rgba(0,0,0,.25)' : 'transparent'

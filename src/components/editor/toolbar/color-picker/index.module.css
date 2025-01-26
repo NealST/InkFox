@@ -1,0 +1,103 @@
+.rcs_panel {
+  font-size: 12px;
+  color: var(--font-color);
+}
+
+.rcs_panel_input {
+  display: flex;
+  align-items: center;
+  flex-shrink: 1;
+}
+
+.rcs_panel_input_type {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  margin-left: 4px;
+  width: 100%;
+}
+
+.rc_input_number_affix_wrapper {
+  flex: 1;
+  margin-left: 2px;
+}
+
+.rcs_panel_input_type .rc-input-number {
+  flex: 1;
+  margin-left: 2px;
+}
+
+.rcs_panel_input_rgb {
+  margin-left: 0;
+  justify-content: space-around;
+}
+
+.rcs_panel_input_hsb {
+  margin-left: 0;
+  justify-content: space-around;
+}
+
+.rcs_panel_input_alpha {
+  display: flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+.rcs_panel_input_types {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.rcs_preset_colors {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  gap: 6px;
+}
+
+.rsc_preset_color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.rcs_panel_type_select {
+  position: relative;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.rcs_panel_type_select_trigger {
+  cursor: pointer;
+}
+
+.rcs_panel_type_select_item {
+  vertical-align: middle;
+}
+
+.rcs_panel_type_select_arrow {
+  margin-left: 2px;
+  user-select: none;
+  line-height: 1;
+}
+
+.rcs_panel_type_select_options {
+  position: absolute;
+  left: -6px;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  padding: 2px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+}
+
+.rcs_panel_type_select_item {
+  padding: 4px 20px;
+  cursor: pointer;
+}
