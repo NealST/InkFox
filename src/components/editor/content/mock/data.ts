@@ -69,4 +69,8 @@ export const defaultState = [
       },
     ],
   },
+  {
+    name: "quote",
+    text: "I am a quote"
+  },
 ];
