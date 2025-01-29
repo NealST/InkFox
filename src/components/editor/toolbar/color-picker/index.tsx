@@ -4,8 +4,8 @@ import { Color, getColorStringByFormat, hasValue } from "./controller";
 import type { ColorFormat } from "./controller";
 import ColorInput from "./color-input";
 import PresetColors from "./preset-colors";
-import styles from './index.module.css';
 import '@rc-component/color-picker/assets/index.css';
+import styles from './index.module.css';
 
 export interface ComponentProps {
   format?: ColorFormat;
@@ -46,9 +46,9 @@ export default function ColorPicker(props: ComponentProps) {
       panelRender={(innerPanel: React.ReactElement) => {
         const panel = (
           <div className={styles.rcs_panel}>
+            <PresetColors value={value} onChange={handlePresetChange} />
             {innerPanel}
             <ColorInput format={format} value={color} onChange={handleChange} />
-            <PresetColors value={value} onChange={handlePresetChange} />
           </div>
         );
         if (typeof panelRender === "function") {
