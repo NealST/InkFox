@@ -47,7 +47,7 @@ const Content = function () {
         {dataSource.map((item, index) => {
           const { name, id } = item;
           const Com = blockMap[name as BlockKey];
-          return <Com data={item} key={id} index={index} />;
+          return <Com data={item} key={id} blockIndex={index} />;
         })}
       </div>
     </div>

@@ -21,8 +21,12 @@ import {
 } from "../../../controllers/selection-range";
 import styles from "./index.module.css";
 
-const Paragraph = function (props: IBlockProps) {
-  const { data, index: blockIndex } = props;
+interface IParagraphProps extends IBlockProps {
+  paragraphIndex?: number;
+}
+
+const Paragraph = function (props: IParagraphProps) {
+  const { data, blockIndex, paragraphIndex } = props;
   const contentRef: RefObject<HTMLSpanElement> = useRef(null);
   const children = data.children || [];
   const contentHtml = transformChildren2Html(children);
@@ -32,6 +36,7 @@ const Paragraph = function (props: IBlockProps) {
   const selectionRange = useSelectionRange(
     (state: ISelectionRange) => state.range
   );
+  const isBlock = !paragraphIndex;
 
   function checkForUpdate(content: string | undefined) {
     if (!content) {
@@ -63,7 +68,8 @@ const Paragraph = function (props: IBlockProps) {
                     stateItem
                   ),
                 },
-                blockIndex
+                blockIndex,
+                paragraphIndex
               )
             );
           }
@@ -168,8 +174,8 @@ const Paragraph = function (props: IBlockProps) {
       <span
         className={cn(
           styles.paragraph_content,
-          "block-content",
-          `block-content-${blockIndex}`
+          'paragraph-content',
+          isBlock ? "block-content" : '',
         )}
         ref={contentRef}
         role="doc-part"
@@ -178,6 +184,7 @@ const Paragraph = function (props: IBlockProps) {
         onKeyDown={handleKeydown}
         dangerouslySetInnerHTML={{ __html: contentHtml }}
         data-blockindex={blockIndex}
+        data-paragraphindex={paragraphIndex}
       ></span>
     </p>
   );

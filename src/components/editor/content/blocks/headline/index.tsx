@@ -18,7 +18,7 @@ const prefixReg = /^(\#*)/;
 const modeReg = /^(\#+)(\s+)([^\#]*)/;
 
 const HeadLine = function (props: IBlockProps) {
-  const { index: blockIndex, data } = props;
+  const { blockIndex, data } = props;
   const contentRef: RefObject<HTMLSpanElement> = useRef(null);
   const { dataSource, setDataSource } = useContentState(
     (state: IContentState) => state

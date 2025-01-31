@@ -1,21 +1,21 @@
 import { useRef, RefObject } from "react";
 import cn from "classnames";
-import debounce from "@/utils/debounce";
 import getUpdatedState from "../../../controllers/update-block";
 import {
   useContentState,
   type IContentState,
 } from "../../../controllers/datasource-state";
-import type { IBlockProps } from "../types";
+import Paragraph from "../paragraph";
+import type { IBlockProps, IBlockStateItem } from "../types";
 import styles from "./index.module.css";
 
 const Quote = function (props: IBlockProps) {
-  const { index: blockIndex, data } = props;
+  const { blockIndex, data } = props;
   const contentRef: RefObject<HTMLSpanElement> = useRef(null);
   const { dataSource, setDataSource } = useContentState(
     (state: IContentState) => state
   );
-  const text = data.text || "";
+  const children = data.children || [];
 
   function handleInput() {
     const contentDom = contentRef.current;
@@ -41,19 +41,19 @@ const Quote = function (props: IBlockProps) {
 
   return (
     <blockquote className={styles.quote}>
-      <span
+      <div
         className={cn(
-          styles.quote_text,
+          styles.quote_content,
           "block-content",
-          `block-content-${blockIndex}`
         )}
-        ref={contentRef}
-        contentEditable
-        onInput={debounce(handleInput)}
-        onKeyDown={handleKeydown}
-        dangerouslySetInnerHTML={{ __html: text }}
         data-blockindex={blockIndex}
-      ></span>
+      >
+        {
+          children.length > 0 && children.map((child: IBlockStateItem, index: number) => {
+            return <Paragraph blockIndex={blockIndex} paragraphIndex={index} data={child} />
+          })
+        }
+      </div>
     </blockquote>
   );
 };

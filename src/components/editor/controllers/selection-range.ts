@@ -1,11 +1,12 @@
 // manage the state of selection range
-import getBlockIndex from "./get-block-index";
-import getChildIndex from "./get-child-index";
+import { getPositionInParagraph, type IPosition } from "./get-position-for-node";
 import { create } from "zustand";
 
 export interface IRange {
   startBlockIndex: number;
   endBlockIndex: number;
+  startParagraphIndex?: number;
+  endParagraphIndex?: number;
   startChildIndex: number;
   endChildIndex: number;
   startChildOffset: number;
@@ -34,36 +35,32 @@ export const getSelectionRange = function (): IRange {
   if (!anchorNode) {
     return defaultRange;
   }
-  const startBlockIndex = getBlockIndex(anchorNode);
-  const startContentDom = document.querySelector(
-    `.block-content-${startBlockIndex}`
-  );
-  const startChildIndex = getChildIndex(
-    anchorNode,
-    startContentDom as HTMLElement
-  );
+  const startNodePosition = getPositionInParagraph(anchorNode) as IPosition;
+  const startBlockIndex = startNodePosition.blockIndex;
+  const startChildIndex = startNodePosition.childIndex;
+  const startParagraphIndex = startNodePosition.paragraphIndex;
   if (isCollapsed) {
     return {
       startBlockIndex,
+      startParagraphIndex,
       startChildIndex,
       startChildOffset: anchorOffset,
       endBlockIndex: startBlockIndex,
+      endParagraphIndex: startParagraphIndex,
       endChildIndex: startChildIndex,
       endChildOffset: anchorOffset,
       isCollapsed,
     };
   }
-  const endBlockIndex = getBlockIndex(focusNode as Node);
-  const endChildIndex = getChildIndex(
-    focusNode as Node,
-    document.querySelector(`.block-content-${endBlockIndex}`) as HTMLElement
-  );
+  const endNodePosition = getPositionInParagraph(focusNode) as IPosition;
   return {
     startBlockIndex,
+    startParagraphIndex,
     startChildIndex,
     startChildOffset: anchorOffset,
-    endBlockIndex: endBlockIndex,
-    endChildIndex: endChildIndex,
+    endBlockIndex: endNodePosition.blockIndex,
+    endParagraphIndex: endNodePosition.paragraphIndex,
+    endChildIndex: endNodePosition.childIndex,
     endChildOffset: focusOffset,
     isCollapsed,
   };

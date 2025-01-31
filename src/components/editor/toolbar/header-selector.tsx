@@ -22,7 +22,7 @@ import {
   useContentState,
   type IContentState,
 } from "../controllers/datasource-state";
-import getBlockIndex from "../controllers/get-block-index";
+import { getBlockIndexForNode } from "../controllers/get-position-for-node";
 import getUpdatedState from "../controllers/update-block";
 import type { IBlockStateItem } from "../content/blocks/types";
 import type { ISelectorProps } from './types';
@@ -72,7 +72,7 @@ const HeaderSelector = function(props: ISelectorProps) {
     if (!anchorNode) {
       return;
     }
-    const anchorBlockIndex = getBlockIndex(anchorNode);
+    const anchorBlockIndex = getBlockIndexForNode(anchorNode);
     const anchorBlock = dataSource[anchorBlockIndex];
     const isBodyText = newHeaderId === "bodytext";
     const newBlockInfo: IBlockStateItem = {

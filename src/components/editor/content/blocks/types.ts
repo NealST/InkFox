@@ -9,6 +9,6 @@ export interface IBlockStateItem {
 }
 
 export interface IBlockProps {
-  index: number;
+  blockIndex: number;
   data: IBlockStateItem;
 }

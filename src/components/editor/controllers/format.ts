@@ -240,9 +240,11 @@ export const getFormatedContentByRange = function (
 ) {
   const {
     startBlockIndex,
+    startParagraphIndex,
     startChildIndex,
     startChildOffset,
     endBlockIndex,
+    endParagraphIndex,
     endChildIndex,
     endChildOffset,
     isCollapsed,
@@ -263,6 +265,26 @@ export const getFormatedContentByRange = function (
       endChildOffset === 0 || endChildOffset === endChildText?.length;
     // if format happens in the same block
     if (startBlockIndex === endBlockIndex) {
+      
+      // if paragraph index exist
+      if (startParagraphIndex !== undefined) {
+        const startParagraph = startBlock.children?.[startParagraphIndex];
+        const startChild = startParagraph?.children?.[startChildIndex];
+        const startChildText = startChild?.text;
+        // @ts-ignore
+        const endParagraph = endBlock.children?.[endParagraphIndex];
+        const endChild = endParagraph?.children?.[endChildIndex];
+        const endChildText = endChild?.text;
+        const isStartAtBoundary =
+          startChildOffset === 0 || startChildOffset === startChildText?.length;
+        const isEndAtBoundary =
+          endChildOffset === 0 || endChildOffset === endChildText?.length;
+        if (startParagraphIndex === endParagraphIndex) {
+
+        }
+      }
+      
+
       if (startChildIndex === endChildIndex) {
         if (
           startChildOffset === 0 &&

@@ -71,6 +71,16 @@ export const defaultState = [
   },
   {
     name: "quote",
-    text: "I am a quote"
+    children: [
+      {
+        name: 'paragraph',
+        children: [
+          {
+            name: 'plain',
+            text: 'I am a quote'
+          }
+        ]
+      }
+    ]
   },
 ];
