@@ -19,6 +19,7 @@ import {
   useSelectionRange,
   ISelectionRange,
 } from "../../../controllers/selection-range";
+import { produce } from 'immer';
 import styles from "./index.module.css";
 
 interface IParagraphProps extends IBlockProps {
@@ -36,7 +37,7 @@ const Paragraph = function (props: IParagraphProps) {
   const selectionRange = useSelectionRange(
     (state: ISelectionRange) => state.range
   );
-  const isBlock = !paragraphIndex;
+  const isBlock = paragraphIndex === undefined;
 
   function checkForUpdate(content: string | undefined) {
     if (!content) {
@@ -45,7 +46,7 @@ const Paragraph = function (props: IParagraphProps) {
     const ruleKeys: Array<RuleKeys> = Object.keys(
       md2StateRules
     ) as Array<RuleKeys>;
-    ruleKeys.some((item) => {
+    if (ruleKeys.some((item) => {
       const { beginReg, reg, toState } = md2StateRules[item];
       // if text matches the start rule, then end the execution.
       // in case that em is prior to strong when matching.
@@ -54,22 +55,29 @@ const Paragraph = function (props: IParagraphProps) {
           const matches = content.match(reg);
           if (matches) {
             const stateItem = toState(matches);
+            const newParagraphData = {
+              ...data,
+              children: getNewChildren(
+                children,
+                {
+                  childIndex: selectionRange.startChildIndex,
+                  childOffset: selectionRange.startChildOffset,
+                },
+                stateItem
+              ),
+            };
+            let newBlockData: IBlockStateItem = newParagraphData;
+            if (!isBlock) {
+              newBlockData = produce(dataSource[blockIndex], draft => {
+                // @ts-ignore
+                draft.children[paragraphIndex] = newParagraphData;
+              });
+            }
             setDataSource(
               getUpdatedState(
                 dataSource,
-                {
-                  ...data,
-                  children: getNewChildren(
-                    children,
-                    {
-                      childIndex: selectionRange.startChildIndex,
-                      childOffset: selectionRange.startChildOffset,
-                    },
-                    stateItem
-                  ),
-                },
+                newBlockData,
                 blockIndex,
-                paragraphIndex
               )
             );
           }
@@ -77,7 +85,11 @@ const Paragraph = function (props: IParagraphProps) {
         return true;
       }
       return false;
-    });
+    })) {
+      return
+    }
+    
+    // todo: update the paragraph content
   }
 
   function handleInput() {

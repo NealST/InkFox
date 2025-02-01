@@ -254,25 +254,20 @@ export const getFormatedContentByRange = function (
   }
   const newDataSource = produce(dataSource, (draft) => {
     const startBlock = draft[startBlockIndex];
-    const startChild = startBlock.children?.[startChildIndex];
-    const startChildText = startChild?.text;
     const endBlock = draft[endBlockIndex];
-    const endChild = endBlock.children?.[endChildIndex];
-    const endChildText = endChild?.text;
-    const isStartAtBoundary =
-      startChildOffset === 0 || startChildOffset === startChildText?.length;
-    const isEndAtBoundary =
-      endChildOffset === 0 || endChildOffset === endChildText?.length;
+    
     // if format happens in the same block
     if (startBlockIndex === endBlockIndex) {
       
       // if paragraph index exist
-      if (startParagraphIndex !== undefined) {
+      if (startParagraphIndex !== undefined && endParagraphIndex !== undefined) {
         const startParagraph = startBlock.children?.[startParagraphIndex];
+        const startParagraphChildren = startParagraph?.children;
         const startChild = startParagraph?.children?.[startChildIndex];
         const startChildText = startChild?.text;
         // @ts-ignore
         const endParagraph = endBlock.children?.[endParagraphIndex];
+        const endParagraphChildren = endParagraph?.children;
         const endChild = endParagraph?.children?.[endChildIndex];
         const endChildText = endChild?.text;
         const isStartAtBoundary =
@@ -280,10 +275,252 @@ export const getFormatedContentByRange = function (
         const isEndAtBoundary =
           endChildOffset === 0 || endChildOffset === endChildText?.length;
         if (startParagraphIndex === endParagraphIndex) {
-
+          if (startChildIndex === endChildIndex) {
+            if (
+              startChildOffset === 0 &&
+              endChildOffset === startChildText?.length
+            ) {
+              // @ts-ignore
+              draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] =
+                // @ts-ignore
+                formatCb(startChild);
+              return;
+            }
+            if (startChildOffset === 0) {
+              // @ts-ignore
+              draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = formatCb({
+                // @ts-ignore
+                ...startChild,
+                text: startChildText?.slice(startChildOffset, endChildOffset),
+              });
+              // @ts-ignore
+              draft[startBlockIndex].children[startParagraphIndex].children?.splice(startChildIndex + 1, 0, {
+                // @ts-ignore
+                ...startChild,
+                text: startChildText?.slice(endChildOffset),
+              });
+              return;
+            }
+            if (endChildOffset === startChildText?.length) {
+              // @ts-ignore
+              draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = {
+                ...startChild,
+                text: startChildText?.slice(0, startChildOffset),
+              };
+              // @ts-ignore
+              draft[startBlockIndex].children[startParagraphIndex].children?.splice(
+                startChildIndex + 1,
+                0,
+                formatCb({
+                  ...startChild,
+                  text: startChildText?.slice(startChildOffset, endChildOffset),
+                } as IBlockStateItem)
+              );
+              return;
+            }
+            // @ts-ignore
+            draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = {
+              ...startChild,
+              text: startChildText?.slice(0, startChildOffset),
+            };
+            // @ts-ignore
+            draft[startBlockIndex].children[startParagraphIndex].children?.splice(
+              startChildIndex + 1,
+              0,
+              formatCb({
+                ...startChild,
+                text: startChildText?.slice(startChildOffset, endChildOffset),
+              } as IBlockStateItem)
+            );
+            draft[startBlockIndex].children?.splice(startChildIndex + 2, 0, {
+              ...startChild,
+              text: startChildText?.slice(endChildOffset),
+            } as IBlockStateItem);
+            return;
+          }
+          if (isStartAtBoundary && isEndAtBoundary) {
+            const leftChildIndex =
+              startChildOffset === 0 ? startChildIndex : startChildIndex + 1;
+            const rightChildIndex =
+              endChildOffset === 0 ? endChildIndex - 1 : endChildIndex;
+            for (let i = leftChildIndex; i <= rightChildIndex; i++) {
+              // @ts-ignore
+              draft[startBlockIndex].children[startParagraphIndex].children[i] = formatCb(
+                // @ts-ignore
+                startParagraphChildren[i]
+              );
+            }
+            return;
+          }
+          if (isStartAtBoundary) {
+            const leftChildIndex =
+              startChildOffset === 0 ? startChildIndex : startChildIndex + 1;
+            for (let i = leftChildIndex; i < endChildIndex; i++) {
+              // @ts-ignore
+              draft[startBlockIndex].children[startParagraphIndex].children[i] = formatCb(
+                // @ts-ignore
+                startParagraphChildren[i]
+              );
+            }
+            // @ts-ignore
+            draft[startBlockIndex].children[startParagraphIndex].children[endChildIndex] = formatCb({
+              // @ts-ignore
+              ...endChild,
+              text: endChildText?.slice(0, endChildOffset),
+            });
+            // @ts-ignore
+            draft[startBlockIndex].children[startParagraphIndex].children?.splice(endChildIndex + 1, 0, {
+              // @ts-ignore
+              ...endChild,
+              text: endChildText?.slice(endChildOffset),
+            });
+            return;
+          }
+          if (isEndAtBoundary) {
+            const rightChildIndex =
+              endChildOffset === 0 ? endChildIndex - 1 : endChildIndex;
+            for (let i = startChildIndex + 1; i <= rightChildIndex; i++) {
+              // @ts-ignore
+              draft[startBlockIndex].children[startParagraphIndex].children[i] = formatCb(
+                // @ts-ignore
+                startParagraphChildren[i]
+              );
+            }
+            // @ts-ignore
+            draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = {
+              // @ts-ignore
+              ...startChild,
+              text: startChildText?.slice(0, startChildOffset),
+            };
+            // @ts-ignore
+            draft[startBlockIndex].children[startParagraphIndex].children?.splice(
+              startChildIndex + 1,
+              0,
+              formatCb({
+                ...startChild,
+                text: startChildText?.slice(startChildOffset),
+              } as IBlockStateItem)
+            );
+            return;
+          }
+          if (endChildIndex - startChildIndex > 1) {
+            const leftChildIndex = startChildIndex + 1;
+            const rightChildIndex = endChildIndex - 1;
+            for (let i = leftChildIndex; i <= rightChildIndex; i++) {
+              // @ts-ignore
+              draft[startBlockIndex].children[startParagraphIndex].children[i] = formatCb(
+                // @ts-ignore
+                startParagraphChildren[i]
+              );
+            }
+          }
+          // @ts-ignore
+          draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = {
+            // @ts-ignore
+            ...startChild,
+            text: startChildText?.slice(0, startChildOffset),
+          };
+          // @ts-ignore
+          draft[startBlockIndex].children[startParagraphIndex].children?.splice(
+            startChildIndex + 1,
+            0,
+            formatCb({
+              ...startChild,
+              text: startChildText?.slice(startChildOffset),
+            } as IBlockStateItem)
+          );
+          // @ts-ignore
+          draft[startBlockIndex].children[startParagraphIndex].children[endChildIndex + 1] = formatCb({
+            // @ts-ignore
+            ...endChild,
+            text: endChildText?.slice(0, endChildOffset),
+          });
+          // @ts-ignore
+          draft[startBlockIndex].children[startParagraphIndex].children?.splice(endChildIndex + 2, 0, {
+            // @ts-ignore
+            ...endChild,
+            text: endChildText?.slice(endChildOffset),
+          });
+          return;
         }
+        // @ts-ignore
+        for (let i = startChildIndex + 1; i < startParagraph?.children.length; i++) {
+          // @ts-ignore
+          draft[startBlockIndex].children[startParagraphIndex].children[i] = formatCb(
+            // @ts-ignore
+            startParagraphChildren[i]
+          );
+        }
+        if (startChildOffset === 0) {
+          // @ts-ignore
+          draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = formatCb(
+            // @ts-ignore
+            startParagraphChildren[startChildIndex]
+          );
+        } else if (startChildOffset !== startChildText?.length) {
+          // @ts-ignore
+          draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = {
+            // @ts-ignore
+            ...startChild,
+            text: startChildText?.slice(0, startChildOffset),
+          };
+          // @ts-ignore
+          draft[startBlockIndex].children[startParagraphIndex].children?.splice(
+            startChildIndex + 1,
+            0,
+            formatCb({
+              ...startChild,
+              text: startChildText?.slice(startChildOffset),
+            } as IBlockStateItem)
+          );
+        }
+        
+        // @ts-ignore
+        for (let i = 0; i < endChildIndex; i++) {
+          // @ts-ignore
+          draft[startBlockIndex].children[endParagraphIndex].children[i] = formatCb(
+            // @ts-ignore
+            endParagraphChildren[i]
+          );
+        }
+        if (endChildOffset === endChildText?.length) {
+          // @ts-ignore
+          draft[startBlockIndex].children[endParagraphIndex].children[endChildIndex] = formatCb(
+            // @ts-ignore
+            endParagraphChildren[endChildIndex]
+          );
+        } else if (endChildOffset !== 0) {
+          // @ts-ignore
+          draft[startBlockIndex].children[endParagraphIndex].children[endChildIndex] = formatCb({
+            // @ts-ignore
+            ...endChild,
+            text: endChildText?.slice(0, endChildOffset),
+          });
+          // @ts-ignore
+          draft[startBlockIndex].children[endParagraphIndex].children?.splice(endChildIndex + 1, 0, {
+            // @ts-ignore
+            ...endChild,
+            text: endChildText?.slice(endChildOffset),
+          });
+        }
+        if (endParagraphIndex - startParagraphIndex > 1) {
+          for (let i = startParagraphIndex + 1;i < endParagraphIndex; i++) {
+            // @ts-ignore
+            draft[startBlockIndex].children[i].children = startBlock.children[i].children?.map(child => formatCb(child));
+          }
+        }
+
+        return;
       }
       
+      const startChild = startBlock.children?.[startChildIndex];
+      const startChildText = startChild?.text;
+      const endChild = endBlock.children?.[endChildIndex];
+      const endChildText = endChild?.text;
+      const isStartAtBoundary =
+        startChildOffset === 0 || startChildOffset === startChildText?.length;
+      const isEndAtBoundary =
+        endChildOffset === 0 || endChildOffset === endChildText?.length;
 
       if (startChildIndex === endChildIndex) {
         if (
@@ -300,54 +537,50 @@ export const getFormatedContentByRange = function (
           // @ts-ignore
           draft[startBlockIndex].children[startChildIndex] = formatCb({
             // @ts-ignore
-            name: startChild?.name,
-            text: startChildText?.slice(startChildOffset, endChildOffset),
+            ...startChild,
+            text: startChildText?.slice(0, endChildOffset),
           });
           draft[startBlockIndex].children?.splice(startChildIndex + 1, 0, {
-            // @ts-ignore
-            name: startChild?.name,
+            ...startChild,
             text: startChildText?.slice(endChildOffset),
-          });
+          } as IBlockStateItem);
           return;
         }
         if (endChildOffset === startChildText?.length) {
           // @ts-ignore
           draft[startBlockIndex].children[startChildIndex] = {
             // @ts-ignore
-            name: startChild?.name,
+            ...startChild,
             text: startChildText?.slice(0, startChildOffset),
           };
           draft[startBlockIndex].children?.splice(
             startChildIndex + 1,
             0,
             formatCb({
-              // @ts-ignore
-              name: startChild?.name,
+              ...startChild,
               text: startChildText?.slice(startChildOffset, endChildOffset),
-            })
+            } as IBlockStateItem)
           );
           return;
         }
         // @ts-ignore
         draft[startBlockIndex].children[startChildIndex] = {
           // @ts-ignore
-          name: startChild?.name,
+          ...startChild,
           text: startChildText?.slice(0, startChildOffset),
         };
         draft[startBlockIndex].children?.splice(
           startChildIndex + 1,
           0,
           formatCb({
-            // @ts-ignore
-            name: startChild?.name,
+            ...startChild,
             text: startChildText?.slice(startChildOffset, endChildOffset),
-          })
+          } as IBlockStateItem)
         );
         draft[startBlockIndex].children?.splice(startChildIndex + 2, 0, {
-          // @ts-ignore
-          name: startChild?.name,
+          ...startChild,
           text: startChildText?.slice(endChildOffset),
-        });
+        } as IBlockStateItem);
         return;
       }
       if (isStartAtBoundary && isEndAtBoundary) {
@@ -359,7 +592,7 @@ export const getFormatedContentByRange = function (
           // @ts-ignore
           draft[startBlockIndex].children[i] = formatCb(
             // @ts-ignore
-            draft[startBlockIndex].children[i]
+            startBlock.children[i]
           );
         }
         return;
@@ -371,20 +604,20 @@ export const getFormatedContentByRange = function (
           // @ts-ignore
           draft[startBlockIndex].children[i] = formatCb(
             // @ts-ignore
-            draft[startBlockIndex].children[i]
+            startBlock.children[i]
           );
         }
         // @ts-ignore
         draft[startBlockIndex].children[endChildIndex] = formatCb({
           // @ts-ignore
-          name: endChild?.name,
+          ...endChild,
           text: endChildText?.slice(0, endChildOffset),
         });
         draft[startBlockIndex].children?.splice(endChildIndex + 1, 0, {
           // @ts-ignore
-          name: endChild?.name,
+          ...endChild,
           text: endChildText?.slice(endChildOffset),
-        });
+        } as IBlockStateItem);
         return;
       }
       if (isEndAtBoundary) {
@@ -394,13 +627,13 @@ export const getFormatedContentByRange = function (
           // @ts-ignore
           draft[startBlockIndex].children[i] = formatCb(
             // @ts-ignore
-            draft[startBlockIndex].children[i]
+            startBlock.children[i]
           );
         }
         // @ts-ignore
         draft[startBlockIndex].children[startChildIndex] = {
           // @ts-ignore
-          name: startChild?.name,
+          ...startChild,
           text: startChildText?.slice(0, startChildOffset),
         };
         draft[startBlockIndex].children?.splice(
@@ -408,9 +641,9 @@ export const getFormatedContentByRange = function (
           0,
           formatCb({
             // @ts-ignore
-            name: startChild?.name,
+            ...startChild,
             text: startChildText?.slice(startChildOffset),
-          })
+          } as IBlockStateItem)
         );
         return;
       }
@@ -421,38 +654,38 @@ export const getFormatedContentByRange = function (
           // @ts-ignore
           draft[startBlockIndex].children[i] = formatCb(
             // @ts-ignore
-            draft[startBlockIndex].children[i]
+            startBlock.children[i]
           );
         }
       }
       // @ts-ignore
       draft[startBlockIndex].children[startChildIndex] = {
         // @ts-ignore
-        name: startChild?.name,
+        ...startChild,
         text: startChildText?.slice(0, startChildOffset),
       };
       draft[startBlockIndex].children?.splice(
         startChildIndex + 1,
         0,
         formatCb({
-          // @ts-ignore
-          name: startChild?.name,
+          ...startChild,
           text: startChildText?.slice(startChildOffset),
-        })
+        } as IBlockStateItem)
       );
       // @ts-ignore
       draft[startBlockIndex].children[endChildIndex + 1] = formatCb({
         // @ts-ignore
-        name: endChild?.name,
+        ...endChild,
         text: endChildText?.slice(0, endChildOffset),
       });
       draft[startBlockIndex].children?.splice(endChildIndex + 2, 0, {
         // @ts-ignore
-        name: endChild?.name,
+        ...endChild,
         text: endChildText?.slice(endChildOffset),
-      });
+      } as IBlockStateItem);
       return;
     }
+
     if (endBlockIndex - startBlockIndex > 1) {
       const leftBlockIndex = startBlockIndex + 1;
       const rightBlockIndex = endBlockIndex - 1;
@@ -462,86 +695,203 @@ export const getFormatedContentByRange = function (
           continue;
         }
         for (let j = 0; j < theBlock.children.length; j++) {
-          // @ts-ignore
-          draft[i].children[j] = formatCb(draft[i].children[j]);
+          const blockChild = theBlock.children[j];
+          if (!blockChild.children) {
+            // @ts-ignore
+            draft[i].children[j] = formatCb(blockChild);
+          } else {
+            // @ts-ignore
+            draft[i].children[j].children = blockChild.children.map(child => formatCb(child));
+          }
         }
       }
     }
     if (!startBlock.children && !endBlock.children) {
       return;
     }
-    const startChildrenLen = startBlock.children?.length;
-    const formatStartChildIndex = startChildIndex + 1;
-    // @ts-ignore
-    if (formatStartChildIndex <= startChildrenLen - 1) {
-      // @ts-ignore
-      for (let i = formatStartChildIndex; i < startChildrenLen; i++) {
-        // @ts-ignore
-        draft[startBlockIndex].children[i] = formatCb(
-          // @ts-ignore
-          draft[startBlockIndex].children[i]
-        );
-      }
-    }
-    if (startChildOffset === 0) {
-      // @ts-ignore
-      draft[startBlockIndex].children[startChildIndex] = formatCb(
-        // @ts-ignore
-        draft[startBlockIndex].children[startChildIndex]
-      );
-    }
-    // @ts-ignore
-    if (startChildOffset > 0 && startChildOffset < startChildText?.length) {
-      // @ts-ignore
-      draft[startBlockIndex].children[startChildIndex] = {
-        // @ts-ignore
-        name: startChild?.name,
-        text: startChildText?.slice(0, startChildOffset),
-      };
-      draft[startBlockIndex].children?.splice(
-        startChildIndex + 1,
-        0,
-        formatCb({
-          // @ts-ignore
-          name: startChild?.name,
-          text: startChildText?.slice(startChildOffset),
-        })
-      );
-    }
 
-    const formatEndChildIndex = endChildIndex - 1;
-    // @ts-ignore
-    if (formatEndChildIndex >= 0) {
+    if (startParagraphIndex === undefined) {
+      const startChild = startBlock.children?.[startChildIndex];
+      const startChildText = startChild?.text;
+      const startChildrenLen = startBlock.children?.length;
+      const formatStartChildIndex = startChildIndex + 1;
       // @ts-ignore
-      for (let i = 0; i <= formatEndChildIndex; i++) {
+      if (formatStartChildIndex <= startChildrenLen - 1) {
         // @ts-ignore
-        draft[endBlockIndex].children[i] = formatCb(
+        for (let i = formatStartChildIndex; i < startChildrenLen; i++) {
           // @ts-ignore
-          draft[endBlockIndex].children[i]
+          draft[startBlockIndex].children[i] = formatCb(
+            // @ts-ignore
+            startBlock.children[i]
+          );
+        }
+      }
+      if (startChildOffset === 0) {
+        // @ts-ignore
+        draft[startBlockIndex].children[startChildIndex] = formatCb(
+          // @ts-ignore
+          startBlock.children[startChildIndex]
         );
       }
-    }
-    if (endChildOffset === endChildText?.length) {
       // @ts-ignore
-      draft[endBlockIndex].children[endChildIndex] = formatCb(
+      if (startChildOffset > 0 && startChildOffset < startChildText?.length) {
         // @ts-ignore
-        draft[endBlockIndex].children[endChildIndex]
-      );
-    }
-    // @ts-ignore
-    if (endChildOffset > 0 && endChildOffset < endChildText?.length) {
+        draft[startBlockIndex].children[startChildIndex] = {
+          // @ts-ignore
+          ...startChild,
+          text: startChildText?.slice(0, startChildOffset),
+        };
+        draft[startBlockIndex].children?.splice(
+          startChildIndex + 1,
+          0,
+          formatCb({
+            // @ts-ignore
+            ...startChild,
+            text: startChildText?.slice(startChildOffset),
+          } as IBlockStateItem)
+        );
+      }
+    } else {
       // @ts-ignore
-      draft[endBlockIndex].children[endChildIndex] = formatCb({
+      const startParagraphChildren = startBlock.children[startParagraphIndex].children;
+      const startChild = startParagraphChildren?.[startChildIndex];
+      const startChildText = startChild?.text;
+      const startChildrenLen = startParagraphChildren?.length;
+      const formatStartChildIndex = startChildIndex + 1;
+      // @ts-ignore
+      if (formatStartChildIndex <= startChildrenLen - 1) {
         // @ts-ignore
-        name: endChild?.name,
-        text: endChildText?.slice(0, endChildOffset),
-      });
-      draft[endBlockIndex].children?.splice(endChildIndex + 1, 0, {
+        for (let i = formatStartChildIndex; i < startChildrenLen; i++) {
+          // @ts-ignore
+          draft[startBlockIndex].children[startParagraphIndex].children[i] = formatCb(
+            // @ts-ignore
+            startParagraphChildren[i]
+          );
+        }
+      }
+      if (startChildOffset === 0) {
         // @ts-ignore
-        name: endChild?.name,
-        text: endChildText?.slice(endChildOffset),
-      });
+        draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = formatCb(
+          // @ts-ignore
+          startParagraphChildren[startChildIndex]
+        );
+      }
+      // @ts-ignore
+      if (startChildOffset > 0 && startChildOffset < startChildText?.length) {
+        // @ts-ignore
+        draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = {
+          // @ts-ignore
+          ...startChild,
+          text: startChildText?.slice(0, startChildOffset),
+        };
+        // @ts-ignore
+        draft[startBlockIndex].children[startParagraphIndex].children?.splice(
+          startChildIndex + 1,
+          0,
+          formatCb({
+            // @ts-ignore
+            ...startChild,
+            text: startChildText?.slice(startChildOffset),
+          } as IBlockStateItem)
+        );
+      }
+
+      // process those paragraphs after this paragraph in this block
+      // @ts-ignore
+      if (startParagraphIndex !== startBlock.children?.length - 1) {
+        // @ts-ignore
+        for (let i = startParagraphIndex + 1;i < startBlock.children?.length;i++) {
+          // @ts-ignore
+          draft[startBlockIndex].children[i].children = startBlock.children[i].children?.map(child => formatCb(child));
+        }
+      }
     }
+    
+    if (endParagraphIndex === undefined) {
+      const endChild = endBlock.children?.[endChildIndex];
+      const endChildText = endChild?.text;
+      const formatEndChildIndex = endChildIndex - 1;
+      // @ts-ignore
+      if (formatEndChildIndex >= 0) {
+        // @ts-ignore
+        for (let i = 0; i <= formatEndChildIndex; i++) {
+          // @ts-ignore
+          draft[endBlockIndex].children[i] = formatCb(
+            // @ts-ignore
+            endBlock.children[i]
+          );
+        }
+      }
+      if (endChildOffset === endChildText?.length) {
+        // @ts-ignore
+        draft[endBlockIndex].children[endChildIndex] = formatCb(
+          // @ts-ignore
+          endBlock.children[endChildIndex]
+        );
+      }
+      // @ts-ignore
+      if (endChildOffset > 0 && endChildOffset < endChildText?.length) {
+        // @ts-ignore
+        draft[endBlockIndex].children[endChildIndex] = formatCb({
+          // @ts-ignore
+          ...endChild,
+          text: endChildText?.slice(0, endChildOffset),
+        });
+        draft[endBlockIndex].children?.splice(endChildIndex + 1, 0, {
+          // @ts-ignore
+          ...endChild,
+          text: endChildText?.slice(endChildOffset),
+        } as IBlockStateItem);
+      }
+    } else {
+      // @ts-ignore
+      const endParagraphChildren = endBlock.children[endParagraphIndex].children;
+      const endChild = endParagraphChildren?.[endChildIndex];
+      const endChildText = endChild?.text;
+      const formatEndChildIndex = endChildIndex - 1;
+      // @ts-ignore
+      if (formatEndChildIndex >= 0) {
+        // @ts-ignore
+        for (let i = 0; i <= formatEndChildIndex; i++) {
+          // @ts-ignore
+          draft[endBlockIndex].children[endParagraphIndex].children[i] = formatCb(
+            // @ts-ignore
+            endParagraphChildren[i]
+          );
+        }
+      }
+      if (endChildOffset === endChildText?.length) {
+        // @ts-ignore
+        draft[endBlockIndex].children[endParagraphIndex].children[endChildIndex] = formatCb(
+          // @ts-ignore
+          endParagraphChildren[endChildIndex]
+        );
+      }
+      // @ts-ignore
+      if (endChildOffset > 0 && endChildOffset < endChildText?.length) {
+        // @ts-ignore
+        draft[endBlockIndex].children[endParagraphIndex].children[endChildIndex] = formatCb({
+          // @ts-ignore
+          ...endChild,
+          text: endChildText?.slice(0, endChildOffset),
+        });
+        // @ts-ignore
+        draft[endBlockIndex].children[endParagraphIndex].children?.splice(endChildIndex + 1, 0, {
+          // @ts-ignore
+          ...endChild,
+          text: endChildText?.slice(endChildOffset),
+        } as IBlockStateItem);
+      }
+
+      // process those paragraphs before this paragraph in this block
+      if (endParagraphIndex > 0) {
+        for (let i = 0;i < endParagraphIndex;i++) {
+          // @ts-ignore
+          draft[endBlockIndex].children[i].children = endBlock.children[i].children?.map(child => formatCb(child));
+        }
+      }
+    }
+    
   });
   return newDataSource;
 };

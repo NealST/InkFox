@@ -4,11 +4,11 @@ import { produce } from "immer";
 const getUpdatedState = function (
   curState: IBlockStateItem[],
   newBlock: IBlockStateItem,
-  index: number
+  blockIndex: number
 ) {
   return produce(curState, (draft) => {
-    draft[index] = {
-      ...draft[index],
+    draft[blockIndex] = {
+      ...draft[blockIndex],
       ...newBlock,
     };
   });

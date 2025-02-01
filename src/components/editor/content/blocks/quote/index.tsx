@@ -11,33 +11,7 @@ import styles from "./index.module.css";
 
 const Quote = function (props: IBlockProps) {
   const { blockIndex, data } = props;
-  const contentRef: RefObject<HTMLSpanElement> = useRef(null);
-  const { dataSource, setDataSource } = useContentState(
-    (state: IContentState) => state
-  );
   const children = data.children || [];
-
-  function handleInput() {
-    const contentDom = contentRef.current;
-    if (!contentDom) {
-      return;
-    }
-    const textContent = contentDom.textContent || "";
-    if (textContent !== text) {
-      setDataSource(
-        getUpdatedState(
-          dataSource,
-          {
-            name: "quote",
-            text: textContent || "",
-          },
-          blockIndex
-        )
-      );
-    }
-  }
-
-  function handleKeydown() {}
 
   return (
     <blockquote className={styles.quote}>
