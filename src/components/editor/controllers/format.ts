@@ -303,10 +303,7 @@ export const getFormatedContentByRange = function (
             }
             if (endChildOffset === startChildText?.length) {
               // @ts-ignore
-              draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = {
-                ...startChild,
-                text: startChildText?.slice(0, startChildOffset),
-              };
+              draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex].text = startChildText?.slice(0, startChildOffset);
               // @ts-ignore
               draft[startBlockIndex].children[startParagraphIndex].children?.splice(
                 startChildIndex + 1,
@@ -319,10 +316,7 @@ export const getFormatedContentByRange = function (
               return;
             }
             // @ts-ignore
-            draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = {
-              ...startChild,
-              text: startChildText?.slice(0, startChildOffset),
-            };
+            draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex].text = startChildText?.slice(0, startChildOffset);
             // @ts-ignore
             draft[startBlockIndex].children[startParagraphIndex].children?.splice(
               startChildIndex + 1,
@@ -387,11 +381,7 @@ export const getFormatedContentByRange = function (
               );
             }
             // @ts-ignore
-            draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = {
-              // @ts-ignore
-              ...startChild,
-              text: startChildText?.slice(0, startChildOffset),
-            };
+            draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex].text = startChildText?.slice(0, startChildOffset);
             // @ts-ignore
             draft[startBlockIndex].children[startParagraphIndex].children?.splice(
               startChildIndex + 1,
@@ -415,11 +405,7 @@ export const getFormatedContentByRange = function (
             }
           }
           // @ts-ignore
-          draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = {
-            // @ts-ignore
-            ...startChild,
-            text: startChildText?.slice(0, startChildOffset),
-          };
+          draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex].text = startChildText?.slice(0, startChildOffset);
           // @ts-ignore
           draft[startBlockIndex].children[startParagraphIndex].children?.splice(
             startChildIndex + 1,
@@ -459,11 +445,7 @@ export const getFormatedContentByRange = function (
           );
         } else if (startChildOffset !== startChildText?.length) {
           // @ts-ignore
-          draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = {
-            // @ts-ignore
-            ...startChild,
-            text: startChildText?.slice(0, startChildOffset),
-          };
+          draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex].text = startChildText?.slice(0, startChildOffset);
           // @ts-ignore
           draft[startBlockIndex].children[startParagraphIndex].children?.splice(
             startChildIndex + 1,
@@ -631,11 +613,7 @@ export const getFormatedContentByRange = function (
           );
         }
         // @ts-ignore
-        draft[startBlockIndex].children[startChildIndex] = {
-          // @ts-ignore
-          ...startChild,
-          text: startChildText?.slice(0, startChildOffset),
-        };
+        draft[startBlockIndex].children[startChildIndex].text = startChildText?.slice(0, startChildOffset);
         draft[startBlockIndex].children?.splice(
           startChildIndex + 1,
           0,
@@ -659,11 +637,7 @@ export const getFormatedContentByRange = function (
         }
       }
       // @ts-ignore
-      draft[startBlockIndex].children[startChildIndex] = {
-        // @ts-ignore
-        ...startChild,
-        text: startChildText?.slice(0, startChildOffset),
-      };
+      draft[startBlockIndex].children[startChildIndex].text = startChildText?.slice(0, startChildOffset);
       draft[startBlockIndex].children?.splice(
         startChildIndex + 1,
         0,
@@ -736,11 +710,7 @@ export const getFormatedContentByRange = function (
       // @ts-ignore
       if (startChildOffset > 0 && startChildOffset < startChildText?.length) {
         // @ts-ignore
-        draft[startBlockIndex].children[startChildIndex] = {
-          // @ts-ignore
-          ...startChild,
-          text: startChildText?.slice(0, startChildOffset),
-        };
+        draft[startBlockIndex].children[startChildIndex].text = startChildText?.slice(0, startChildOffset);
         draft[startBlockIndex].children?.splice(
           startChildIndex + 1,
           0,
@@ -779,11 +749,7 @@ export const getFormatedContentByRange = function (
       // @ts-ignore
       if (startChildOffset > 0 && startChildOffset < startChildText?.length) {
         // @ts-ignore
-        draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex] = {
-          // @ts-ignore
-          ...startChild,
-          text: startChildText?.slice(0, startChildOffset),
-        };
+        draft[startBlockIndex].children[startParagraphIndex].children[startChildIndex].text = startChildText?.slice(0, startChildOffset);
         // @ts-ignore
         draft[startBlockIndex].children[startParagraphIndex].children?.splice(
           startChildIndex + 1,

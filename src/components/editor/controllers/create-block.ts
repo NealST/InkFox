@@ -3,7 +3,7 @@ import type { IBlockStateItem } from "../content/blocks/types";
 import { uid } from 'uid';
 import { produce } from 'immer';
 
-const getCreatedState = function(curState: IBlockStateItem[], newBlock: IBlockStateItem, index: number) {
+export const getCreatedState = function(curState: IBlockStateItem[], newBlock: IBlockStateItem, index: number) {
   return produce(curState, (draft) => {
     draft.splice(index, 0, newBlock);
   });

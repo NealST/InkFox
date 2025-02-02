@@ -1,10 +1,4 @@
-import { useRef, RefObject } from "react";
 import cn from "classnames";
-import getUpdatedState from "../../../controllers/update-block";
-import {
-  useContentState,
-  type IContentState,
-} from "../../../controllers/datasource-state";
 import Paragraph from "../paragraph";
 import type { IBlockProps, IBlockStateItem } from "../types";
 import styles from "./index.module.css";
@@ -24,7 +18,7 @@ const Quote = function (props: IBlockProps) {
       >
         {
           children.length > 0 && children.map((child: IBlockStateItem, index: number) => {
-            return <Paragraph blockIndex={blockIndex} paragraphIndex={index} data={child} />
+            return <Paragraph key={index} blockIndex={blockIndex} paragraphIndex={index} data={child} />
           })
         }
       </div>
