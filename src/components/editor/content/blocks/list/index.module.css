@@ -1,0 +1,7 @@
+.list_ol {
+  list-style: decimal outside none;
+}
+
+.list_ul {
+  list-style: disc outside none;
+}

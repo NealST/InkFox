@@ -83,4 +83,38 @@ export const defaultState = [
       }
     ]
   },
+  {
+    name: "list",
+    meta: {
+      type: 'ul'
+    },
+    children: [
+      {
+        name: 'paragraph',
+        children: [
+          {
+            name: 'plain',
+            text: 'I am a ul list item'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    name: "list",
+    meta: {
+      type: 'ol'
+    },
+    children: [
+      {
+        name: 'paragraph',
+        children: [
+          {
+            name: 'plain',
+            text: 'I am a ol list item'
+          }
+        ]
+      }
+    ]
+  },
 ];

@@ -14,11 +14,11 @@ function isBlockContentDom(node: Node | null) {
   return isElement(node) && node.classList.contains("block-content");
 }
 
-function isParagraphContentDom(node: Node | null) {
+function isContentDom(node: Node | null) {
   if (!node) {
     return false;
   }
-  return isElement(node) && node.classList.contains("paragraph-content");
+  return isElement(node) && ['paragraph-content', 'list-item-content'].some(item => node.classList.contains(item));
 }
 
 export const getBlockIndexForNode = function (node: Node): number {
@@ -48,19 +48,19 @@ export const getPositionInParagraph = function (
   const setPositionForContentDom = function (theNode: Node) {
     const nodeData = (theNode as HTMLElement).dataset;
     const paragraphIndex = nodeData.paragraphindex;
-    if (paragraphIndex) {
+    if (paragraphIndex !== undefined) {
       retPosition.paragraphIndex = Number(paragraphIndex);
     }
     retPosition.blockIndex = Number(nodeData.blockindex);
   };
 
-  if (isParagraphContentDom(curNode)) {
+  if (isContentDom(curNode)) {
     setPositionForContentDom(curNode);
     return retPosition;
   }
 
   let childIndex = 0;
-  while (!isParagraphContentDom(curNode.parentNode) && curNode.parentNode) {
+  while (!isContentDom(curNode.parentNode) && curNode.parentNode) {
     curNode = curNode.parentNode as Node;
   }
   let preSibling: Node | null = node;

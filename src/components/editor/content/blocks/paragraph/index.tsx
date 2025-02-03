@@ -209,6 +209,9 @@ const Paragraph = function (props: IParagraphProps) {
         ).concat(children.slice(childIndex + 1))
       );
     }
+    if (pressKey === "Delete") {
+      // todo: process the delete logic
+    }
   }
 
   return (
