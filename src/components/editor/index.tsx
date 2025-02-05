@@ -2,7 +2,7 @@ import Header from './header';
 // import Toolbar from './toolbar';
 import Content from './content';
 import Outline from './outline';
-import Plate from './plate';
+import MainEditor from './main-editor';
 import styles from './index.module.css';
 
 const Editor = function() {
@@ -13,7 +13,7 @@ const Editor = function() {
       <div className={styles.editor_main}>
         {/* <Content /> */}
         {/* <Outline /> */}
-        <Plate />
+        <MainEditor />
       </div>
     </div>
   )

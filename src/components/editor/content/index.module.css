@@ -11,7 +11,7 @@
   resize: none;
   line-height: 1.389 !important;
   font-variant-ligatures: none;
-  color: var(--font-color);
+  color: hsl(var(--foreground));
   font-weight: 700;
   font-size: 36px !important;
   border-radius: 0;

@@ -12,7 +12,7 @@
 }
 
 .header_label {
-  color: var(--font-color);
+  color: hsl(var(--foreground));
   font-size: 14px;
   display: flex;
   flex-direction: row;
@@ -45,11 +45,11 @@
 }
 
 .item_input {
-  color: var(--font-color);
+  color: hsl(var(--foreground));
   height: 24px;
 }
 
 .item_name {
   font-size: 16px;
-  color: var(--font-color);
+  color: hsl(var(--foreground));
 }

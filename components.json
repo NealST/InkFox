@@ -22,7 +22,7 @@
     "plate": {
       "style": "default",
       "tailwind": {
-        "baseColor": "slate"
+        "baseColor": "zinc"
       },
       "aliases": {
         "ui": "@/components/plate-ui"

@@ -4,7 +4,7 @@
   padding-top: 10px;
   padding-left: 10px;
   padding-right: 10px;
-  background-color: var(--nav-bg-color);
+  background-color: hsl(var(--background));
 }
 
 .articles_header {
@@ -12,8 +12,8 @@
   justify-content: space-between;
   align-items: center;
   height: 60px;
-  border-bottom: 1px solid var(--border-color);
-  color: var(--font-color);
+  border-bottom: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
   margin-bottom: 10px;
 }
 
@@ -27,9 +27,9 @@
 }
 
 .articles_add_hover {
-  background-color: var(--pop-bg-color);
+  background-color: hsl(var(--popover));
   box-shadow: 0 8px 16px 4px rgba(0, 0, 0, .04);
-  border: 1px solid var(--pop-border-color);
+  border: 1px solid hsl(var(--border));
   border-radius: 8px;
 }
 
@@ -55,7 +55,7 @@
 .articles_home {
   width: 100%;
   margin-bottom: 16px;
-  color: var(--font-color);
+  color: hsl(var(--foreground));
   display: flex;
   flex-direction: row;
 }
@@ -68,7 +68,7 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
-  color: var(--font-color);
+  color: hsl(var(--foreground));
 }
 
 .dir_left {
@@ -98,7 +98,7 @@
 .file_left {
   display: flex;
   flex-direction: row;
-  color: var(--font-color);
+  color: hsl(var(--foreground));
 }
 
 .group_header {
@@ -109,11 +109,11 @@
 .group_header_label {
     display: flex;
     flex-direction: row;
-    color: var(--font-color); 
+    color: hsl(var(--foreground)); 
 }
 
 .group_header_action {
     display: flex;
     flex-direction: row;  
-    color: var(--font-color);
+    color: hsl(var(--foreground));
 }

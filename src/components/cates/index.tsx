@@ -106,7 +106,7 @@ const Cates = function () {
               >
                 <FolderIcon
                   style={{
-                    color: "var(--font-color)",
+                    color: "hsl(var(--foreground))",
                     marginRight: "8px",
                   }}
                 />
