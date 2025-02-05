@@ -1,0 +1,15 @@
+.side_bar {
+  display: flex;
+  flex-direction: row;
+}
+
+.bar_cates {
+  width: 240px;
+  height: 100vh;
+  border-right: 1px solid hsl(var(--border));
+}
+
+.bar_articles {
+  width: 240px;
+  height: 100vh;
+}

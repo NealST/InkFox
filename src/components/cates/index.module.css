@@ -1,5 +1,9 @@
 .cates {
   width: 100%;
+  height: 100vh;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .cates_header {
@@ -7,8 +11,10 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding-left: 10px;
-  padding-right: 10px;
+  height: 40px;
+  border-bottom: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+  margin-bottom: 10px;
 }
 
 .header_label {
@@ -37,15 +43,15 @@
 }
 
 .cate_item:hover {
-  background-color: var(--item-select-bg-color);
+  background-color: hsl(var(--accent));
 }
 
 .cate_item_selected {
-  background-color: var(--item-select-bg-color);
+  background-color: hsl(var(--accent));;
 }
 
 .item_input {
-  color: hsl(var(--foreground));
+  color: hsl(var(--input));
   height: 24px;
 }
 
