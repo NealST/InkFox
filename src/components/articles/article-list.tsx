@@ -49,7 +49,7 @@ const ArticleList = function (props: IProps) {
     const articleName = newArticleNameRef.current || t("newgroup");
     createGroup(parentPath, articleName)
       .then(() => {
-        const newArticles = immerArticles(globalDataSource, `${parentKey}[0]`, 'replace', {
+        const newArticles = immerArticles(globalDataSource, `${parentKey}[0]`, 'addChild', {
           type: "group",
           name: articleName,
           id: uid(),

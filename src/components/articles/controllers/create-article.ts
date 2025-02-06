@@ -4,7 +4,7 @@ import i18n from '@/i18n';
 
 // create a untitled file by default
 export const createFile = async function(parentPath: string) {
-  const file = await create(`${parentPath}/${i18n.t('untitled')}.md`);
+  const file = await create(`${parentPath}/${i18n.t('untitled')}.json`);
   await file.write(new TextEncoder().encode(''));
   await file.close();
   return true;

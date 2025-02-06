@@ -3,6 +3,7 @@ use std::io;
 use std::path::Path;
 use serde::Serialize;
 use std::time::SystemTime;
+use std::fmt;
 
 #[derive(Debug, Serialize)]
 struct FileMeta {
@@ -22,6 +23,12 @@ pub struct DirectoryInfo {
   pub path: String,
   pub files: Vec<FileInfo>,
   pub subdirectories: Vec<DirectoryInfo>,
+}
+
+impl fmt::Display for DirectoryInfo {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    write!(f, "({})", self.path)
+  }
 }
 
 pub fn read_dir_recursive(path: &Path) -> io::Result<DirectoryInfo> {

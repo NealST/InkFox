@@ -11,6 +11,7 @@ fn greet(name: &str) -> String {
 
 #[tauri::command]
 fn get_dir_info(path: &str) -> DirectoryInfo {
+  println!("input path: {}", path);
   let path = Path::new(path);
   let dir_info = read_dir_recursive(path);
   let mut result_dir_info: DirectoryInfo;
@@ -23,6 +24,8 @@ fn get_dir_info(path: &str) -> DirectoryInfo {
       subdirectories: Vec::new()
     }
   }
+
+  println!("{}", result_dir_info);
   
   result_dir_info
 }
