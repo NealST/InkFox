@@ -4,10 +4,11 @@ import i18n from '@/i18n';
 
 // create a untitled file by default
 export const createFile = async function(parentPath: string) {
-  const file = await create(`${parentPath}/${i18n.t('untitled')}.json`);
+  const filePath = `${parentPath}/${i18n.t('untitled')}.json`;
+  const file = await create(filePath);
   await file.write(new TextEncoder().encode(''));
   await file.close();
-  return true;
+  return filePath;
 }
 
 export const createGroup = async function(parentPath: string, groupName: string) {

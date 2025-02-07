@@ -30,7 +30,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Badge } from "@/components/ui/badge";
-import { TreeViewItem, TreeItemProps } from './types';
+import type { IArticleItem, TreeItemProps } from './types';
 
 const TreeItem = function ({
   item,
@@ -43,21 +43,21 @@ const TreeItem = function ({
   getIcon,
   onAction,
 }: TreeItemProps) {
-  const isOpen = expandedIds.has(item.id);
-  const isSelected = selectedIds.has(item.id);
+  const isOpen = expandedIds.has(item.path);
+  const isSelected = selectedIds.has(item.path);
   const itemRef = useRef<HTMLDivElement>(null);
   const [selectionStyle, setSelectionStyle] = useState("");
 
   // Get all visible items in order
   const getVisibleItems = useCallback(
-    (items: TreeViewItem[]): TreeViewItem[] => {
-      let visibleItems: TreeViewItem[] = [];
+    (items: IArticleItem[]): IArticleItem[] => {
+      let visibleItems: IArticleItem[] = [];
 
       items.forEach((item) => {
         visibleItems.push(item);
         if (
-          item.type === "folder" &&
-          expandedIds.has(item.id) &&
+          item.metadata.is_dir &&
+          expandedIds.has(item.path) &&
           item.children
         ) {
           visibleItems = [...visibleItems, ...getVisibleItems(item.children)];
@@ -68,29 +68,6 @@ const TreeItem = function ({
     },
     [expandedIds]
   );
-
-  useEffect(() => {
-    if (!isSelected) {
-      setSelectionStyle("");
-      return;
-    }
-
-    const visibleItems = getVisibleItems(test_data);
-    const currentIndex = visibleItems.findIndex((i) => i.id === item.id);
-
-    const prevItem = visibleItems[currentIndex - 1];
-    const nextItem = visibleItems[currentIndex + 1];
-
-    const isPrevSelected = prevItem && selectedIds.has(prevItem.id);
-    const isNextSelected = nextItem && selectedIds.has(nextItem.id);
-
-    const roundTop = !isPrevSelected;
-    const roundBottom = !isNextSelected;
-
-    setSelectionStyle(
-      `${roundTop ? "rounded-t-md" : ""} ${roundBottom ? "rounded-b-md" : ""}`
-    );
-  }, [isSelected, selectedIds, expandedIds, item.id, getVisibleItems]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -123,20 +100,20 @@ const TreeItem = function ({
         }
       });
     } else if (e.ctrlKey || e.metaKey) {
-      if (newSelection.has(item.id)) {
-        newSelection.delete(item.id);
+      if (newSelection.has(item.path)) {
+        newSelection.delete(item.path);
       } else {
-        newSelection.add(item.id);
+        newSelection.add(item.path);
       }
     } else {
-      newSelection = new Set([item.id]);
+      newSelection = new Set([item.path]);
       // Open folder on single click if it's a folder
-      if (item.type === "folder" && isSelected) {
-        onToggleExpand(item.id, !isOpen);
+      if (item.metadata.is_dir && isSelected) {
+        onToggleExpand(item.path, !isOpen);
       }
     }
 
-    lastSelectedId.current = item.id;
+    lastSelectedId.current = item.path;
     onSelect(newSelection);
   };
 
@@ -154,8 +131,8 @@ const TreeItem = function ({
     }
 
     // Default icon logic
-    if (item.type === "file") {
-      return item.id.startsWith("wm") ? (
+    if (item.metadata.is_file) {
+      return item.path.startsWith("wm") ? (
         <Waves className="h-4 w-4 text-blue-600" />
       ) : (
         <Wind className="h-4 w-4 text-orange-600" />
@@ -174,42 +151,17 @@ const TreeItem = function ({
     }
   };
 
-  const getItemPath = (item: TreeViewItem, items: TreeViewItem[]): string => {
-    const path: string[] = [item.name];
-
-    const findParent = (
-      currentItem: TreeViewItem,
-      allItems: TreeViewItem[]
-    ) => {
-      for (const potentialParent of allItems) {
-        if (
-          potentialParent.children?.some((child) => child.id === currentItem.id)
-        ) {
-          path.unshift(potentialParent.name);
-          findParent(potentialParent, allItems);
-          break;
-        }
-        if (potentialParent.children) {
-          findParent(currentItem, potentialParent.children);
-        }
-      }
-    };
-
-    findParent(item, items);
-    return path.join(" → ");
-  };
-
   // Add function to count selected items in a folder
-  const getSelectedChildrenCount = (item: TreeViewItem): number => {
+  const getSelectedChildrenCount = (item: IArticleItem): number => {
     let count = 0;
 
     if (!item.children) return 0;
 
     item.children.forEach((child) => {
-      if (selectedIds.has(child.id)) {
+      if (selectedIds.has(child.path)) {
         count++;
       }
-      if (child.type === "folder") {
+      if (child.metadata.is_dir) {
         count += getSelectedChildrenCount(child);
       }
     });
@@ -219,7 +171,7 @@ const TreeItem = function ({
 
   // Get selected count only if folder is collapsed and has selected children
   const selectedCount =
-    (item.type === "folder" && !isOpen && getSelectedChildrenCount(item)) ||
+    (item.metadata.is_dir && !isOpen && getSelectedChildrenCount(item)) ||
     null;
 
   return (
@@ -229,9 +181,9 @@ const TreeItem = function ({
           <div
             ref={itemRef}
             data-tree-item
-            data-id={item.id}
+            data-id={item.path}
             data-depth={depth}
-            data-folder-closed={item.type === "folder" && !isOpen}
+            data-folder-closed={item.metadata.is_dir && !isOpen}
             className={`select-none cursor-pointer ${
               isSelected ? `bg-blue-100 ${selectionStyle}` : "text-foreground"
             } px-1`}
@@ -239,11 +191,11 @@ const TreeItem = function ({
             onClick={handleClick}
           >
             <div className="flex items-center h-8">
-              {item.type === "folder" ? (
+              {item.metadata.is_dir ? (
                 <div className="flex items-center gap-2 flex-1 group">
                   <Collapsible
                     open={isOpen}
-                    onOpenChange={(open) => onToggleExpand(item.id, open)}
+                    onOpenChange={(open) => onToggleExpand(item.path, open)}
                   >
                     <CollapsibleTrigger
                       asChild
@@ -286,15 +238,8 @@ const TreeItem = function ({
                         <h4 className="text-sm font-semibold">{item.name}</h4>
                         <div className="text-sm text-muted-foreground space-y-1">
                           <div>
-                            <span className="font-medium">Type:</span>{" "}
-                            {item.type}
-                          </div>
-                          <div>
-                            <span className="font-medium">ID:</span> {item.id}
-                          </div>
-                          <div>
-                            <span className="font-medium">Location:</span>{" "}
-                            {getItemPath(item, test_data)}
+                            <span className="font-medium">Name:</span>{" "}
+                            {item.name}
                           </div>
                           <div>
                             <span className="font-medium">Items:</span>{" "}
@@ -325,17 +270,7 @@ const TreeItem = function ({
                         <h4 className="text-sm font-semibold">{item.name}</h4>
                         <div className="text-sm text-muted-foreground space-y-1">
                           <div>
-                            <span className="font-medium">Type:</span>{" "}
-                            {item.id.startsWith("wm")
-                              ? "Washing Machine"
-                              : "Dryer"}
-                          </div>
-                          <div>
-                            <span className="font-medium">ID:</span> {item.id}
-                          </div>
-                          <div>
-                            <span className="font-medium">Location:</span>{" "}
-                            {getItemPath(item, test_data)}
+                            <span className="font-medium">Path:</span> {item.path}
                           </div>
                         </div>
                       </div>
@@ -346,10 +281,10 @@ const TreeItem = function ({
             </div>
           </div>
 
-          {item.type === "folder" && (
+          {item.metadata.is_dir && (
             <Collapsible
               open={isOpen}
-              onOpenChange={(open) => onToggleExpand(item.id, open)}
+              onOpenChange={(open) => onToggleExpand(item.path, open)}
             >
               <AnimatePresence initial={false}>
                 {isOpen && (
@@ -362,7 +297,7 @@ const TreeItem = function ({
                     >
                       {item.children?.map((child) => (
                         <TreeItem
-                          key={child.id}
+                          key={child.path}
                           item={child}
                           depth={depth + 1}
                           selectedIds={selectedIds}
@@ -383,7 +318,7 @@ const TreeItem = function ({
         </div>
       </ContextMenuTrigger>
       <ContextMenuContent className="w-64">
-        {item.type === "folder" ? (
+        {item.metadata.is_dir ? (
           <>
             <ContextMenuItem onClick={() => handleAction("open")}>
               <FolderOpen className="mr-2 h-4 w-4" />

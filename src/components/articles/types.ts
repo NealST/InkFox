@@ -3,7 +3,9 @@ export type FileType = 'group' | 'file';
 export interface IMetadata {
   is_file: boolean;
   is_dir: boolean;
-  len: number;
+  len?: number;
+  created: string;
+  modified?: string;
 }
 
 export interface IArticleItem {
@@ -14,21 +16,23 @@ export interface IArticleItem {
   children?: IArticleItem[];
 }
 
-export interface TreeViewItem {
-  id: string;
-  name: string;
-  type: string;
-  children?: TreeViewItem[];
-}
-
 export interface TreeItemProps {
-  item: TreeViewItem;
+  item: IArticleItem;
   depth?: number;
   selectedIds: Set<string>;
   lastSelectedId: React.MutableRefObject<string | null>;
   onSelect: (ids: Set<string>) => void;
   expandedIds: Set<string>;
   onToggleExpand: (id: string, isOpen: boolean) => void;
-  getIcon?: (item: TreeViewItem, depth: number) => React.ReactNode;
-  onAction?: (action: string, item: TreeViewItem) => void;
+  getIcon?: (item: IArticleItem, depth: number) => React.ReactNode;
+  onAction?: (action: string, item: IArticleItem) => void;
+}
+
+export interface TreeViewProps {
+  data: IArticleItem[];
+  title?: string;
+  showExpandAll?: boolean;
+  getIcon?: (item: IArticleItem, depth: number) => React.ReactNode;
+  onSelectionChange?: (selectedItems: IArticleItem[]) => void;
+  onAction?: (action: string, item: IArticleItem) => void;
 }

@@ -43,7 +43,6 @@ const Cates = function () {
       },
     ].concat(dataSource);
     setDataSource(newDataSource);
-    setSelectedCate("");
   }
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
@@ -56,7 +55,6 @@ const Cates = function () {
     if (!newCateName) {
       newCates.shift();
       setDataSource(newCates);
-      setSelectedCate(newCates[0]?.name || "");
       return;
     }
     createCate(newCateName)
@@ -66,13 +64,11 @@ const Cates = function () {
           name: newCateName,
         };
         setDataSource(newCates);
-        setSelectedCate(newCateName);
         newCateNameRef.current = '';
       })
       .catch(() => {
         newCates.shift();
         setDataSource(newCates);
-        setSelectedCate(newCates[0]?.name || "");
         newCateNameRef.current = '';
       });
   }

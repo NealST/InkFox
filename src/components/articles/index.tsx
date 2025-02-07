@@ -29,7 +29,8 @@ import {
   useDataSource,
   IDataSourceState,
 } from "./controllers/datasource-state";
-import { uid } from "uid";
+import { format } from 'date-fns';
+import TreeView from "./tree-view";
 import styles from "./index.module.css";
 
 const Articles = function () {
@@ -48,21 +49,29 @@ const Articles = function () {
       if (selectedCate) {
         setParentCatePath(selectedCatePath);
       
-        getArticles(selectedCatePath).then((articles) => {
-          setDataSource(articles);
+        getArticles(selectedCatePath).then((retStr) => {
+          const searchResult = JSON.parse(retStr);
+          console.log('searchResult', searchResult);
+          // setDataSource(articles);
+          setDataSource(searchResult.children || []);
         });
       }
     });
   }, [selectedCate]);
 
   function handleAddFile() {
-    createFile(parentCatePath).then(() => {
+    createFile(parentCatePath).then((filePath) => {
       setDataSource(
         [
           {
-            type: "file",
             name: t("untitled"),
-            id: uid(),
+            path: filePath,
+            metadata: {
+              is_dir: false,
+              is_file: true,
+              len: 0,
+              created: format(Date.now(), 'yyyy-MM-dd HH:mm:ss')
+            }
           } as IArticleItem,
         ].concat(dataSource)
       );
@@ -74,10 +83,15 @@ const Articles = function () {
     setDataSource(
       [
         {
-          type: "group",
           name: defaultGroupName,
           action: "input",
-          id: uid(),
+          path: `${parentCatePath}/${defaultGroupName}`,
+          children: [] as IArticleItem[],
+          metadata: {
+            is_dir: true,
+            is_file: false,
+            created: format(Date.now(), 'yyyy-MM-dd HH:mm:ss')
+          }
         } as IArticleItem,
       ].concat(dataSource)
     );
@@ -125,10 +139,9 @@ const Articles = function () {
           {isCollapseAll ? <ArrowDownNarrowWide /> : <ArrowUpNarrowWide />}
         </div>
       </div>
-      <ArticleList
-        parentPath={parentCatePath}
-        parentKey=""
-        dataSource={dataSource}
+
+      <TreeView
+        data={dataSource}
       />
     </div>
   );

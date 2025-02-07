@@ -3,6 +3,7 @@ use std::fs;
 use std::path::PathBuf;
 use walkdir::WalkDir;
 use std::fs::metadata;
+use chrono::{DateTime, Local};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct FileInfo {
@@ -17,13 +18,24 @@ struct MetadataInfo {
     is_file: bool,
     is_dir: bool,
     len: u64,
+   created: Option<String>,
+   modified: Option<String>,
 }
 
 fn get_metadata_info(metadata: fs::Metadata) -> MetadataInfo {
+  let created = metadata.created()
+        .ok()
+        .and_then(|time| DateTime::<Local>::from(time).to_rfc3339().parse().ok());
+    let modified = metadata.modified()
+        .ok()
+        .and_then(|time| DateTime::<Local>::from(time).to_rfc3339().parse().ok());
+
     MetadataInfo {
         is_file: metadata.is_file(),
         is_dir: metadata.is_dir(),
         len: metadata.len(),
+        created,
+        modified,
     }
 }
 
@@ -64,7 +76,6 @@ pub fn read_dir_recursive(path: &str) -> String {
 
     // 将结果序列化为 JSON
     let json_result = serde_json::to_string_pretty(&file_tree).unwrap();
-    println!("{}", json_result);
 
     json_result
 }

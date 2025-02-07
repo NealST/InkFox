@@ -7,17 +7,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import TreeItem from "./tree-item";
-import { TreeViewItem } from './types';
-import { test_data } from "@/lib/demo_data";
-
-export interface TreeViewProps {
-  data: TreeViewItem[];
-  title?: string;
-  showExpandAll?: boolean;
-  getIcon?: (item: TreeViewItem, depth: number) => React.ReactNode;
-  onSelectionChange?: (selectedItems: TreeViewItem[]) => void;
-  onAction?: (action: string, item: TreeViewItem) => void;
-}
+import type { IArticleItem, TreeViewProps } from './types';
 
 export default function TreeView({
   data,
@@ -83,11 +73,11 @@ export default function TreeView({
   const { files, folders } = getSelectionCounts();
 
   // Function to collect all folder IDs
-  const getAllFolderIds = (items: TreeViewItem[]): string[] => {
+  const getAllFolderIds = (items: IArticleItem[]): string[] => {
     let ids: string[] = [];
     items.forEach((item) => {
-      if (item.type === "folder") {
-        ids.push(item.id);
+      if (item.metadata.is_dir) {
+        ids.push(item.path);
         if (item.children) {
           ids = [...ids, ...getAllFolderIds(item.children)];
         }
@@ -114,12 +104,12 @@ export default function TreeView({
     setExpandedIds(newExpandedIds);
   };
 
-  const getSelectedItems = useCallback((): TreeViewItem[] => {
-    const selectedItems: TreeViewItem[] = [];
+  const getSelectedItems = useCallback((): IArticleItem[] => {
+    const selectedItems: IArticleItem[] = [];
 
-    const findSelectedItems = (items: TreeViewItem[]) => {
+    const findSelectedItems = (items: IArticleItem[]) => {
       items.forEach((item) => {
-        if (selectedIds.has(item.id)) {
+        if (selectedIds.has(item.path)) {
           // Create a new object without children
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { children, ...itemWithoutChildren } = item;
@@ -247,53 +237,11 @@ export default function TreeView({
     <div className="flex gap-4">
       <div
         ref={treeRef}
-        className="bg-background p-6 rounded-xl border max-w-2xl space-y-4 w-[600px]"
+        className="bg-background rounded-xl max-w-2xl space-y-4 w-[600px]"
       >
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <h2 className="text-xl font-semibold">{title}</h2>
-            {showExpandAll && (
-              <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 px-2"
-                  onClick={handleExpandAll}
-                >
-                  <ChevronDown className="h-4 w-4 mr-1" />
-                  Expand All
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 px-2"
-                  onClick={handleCollapseAll}
-                >
-                  <ChevronRight className="h-4 w-4 mr-1" />
-                  Collapse All
-                </Button>
-              </div>
-            )}
-          </div>
-          {(files > 0 || folders > 0) && (
-            <div className="text-sm text-muted-foreground space-x-2">
-              {folders > 0 && (
-                <span>
-                  {folders} folder{folders !== 1 ? "s" : ""}
-                </span>
-              )}
-              {files > 0 && folders > 0 && <span>·</span>}
-              {files > 0 && (
-                <span>
-                  {files} file{files !== 1 ? "s" : ""}
-                </span>
-              )}
-            </div>
-          )}
-        </div>
         <div
           ref={dragRef}
-          className="border rounded-lg p-4 bg-card relative select-none"
+          className="rounded-lg bg-card relative select-none"
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
         >
@@ -313,7 +261,7 @@ export default function TreeView({
           )}
           {data.map((item) => (
             <TreeItem
-              key={item.id}
+              key={item.path}
               item={item}
               selectedIds={selectedIds}
               lastSelectedId={lastSelectedId}

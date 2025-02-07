@@ -1,14 +1,13 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { IArticleItem } from '../types';
 
-const getArticles = async function(catePath: string): Promise<IArticleItem[]> {
+const getArticles = async function(catePath: string): Promise<string> {
   try {
-    const result: IArticleItem[] = await invoke("get_dir_info", {path: catePath});
+    const result: string = await invoke("get_dir_info", {path: catePath});
     return result;
   } catch(e) {
     console.error(e);
+    return '';
   }
-  
 }
 
 export default getArticles;
