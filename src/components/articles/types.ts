@@ -1,9 +1,15 @@
 export type FileType = 'group' | 'file';
 
+export interface IMetadata {
+  is_file: boolean;
+  is_dir: boolean;
+  len: number;
+}
+
 export interface IArticleItem {
-  type: FileType;
   name: string;
-  id: string;
+  path: string;
+  metadata: IMetadata;
   action?: string;
   children?: IArticleItem[];
 }

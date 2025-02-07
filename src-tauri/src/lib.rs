@@ -1,8 +1,7 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 mod read_dir_recursive;
 
-use std::path::Path;
-use read_dir_recursive::{DirectoryInfo, read_dir_recursive};
+use read_dir_recursive::read_dir_recursive;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -10,24 +9,11 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn get_dir_info(path: &str) -> DirectoryInfo {
+fn get_dir_info(path: &str) -> String {
   println!("input path: {}", path);
-  let path = Path::new(path);
   let dir_info = read_dir_recursive(path);
-  let mut result_dir_info: DirectoryInfo;
-
-  match dir_info {
-    Ok(value) => result_dir_info = value,
-    Err(e) => result_dir_info = DirectoryInfo {
-      path: String::new(),
-      files: Vec::new(),
-      subdirectories: Vec::new()
-    }
-  }
-
-  println!("{}", result_dir_info);
   
-  result_dir_info
+  dir_info
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

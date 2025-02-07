@@ -45,11 +45,13 @@ const Articles = function () {
   useEffect(() => {
     getNavPath("notes").then((ret) => {
       const selectedCatePath = `${ret}/${selectedCate}`;
-      setParentCatePath(selectedCatePath);
-
-      getArticles(selectedCatePath).then((articles) => {
-        setDataSource(articles);
-      });
+      if (selectedCate) {
+        setParentCatePath(selectedCatePath);
+      
+        getArticles(selectedCatePath).then((articles) => {
+          setDataSource(articles);
+        });
+      }
     });
   }, [selectedCate]);
 
