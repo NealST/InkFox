@@ -83,6 +83,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "framer-motion": "^12.4.0",
     "fzf": "0.5.2",
     "github-markdown-css": "^5.8.1",
     "html2canvas": "^1.4.1",

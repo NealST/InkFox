@@ -1,0 +1,438 @@
+import { useRef, useState, useCallback, useEffect } from "react";
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
+import {
+  Folder,
+  ChevronRight,
+  Server,
+  Database,
+  Home,
+  Waves,
+  Wind,
+  Info,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import { Copy, Trash, FolderOpen, FileEdit, Share2 } from "lucide-react";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Badge } from "@/components/ui/badge";
+import { TreeViewItem, TreeItemProps } from './types';
+
+const TreeItem = function ({
+  item,
+  depth = 0,
+  selectedIds,
+  lastSelectedId,
+  onSelect,
+  expandedIds,
+  onToggleExpand,
+  getIcon,
+  onAction,
+}: TreeItemProps) {
+  const isOpen = expandedIds.has(item.id);
+  const isSelected = selectedIds.has(item.id);
+  const itemRef = useRef<HTMLDivElement>(null);
+  const [selectionStyle, setSelectionStyle] = useState("");
+
+  // Get all visible items in order
+  const getVisibleItems = useCallback(
+    (items: TreeViewItem[]): TreeViewItem[] => {
+      let visibleItems: TreeViewItem[] = [];
+
+      items.forEach((item) => {
+        visibleItems.push(item);
+        if (
+          item.type === "folder" &&
+          expandedIds.has(item.id) &&
+          item.children
+        ) {
+          visibleItems = [...visibleItems, ...getVisibleItems(item.children)];
+        }
+      });
+
+      return visibleItems;
+    },
+    [expandedIds]
+  );
+
+  useEffect(() => {
+    if (!isSelected) {
+      setSelectionStyle("");
+      return;
+    }
+
+    const visibleItems = getVisibleItems(test_data);
+    const currentIndex = visibleItems.findIndex((i) => i.id === item.id);
+
+    const prevItem = visibleItems[currentIndex - 1];
+    const nextItem = visibleItems[currentIndex + 1];
+
+    const isPrevSelected = prevItem && selectedIds.has(prevItem.id);
+    const isNextSelected = nextItem && selectedIds.has(nextItem.id);
+
+    const roundTop = !isPrevSelected;
+    const roundBottom = !isNextSelected;
+
+    setSelectionStyle(
+      `${roundTop ? "rounded-t-md" : ""} ${roundBottom ? "rounded-b-md" : ""}`
+    );
+  }, [isSelected, selectedIds, expandedIds, item.id, getVisibleItems]);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let newSelection = new Set(selectedIds);
+
+    if (!itemRef.current) return;
+
+    if (e.shiftKey && lastSelectedId.current !== null) {
+      const items = Array.from(
+        document.querySelectorAll("[data-tree-item]")
+      ) as HTMLElement[];
+      const lastIndex = items.findIndex(
+        (el) => el.getAttribute("data-id") === lastSelectedId.current
+      );
+      const currentIndex = items.findIndex((el) => el === itemRef.current);
+      const [start, end] = [
+        Math.min(lastIndex, currentIndex),
+        Math.max(lastIndex, currentIndex),
+      ];
+
+      items.slice(start, end + 1).forEach((el) => {
+        const id = el.getAttribute("data-id");
+        const parentFolderClosed = el.closest('[data-folder-closed="true"]');
+        const isClosedFolder = el.getAttribute("data-folder-closed") === "true";
+
+        if (id && (isClosedFolder || !parentFolderClosed)) {
+          newSelection.add(id);
+        }
+      });
+    } else if (e.ctrlKey || e.metaKey) {
+      if (newSelection.has(item.id)) {
+        newSelection.delete(item.id);
+      } else {
+        newSelection.add(item.id);
+      }
+    } else {
+      newSelection = new Set([item.id]);
+      // Open folder on single click if it's a folder
+      if (item.type === "folder" && isSelected) {
+        onToggleExpand(item.id, !isOpen);
+      }
+    }
+
+    lastSelectedId.current = item.id;
+    onSelect(newSelection);
+  };
+
+  const handleAction = (action: string) => {
+    if (onAction) {
+      onAction(action, item);
+    } else {
+      console.log(`${action} on:`, item.name);
+    }
+  };
+
+  const renderIcon = () => {
+    if (getIcon) {
+      return getIcon(item, depth);
+    }
+
+    // Default icon logic
+    if (item.type === "file") {
+      return item.id.startsWith("wm") ? (
+        <Waves className="h-4 w-4 text-blue-600" />
+      ) : (
+        <Wind className="h-4 w-4 text-orange-600" />
+      );
+    }
+
+    switch (depth) {
+      case 0:
+        return <Server className="h-4 w-4 text-purple-600" />;
+      case 1:
+        return <Database className="h-4 w-4 text-green-600" />;
+      case 2:
+        return <Home className="h-4 w-4 text-yellow-600" />;
+      default:
+        return <Folder className="h-4 w-4 text-primary/80" />;
+    }
+  };
+
+  const getItemPath = (item: TreeViewItem, items: TreeViewItem[]): string => {
+    const path: string[] = [item.name];
+
+    const findParent = (
+      currentItem: TreeViewItem,
+      allItems: TreeViewItem[]
+    ) => {
+      for (const potentialParent of allItems) {
+        if (
+          potentialParent.children?.some((child) => child.id === currentItem.id)
+        ) {
+          path.unshift(potentialParent.name);
+          findParent(potentialParent, allItems);
+          break;
+        }
+        if (potentialParent.children) {
+          findParent(currentItem, potentialParent.children);
+        }
+      }
+    };
+
+    findParent(item, items);
+    return path.join(" → ");
+  };
+
+  // Add function to count selected items in a folder
+  const getSelectedChildrenCount = (item: TreeViewItem): number => {
+    let count = 0;
+
+    if (!item.children) return 0;
+
+    item.children.forEach((child) => {
+      if (selectedIds.has(child.id)) {
+        count++;
+      }
+      if (child.type === "folder") {
+        count += getSelectedChildrenCount(child);
+      }
+    });
+
+    return count;
+  };
+
+  // Get selected count only if folder is collapsed and has selected children
+  const selectedCount =
+    (item.type === "folder" && !isOpen && getSelectedChildrenCount(item)) ||
+    null;
+
+  return (
+    <ContextMenu>
+      <ContextMenuTrigger>
+        <div>
+          <div
+            ref={itemRef}
+            data-tree-item
+            data-id={item.id}
+            data-depth={depth}
+            data-folder-closed={item.type === "folder" && !isOpen}
+            className={`select-none cursor-pointer ${
+              isSelected ? `bg-blue-100 ${selectionStyle}` : "text-foreground"
+            } px-1`}
+            style={{ paddingLeft: `${depth * 20}px` }}
+            onClick={handleClick}
+          >
+            <div className="flex items-center h-8">
+              {item.type === "folder" ? (
+                <div className="flex items-center gap-2 flex-1 group">
+                  <Collapsible
+                    open={isOpen}
+                    onOpenChange={(open) => onToggleExpand(item.id, open)}
+                  >
+                    <CollapsibleTrigger
+                      asChild
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Button variant="ghost" size="icon" className="h-6 w-6">
+                        <motion.div
+                          initial={false}
+                          animate={{ rotate: isOpen ? 90 : 0 }}
+                          transition={{ duration: 0.1 }}
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </motion.div>
+                      </Button>
+                    </CollapsibleTrigger>
+                  </Collapsible>
+                  {renderIcon()}
+                  <span className="flex-1">{item.name}</span>
+                  {selectedCount !== null && selectedCount > 0 && (
+                    <Badge
+                      variant="secondary"
+                      className="mr-2 bg-blue-100 hover:bg-blue-100"
+                    >
+                      {selectedCount} selected
+                    </Badge>
+                  )}
+                  <HoverCard>
+                    <HoverCardTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 group-hover:opacity-100 opacity-0 items-center justify-center"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Info className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent className="w-80">
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold">{item.name}</h4>
+                        <div className="text-sm text-muted-foreground space-y-1">
+                          <div>
+                            <span className="font-medium">Type:</span>{" "}
+                            {item.type}
+                          </div>
+                          <div>
+                            <span className="font-medium">ID:</span> {item.id}
+                          </div>
+                          <div>
+                            <span className="font-medium">Location:</span>{" "}
+                            {getItemPath(item, test_data)}
+                          </div>
+                          <div>
+                            <span className="font-medium">Items:</span>{" "}
+                            {item.children?.length || 0} direct items
+                          </div>
+                        </div>
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 flex-1 pl-8 group">
+                  {renderIcon()}
+                  <span className="flex-1">{item.name}</span>
+                  <HoverCard>
+                    <HoverCardTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 group-hover:opacity-100 opacity-0 items-center justify-center"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Info className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent className="w-80">
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold">{item.name}</h4>
+                        <div className="text-sm text-muted-foreground space-y-1">
+                          <div>
+                            <span className="font-medium">Type:</span>{" "}
+                            {item.id.startsWith("wm")
+                              ? "Washing Machine"
+                              : "Dryer"}
+                          </div>
+                          <div>
+                            <span className="font-medium">ID:</span> {item.id}
+                          </div>
+                          <div>
+                            <span className="font-medium">Location:</span>{" "}
+                            {getItemPath(item, test_data)}
+                          </div>
+                        </div>
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {item.type === "folder" && (
+            <Collapsible
+              open={isOpen}
+              onOpenChange={(open) => onToggleExpand(item.id, open)}
+            >
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <CollapsibleContent forceMount asChild>
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.05 }}
+                    >
+                      {item.children?.map((child) => (
+                        <TreeItem
+                          key={child.id}
+                          item={child}
+                          depth={depth + 1}
+                          selectedIds={selectedIds}
+                          lastSelectedId={lastSelectedId}
+                          onSelect={onSelect}
+                          expandedIds={expandedIds}
+                          onToggleExpand={onToggleExpand}
+                          getIcon={getIcon}
+                          onAction={onAction}
+                        />
+                      ))}
+                    </motion.div>
+                  </CollapsibleContent>
+                )}
+              </AnimatePresence>
+            </Collapsible>
+          )}
+        </div>
+      </ContextMenuTrigger>
+      <ContextMenuContent className="w-64">
+        {item.type === "folder" ? (
+          <>
+            <ContextMenuItem onClick={() => handleAction("open")}>
+              <FolderOpen className="mr-2 h-4 w-4" />
+              Open
+            </ContextMenuItem>
+            <ContextMenuItem onClick={() => handleAction("share")}>
+              <Share2 className="mr-2 h-4 w-4" />
+              Share
+            </ContextMenuItem>
+            <ContextMenuSeparator />
+            <ContextMenuItem onClick={() => handleAction("copy")}>
+              <Copy className="mr-2 h-4 w-4" />
+              Copy
+            </ContextMenuItem>
+            <ContextMenuItem
+              onClick={() => handleAction("delete")}
+              className="text-red-600"
+            >
+              <Trash className="mr-2 h-4 w-4" />
+              Delete
+            </ContextMenuItem>
+          </>
+        ) : (
+          <>
+            <ContextMenuItem onClick={() => handleAction("open")}>
+              <FileEdit className="mr-2 h-4 w-4" />
+              Open
+            </ContextMenuItem>
+            <ContextMenuItem onClick={() => handleAction("share")}>
+              <Share2 className="mr-2 h-4 w-4" />
+              Share
+            </ContextMenuItem>
+            <ContextMenuSeparator />
+            <ContextMenuItem onClick={() => handleAction("copy")}>
+              <Copy className="mr-2 h-4 w-4" />
+              Copy
+            </ContextMenuItem>
+            <ContextMenuItem
+              onClick={() => handleAction("delete")}
+              className="text-red-600"
+            >
+              <Trash className="mr-2 h-4 w-4" />
+              Delete
+            </ContextMenuItem>
+          </>
+        )}
+      </ContextMenuContent>
+    </ContextMenu>
+  );
+};
+
+export default TreeItem;

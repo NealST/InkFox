@@ -17,17 +17,5 @@
     "cssVariables": true,
     "prefix": ""
   },
-  "tsx": true,
-  "registries": {
-    "plate": {
-      "style": "default",
-      "tailwind": {
-        "baseColor": "zinc"
-      },
-      "aliases": {
-        "ui": "@/components/plate-ui"
-      },
-      "url": "https://platejs.org/r"
-    }
-  }
+  "tsx": true
 }
