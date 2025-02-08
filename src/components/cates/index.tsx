@@ -6,6 +6,7 @@ import { useSelectedCate, type ICateState } from "./controllers/selected-cate";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, SquarePlus, Folder, FolderInput } from "lucide-react";
 import { Input } from "../ui/input";
+import { Button } from '@/components/ui/button';
 import cn from "classnames";
 import styles from "./index.module.css";
 
@@ -77,13 +78,10 @@ const Cates = function () {
     <div className={styles.cates}>
       <div className={styles.cates_header}>
         <div className={styles.header_label}>
-          <ChevronDown style={{ marginRight: "8px" }} />
+          <ChevronDown style={{ marginRight: "8px" }} size={18} />
           <span className={styles.label_text}>{t("cates")}</span>
         </div>
-        <SquarePlus
-          style={{ color: "var(--theme-color)" }}
-          onClick={handleAddCate}
-        />
+        <Button className={styles.header_add}>+</Button>
       </div>
       <div className={styles.cates_list}>
         {dataSource.length > 0 &&
@@ -105,6 +103,7 @@ const Cates = function () {
                     color: "hsl(var(--foreground))",
                     marginRight: "8px",
                   }}
+                  size={18}
                 />
                 {type === "input" ? (
                   <Input

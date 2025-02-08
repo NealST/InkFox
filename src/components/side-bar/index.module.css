@@ -4,12 +4,25 @@
 }
 
 .bar_cates {
-  width: 240px;
+  width: 200px;
   height: 100vh;
   border-right: 1px solid hsl(var(--border));
 }
 
+.bar_logo {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo_img {
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+}
+
 .bar_articles {
-  width: 240px;
+  width: 260px;
   height: 100vh;
 }

@@ -30,7 +30,9 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Badge } from "@/components/ui/badge";
+import cn from 'classnames';
 import type { IArticleItem, TreeItemProps } from './types';
+import styles from './index.module.css';
 
 const TreeItem = function ({
   item,
@@ -125,32 +127,6 @@ const TreeItem = function ({
     }
   };
 
-  const renderIcon = () => {
-    if (getIcon) {
-      return getIcon(item, depth);
-    }
-
-    // Default icon logic
-    if (item.metadata.is_file) {
-      return item.path.startsWith("wm") ? (
-        <Waves className="h-4 w-4 text-blue-600" />
-      ) : (
-        <Wind className="h-4 w-4 text-orange-600" />
-      );
-    }
-
-    switch (depth) {
-      case 0:
-        return <Server className="h-4 w-4 text-purple-600" />;
-      case 1:
-        return <Database className="h-4 w-4 text-green-600" />;
-      case 2:
-        return <Home className="h-4 w-4 text-yellow-600" />;
-      default:
-        return <Folder className="h-4 w-4 text-primary/80" />;
-    }
-  };
-
   // Add function to count selected items in a folder
   const getSelectedChildrenCount = (item: IArticleItem): number => {
     let count = 0;
@@ -190,7 +166,7 @@ const TreeItem = function ({
             style={{ paddingLeft: `${depth * 20}px` }}
             onClick={handleClick}
           >
-            <div className="flex items-center h-8">
+            <div className={cn("flex items-center h-8 rounded", styles.tree_item_head)}>
               {item.metadata.is_dir ? (
                 <div className="flex items-center gap-2 flex-1 group">
                   <Collapsible
@@ -212,7 +188,7 @@ const TreeItem = function ({
                       </Button>
                     </CollapsibleTrigger>
                   </Collapsible>
-                  {renderIcon()}
+                  
                   <span className="flex-1">{item.name}</span>
                   {selectedCount !== null && selectedCount > 0 && (
                     <Badge
@@ -251,8 +227,7 @@ const TreeItem = function ({
                   </HoverCard>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 flex-1 pl-8 group">
-                  {renderIcon()}
+                <div className={cn("flex items-center gap-2 flex-1 pl-6 group", styles.tree_item_name)}>
                   <span className="flex-1">{item.name}</span>
                   <HoverCard>
                     <HoverCardTrigger asChild>

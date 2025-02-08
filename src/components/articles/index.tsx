@@ -31,6 +31,8 @@ import {
 } from "./controllers/datasource-state";
 import { format } from 'date-fns';
 import TreeView from "./tree-view";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import styles from "./index.module.css";
 
 const Articles = function () {
@@ -100,43 +102,31 @@ const Articles = function () {
   return (
     <div className={styles.articles}>
       <div className={styles.articles_header}>
-        <div className={styles.header_label}>
-          <Folder />
-          <span className={styles.header_title}>{selectedCate}</span>
-        </div>
+        <Input placeholder={t('search')} className={styles.articles_search} />
         <HoverCard>
           <HoverCardTrigger>
-            <SquarePlus
-              style={{ color: "var(--theme-color)", cursor: "pointer" }}
-            />
+            <Button className={styles.header_add}>+</Button>
           </HoverCardTrigger>
           <HoverCardContent className={styles.articles_add_hover}>
             <div className={styles.articles_add_item} onClick={handleAddFile}>
-              <File />
+              <File size={18} />
               <span className={styles.add_item_text}>{t("doc")}</span>
             </div>
             <div className={styles.articles_add_item} onClick={handleAddGroup}>
-              <Group />
+              <Group size={18} />
               <span className={styles.add_item_text}>{t("group")}</span>
             </div>
           </HoverCardContent>
         </HoverCard>
       </div>
-      <div
-        className={styles.articles_home}
-        onClick={() => setActivePath("home")}
-      >
-        <House />
-        <span className={styles.home_text}>{t("home")}</span>
-      </div>
       <div className={styles.articles_dir}>
         <div className={styles.dir_left}>
-          <ListTree style={{ marginRight: "8px" }} />
+          <ListTree style={{ marginRight: "8px" }} size={18} />
           <span className={styles.dir_text}>{t("folders")}</span>
         </div>
         <div className={styles.dir_right}>
-          <Locate style={{ marginRight: "6px" }} />
-          {isCollapseAll ? <ArrowDownNarrowWide /> : <ArrowUpNarrowWide />}
+          <Locate style={{ marginRight: "6px" }} size={20} />
+          {isCollapseAll ? <ArrowDownNarrowWide size={20} /> : <ArrowUpNarrowWide size={20} />}
         </div>
       </div>
 

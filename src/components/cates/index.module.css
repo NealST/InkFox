@@ -1,7 +1,6 @@
 .cates {
   width: 100%;
   height: 100vh;
-  padding-top: 10px;
   padding-left: 10px;
   padding-right: 10px;
 }
@@ -23,6 +22,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.header_add {
+  width: 24px !important;
+  height: 24px !important;
+  background-color: var(--theme-color) !important;
+  font-size: 18px !important;
 }
 
 .cates_list {
@@ -47,7 +53,7 @@
 }
 
 .cate_item_selected {
-  background-color: hsl(var(--accent));;
+  background-color: hsl(var(--accent));
 }
 
 .item_input {
