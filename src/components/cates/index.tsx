@@ -4,7 +4,7 @@ import getCates from "./controllers/get-cates";
 import { createCate, renameCate, deleteCate } from "./controllers/cate-action";
 import { useSelectedCate, type ICateState } from "./controllers/selected-cate";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, Folder, FolderInput, Pencil, Trash2 } from "lucide-react";
+import { ChevronDown, Group, FilePenLine, Pencil, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -187,7 +187,7 @@ const Cates = function () {
             const { name, type } = item;
             const isSelected = name === selectedCate;
             const isInput = type === "input";
-            const FolderIcon = isInput ? FolderInput : Folder;
+            const FolderIcon = isInput ? FilePenLine : Group;
             return (
               <div
                 className={cn(
@@ -222,22 +222,31 @@ const Cates = function () {
                 </div>
                 {enterItem.name === name && enterItem.isEntering && (
                   <div className={styles.cate_item_action}>
+                    <div 
+                      style={{
+                        color: "hsl(var(--foreground))",
+                        marginRight: "6px",
+                      }}
+                      title={t('rename')}
+                    >
                     <Pencil
                       style={{
                         color: "hsl(var(--foreground))",
-                        marginRight: "8px",
                       }}
                       size={14}
                       onClick={() => handleRename(index)}
                     />
+                    </div>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Trash2
-                          style={{
-                            color: "var(--danger)",
-                          }}
-                          size={14}
-                        />
+                        <div title={t('remove')}>
+                          <Trash2
+                            style={{
+                              color: "var(--danger)",
+                            }}
+                            size={14}
+                          />
+                        </div>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>

@@ -138,3 +138,13 @@
 .tree_item_head:hover {
   background-color: hsl(var(--accent));
 }
+
+.tree_item_input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.tree_item_input_ele {
+  height: 28px !important;
+}
