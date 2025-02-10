@@ -4,22 +4,24 @@ use std::path::PathBuf;
 use walkdir::WalkDir;
 use std::fs::metadata;
 use chrono::{DateTime, Local};
+use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct FileInfo {
-    name: String,
-    path: String,
-    metadata: MetadataInfo,
-    children: Option<Vec<FileInfo>>,
+  id: String,
+  name: String,
+  path: String,
+  metadata: MetadataInfo,
+  children: Option<Vec<FileInfo>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 struct MetadataInfo {
-    is_file: bool,
-    is_dir: bool,
-    len: u64,
-   created: Option<String>,
-   modified: Option<String>,
+  is_file: bool,
+  is_dir: bool,
+  len: u64,
+  created: Option<String>,
+  modified: Option<String>,
 }
 
 fn get_metadata_info(metadata: fs::Metadata) -> MetadataInfo {
@@ -43,9 +45,11 @@ fn get_file_info(path: PathBuf) -> FileInfo {
     let metadata = fs::metadata(&path).unwrap();
     let name = path.file_name().unwrap().to_string_lossy().to_string();
     let path = path.to_string_lossy().to_string();
+    let id = Uuid::new_v4().to_string();
     let metadata_info = get_metadata_info(metadata);
 
     FileInfo {
+        id,
         name,
         path,
         metadata: metadata_info,
