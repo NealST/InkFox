@@ -9,21 +9,9 @@ import {
   Folder,
   File,
   ChevronRight,
-  Server,
-  Database,
-  Home,
-  Waves,
-  Wind,
-  Info,
   FilePenLine,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import cn from "classnames";
 import type { IArticleItem, TreeItemProps } from "./types";
@@ -32,6 +20,7 @@ import styles from "./index.module.css";
 const TreeItem = function ({
   item,
   depth = 0,
+  itemPaths,
   selectedIds,
   lastSelectedId,
   onSelect,
@@ -44,6 +33,10 @@ const TreeItem = function ({
   const isSelected = selectedIds.has(item.path);
   const itemRef = useRef<HTMLDivElement>(null);
   const [selectionStyle, setSelectionStyle] = useState("");
+  const inputInfoRef = useRef({
+    name: '',
+    type: 'add',
+  });
   const isInput = item.action === "input";
   const isDir = item.metadata.is_dir;
 
@@ -134,13 +127,12 @@ const TreeItem = function ({
     return count;
   };
 
-  const handleInputChange = (event: ChangeEvent) => {};
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const curValue = event.target.value;
+    inputInfoRef.current.name = curValue;
+  };
 
   const handleInputBlur = () => {};
-
-  // Get selected count only if folder is collapsed and has selected children
-  const selectedCount =
-    (isDir && !isOpen && getSelectedChildrenCount(item)) || null;
 
   return (
     <div className={styles.tree_item}>
@@ -228,11 +220,12 @@ const TreeItem = function ({
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.05 }}
                 >
-                  {item.children?.map((child) => (
+                  {item.children?.map((child, index) => (
                     <TreeItem
                       key={child.path}
                       item={child}
                       depth={depth + 1}
+                      itemPaths={itemPaths.concat(index)}
                       selectedIds={selectedIds}
                       lastSelectedId={lastSelectedId}
                       onSelect={onSelect}

@@ -19,6 +19,7 @@ export interface IArticleItem {
 export interface TreeItemProps {
   item: IArticleItem;
   depth?: number;
+  itemPaths: number[];
   selectedIds: Set<string>;
   lastSelectedId: React.MutableRefObject<string | null>;
   onSelect: (ids: Set<string>) => void;

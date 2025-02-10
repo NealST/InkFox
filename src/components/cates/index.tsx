@@ -213,7 +213,7 @@ const Cates = function () {
                       className={styles.item_input}
                       type="text"
                       defaultValue={name}
-                      onInput={handleInputChange}
+                      onChange={handleInputChange}
                       onBlur={handleInputBlur}
                     />
                   ) : (

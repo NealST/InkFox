@@ -1,30 +1,67 @@
-import { produce } from 'immer';
+import { mkdir, rename, remove } from '@tauri-apps/plugin-fs';
 import type { IArticleItem } from '../types';
 
-type Action = 'addChild' | 'replace' | 'remove';
+const updateDataSource = function(dataSource: IArticleItem[], parentPaths: number[], updateCb: (children: IArticleItem[]) => void) {
+  const newDataSource = ([] as IArticleItem[]).concat(dataSource);
+  let target = {
+    children: newDataSource
+  };
+  parentPaths.forEach(path => {
+    // @ts-ignore
+    target = target.children[path];
+  });
+  updateCb(target.children);
+  return newDataSource;
+}
 
-const immerArticles = function(oldArticles: IArticleItem[], changeKey: string, action: Action, newArticle?: IArticleItem) {
-  return produce(oldArticles, (draft) => {
-    const changeKeyStrs = changeKey.split(/\.|\[/);
-    let target = changeKeyStrs.reduce((accumu, cur) => {
-      const isIndex = cur.indexOf(']') >= 0;
-      let key = isIndex ? Number(cur.replace(']', '')) : cur;
-      // @ts-ignore
-      accumu = accumu[key];
-      return accumu;
-    }, draft);
-    if (action === 'addChild') {
-      // @ts-ignore
-      target.children.unshift(newArticle);
-    }
-    if (action === 'replace') {
-      // @ts-ignore
-      target = newArticle;
-    }
-    if (action === 'remove') {
-      // todo: 处理删除的情况
-    }
+export const appendChild = function(dataSource: IArticleItem[], itemPaths: number[], newItem: IArticleItem) {
+  // if newItem has an input action, it indicates that it's just need to change the display datasource
+  const len = itemPaths.length;
+  const parentPaths = itemPaths.slice(0, len - 1);
+  const { name, path, action } = newItem;
+  if (action === 'input') {
+    return updateDataSource(dataSource, parentPaths, (parentChildren) => {
+      parentChildren.unshift(newItem);
+    });
+  }
+  if (!name) {
+    return updateDataSource(dataSource, parentPaths, (parentChildren) => {
+      parentChildren.shift();
+    });
+  }
+
+  // call the file system async and update datasource optimisticly
+  mkdir(path);
+
+  return updateDataSource(dataSource, parentPaths, (parentChildren) => {
+    parentChildren[0] = newItem;
   });
 };
 
-export default immerArticles;
+export const renameChild = function(dataSource: IArticleItem[], itemPaths: number[], newItem: IArticleItem) {
+  const len = itemPaths.length;
+  const parentPaths = itemPaths.slice(0, len - 1);
+  const { path, action } = newItem;
+  return updateDataSource(dataSource, parentPaths, (parentChildren) => {
+    const itemIndex = itemPaths[len - 1];
+    if (action !== 'input') {
+      // call the rename async
+      rename(parentChildren[itemIndex].path, path);
+    }
+    parentChildren[itemIndex] = newItem;
+  });
+};
+
+export const removeChild = function(dataSource: IArticleItem[], itemPaths: number[]) {
+  const len = itemPaths.length;
+  const parentPaths = itemPaths.slice(0, len - 1);
+  
+  return updateDataSource(dataSource, parentPaths, (parentChildren) => {
+    const itemIndex = itemPaths[len - 1];
+    // call the remove async
+    remove(parentChildren[itemIndex].path);
+    
+    parentChildren.slice(itemIndex, 1);
+  });
+};
+

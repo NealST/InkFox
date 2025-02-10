@@ -259,10 +259,11 @@ export default function TreeView({
               }}
             />
           )}
-          {data.map((item) => (
+          {data.map((item, index) => (
             <TreeItem
               key={item.path}
               item={item}
+              itemPaths={[index]}
               selectedIds={selectedIds}
               lastSelectedId={lastSelectedId}
               onSelect={setSelectedIds}
