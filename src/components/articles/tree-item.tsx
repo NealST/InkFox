@@ -132,7 +132,14 @@ const TreeItem = function ({
     inputInfoRef.current.name = curValue;
   };
 
-  const handleInputBlur = () => {};
+  const handleInputBlur = () => {
+    const { name, type } = inputInfoRef.current;
+    if (type === 'add') {
+      if (!name) {
+        
+      }
+    }
+  };
 
   return (
     <div className={styles.tree_item}>
