@@ -48,30 +48,6 @@ export default function TreeView({
     return () => document.removeEventListener("mousedown", handleClickAway);
   }, []);
 
-  // Calculate selected items count
-  const getSelectionCounts = () => {
-    const counts = { files: 0, folders: 0 };
-
-    const countItem = (item: TreeViewItem) => {
-      if (selectedIds.has(item.id)) {
-        if (item.type === "folder") {
-          counts.folders++;
-        } else {
-          counts.files++;
-        }
-      }
-
-      if (item.children) {
-        item.children.forEach(countItem);
-      }
-    };
-
-    data.forEach(countItem);
-    return counts;
-  };
-
-  const { files, folders } = getSelectionCounts();
-
   // Function to collect all folder IDs
   const getAllFolderIds = (items: IArticleItem[]): string[] => {
     let ids: string[] = [];
@@ -84,14 +60,6 @@ export default function TreeView({
       }
     });
     return ids;
-  };
-
-  const handleExpandAll = () => {
-    setExpandedIds(new Set(getAllFolderIds(data)));
-  };
-
-  const handleCollapseAll = () => {
-    setExpandedIds(new Set());
   };
 
   const handleToggleExpand = (id: string, isOpen: boolean) => {
@@ -261,7 +229,7 @@ export default function TreeView({
           )}
           {data.map((item, index) => (
             <TreeItem
-              key={item.path}
+              key={item.id}
               item={item}
               itemPaths={[index]}
               selectedIds={selectedIds}

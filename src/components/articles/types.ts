@@ -9,6 +9,7 @@ export interface IMetadata {
 }
 
 export interface IArticleItem {
+  id: string;
   name: string;
   path: string;
   metadata: IMetadata;

@@ -47,6 +47,7 @@
 .articles_add_item {
   display: flex;
   flex-direction: row;
+  align-items: center;
   cursor: pointer;
   margin-bottom: 10px;
 }
@@ -146,5 +147,40 @@
 }
 
 .tree_item_input_ele {
-  height: 28px !important;
+  height: 30px !important;
+  margin-left: 6px;
+}
+
+.tree_item_dir {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.dir_name {
+  margin-left: 6px;
+}
+
+.file_name {
+  margin-left: 6px;
+}
+
+.tree_item_name {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.tree_item_left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.tree_item_action {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-right: 10px;
 }
