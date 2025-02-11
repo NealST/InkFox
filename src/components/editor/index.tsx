@@ -1,7 +1,4 @@
 import Header from './header';
-// import Toolbar from './toolbar';
-import Content from './content';
-import Outline from './outline';
 import MainEditor from './main-editor';
 import styles from './index.module.css';
 

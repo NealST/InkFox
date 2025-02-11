@@ -1,16 +1,16 @@
 // manage article select state
 
 import { create } from 'zustand';
+import type { IArticleItem } from '../types';
 
 export interface IArticleState {
-  name: string;
-  setName: (newName: string) => void;
+  selectedArticle: IArticleItem;
+  setSelectedArticle: (newArticle: IArticleItem) => void;
 }
 
 export const useSelectedArticle = create<IArticleState>(set => ({
-  name: '',
-  setName: (newName: string) => {
-    set({name: newName});
+  selectedArticle: {} as IArticleItem,
+  setSelectedArticle: (newArticle: IArticleItem) => {
+    set({selectedArticle: newArticle});
   },
 }));
-

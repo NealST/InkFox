@@ -34,6 +34,10 @@ import {
   renameChild,
   removeChild,
 } from "./controllers/immer-articles";
+import {
+  useSelectedArticle,
+  type IArticleState,
+} from "./controllers/selected-article";
 import type { IArticleItem, TreeItemProps } from "./types";
 import styles from "./index.module.css";
 
@@ -50,7 +54,6 @@ const TreeItem = function ({
   onAction,
 }: TreeItemProps) {
   const isOpen = expandedIds.has(item.path);
-  const isSelected = selectedIds.has(item.path);
   const itemRef = useRef<HTMLDivElement>(null);
   const [selectionStyle, setSelectionStyle] = useState("");
   const [enterItem, setEnterItem] = useState({
@@ -63,9 +66,17 @@ const TreeItem = function ({
     name: item.name,
     type: "add",
   });
+  const { selectedArticle, setSelectedArticle } = useSelectedArticle(
+    (state: IArticleState) => state
+  );
   const { t } = useTranslation();
   const isInput = item.action === "input";
   const isDir = item.metadata.is_dir;
+  const isSelected = selectedArticle.id === item.id;
+
+  const handleClickItem = () => {
+    setSelectedArticle(item);
+  };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const curValue = event.target.value;
@@ -98,28 +109,28 @@ const TreeItem = function ({
     );
     // rest input info
     inputInfoRef.current = {
-      name: '',
+      name: "",
       type: "add",
     };
   };
 
   const handleMouseEnter = () => {
-    if (item.action === 'input') {
+    if (item.action === "input") {
       return;
     }
     setEnterItem({
       name: item.name,
-      isEntering: true
+      isEntering: true,
     });
   };
 
   const handleMouseLeave = () => {
-    if (item.action === 'input') {
+    if (item.action === "input") {
       return;
     }
     setEnterItem({
       name: item.name,
-      isEntering: false
+      isEntering: false,
     });
   };
 
@@ -129,13 +140,15 @@ const TreeItem = function ({
       type: "rename",
     };
     setEnterItem({
-      name: '',
+      name: "",
       isEntering: false,
     });
-    setDataSource(renameChild(dataSource, itemPaths, {
-      ...item,
-      action: 'input',
-    }));
+    setDataSource(
+      renameChild(dataSource, itemPaths, {
+        ...item,
+        action: "input",
+      })
+    );
   };
 
   const handleDelete = () => {
@@ -197,13 +210,16 @@ const TreeItem = function ({
         data-paths={itemPaths.join("-")}
         data-depth={depth}
         data-folder-closed={isDir && !isOpen}
-        className={`select-none cursor-pointer ${
-          isSelected ? `bg-blue-100 ${selectionStyle}` : "text-foreground"
-        } px-1`}
+        className={`select-none cursor-pointer px-1`}
         style={{ paddingLeft: `${depth * 20}px` }}
+        onClick={handleClickItem}
       >
         <div
-          className={cn("flex items-center h-8 rounded", styles.tree_item_head)}
+          className={cn(
+            "flex items-center h-8 rounded",
+            styles.tree_item_head,
+            isSelected ? styles.tree_item_head_selected : '',
+          )}
         >
           {isDir ? (
             <div

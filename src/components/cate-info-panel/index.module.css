@@ -1,12 +1,15 @@
-.cate_info_panel {
+.main_panel {
   display: flex;
   flex: 1;
   height: 100vh;
+}
+
+.default_content {
   background-color: hsl(var(--accent));
   padding: 40px 30px 0;
 }
 
-.panel_content {
+.content_container {
   flex: 1;
   background-color: hsl(var(--background));
   border-radius: var(--radius);

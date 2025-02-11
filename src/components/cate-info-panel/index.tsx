@@ -1,13 +1,26 @@
+import DefaultContent from './default-content';
+import Editor from '../editor';
+import { useSelectedCate, type ICateState } from '../cates/controllers/selected-cate';
+import { useSelectedArticle, type IArticleState } from '../articles/controllers/selected-article';
 import styles from './index.module.css';
 
-const CateInfoPanel = function() {
-  return (
-    <div className={styles.cate_info_panel}>
-      <div className={styles.panel_content}>
+const MainPanel = function() {
 
-      </div>
+  const selectedCate = useSelectedCate((state: ICateState) => state.name);
+  const selectedArticle = useSelectedArticle((state: IArticleState) => state.selectedArticle);
+  const showEditor = selectedCate && selectedArticle && selectedArticle.metadata.is_file;
+
+  return (
+    <div className={styles.main_panel}>
+      {
+        showEditor ? (
+          <Editor />
+        ) : (
+          <DefaultContent />
+        )
+      }
     </div>
   )
 };
 
-export default CateInfoPanel;
+export default MainPanel;
