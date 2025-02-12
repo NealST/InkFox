@@ -12,14 +12,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { useTitle, type ITitleState } from "../content/title";
 import styles from "./index.module.css";
 
 const Header = function () {
-  const selectedArticleName = useSelectedArticle(
-    (state: IArticleState) => state.name
+  const selectedArticle = useSelectedArticle(
+    (state: IArticleState) => state.selectedArticle
   );
-  const latestTitle = useTitle((state: ITitleState) => state.title);
   const { t } = useTranslation();
 
   const actions = useMemo(
@@ -48,7 +46,7 @@ const Header = function () {
     <div className={styles.header}>
       <div className={styles.header_info}>
         <span className={styles.info_title}>
-          {latestTitle || selectedArticleName}
+          {selectedArticle.name}
         </span>
         <span className={styles.info_savetime}></span>
         <span className={styles.info_count}>{t("wordcount")}: 0</span>
