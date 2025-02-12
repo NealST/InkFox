@@ -8,7 +8,7 @@ const MainPanel = function() {
 
   const selectedCate = useSelectedCate((state: ICateState) => state.name);
   const selectedArticle = useSelectedArticle((state: IArticleState) => state.selectedArticle);
-  const showEditor = selectedCate && selectedArticle && selectedArticle.metadata.is_file;
+  const showEditor = selectedCate && selectedArticle && selectedArticle?.metadata?.is_file;
 
   return (
     <div className={styles.main_panel}>

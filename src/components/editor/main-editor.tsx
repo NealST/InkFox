@@ -13,7 +13,7 @@ const MainEditor = function() {
   return (
     <DndProvider backend={HTML5Backend}>
       <Plate editor={editor}>
-        <EditorContainer>
+        <EditorContainer className={styles.editor_container}>
           <Editor variant="demo" />
         </EditorContainer>
       </Plate>

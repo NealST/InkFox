@@ -4,7 +4,7 @@ import {
   type IArticleState,
 } from "@/components/articles/controllers/selected-article";
 import { useTranslation } from "react-i18next";
-import { Presentation, Focus, ArrowRightFromLine, Trash2 } from "lucide-react";
+import { Focus, ArrowRightFromLine, Trash2 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -22,10 +22,6 @@ const Header = function () {
 
   const actions = useMemo(
     () => [
-      {
-        id: "presentation",
-        Icon: Presentation,
-      },
       {
         id: "focusmode",
         Icon: Focus,
@@ -55,18 +51,9 @@ const Header = function () {
         {actions.map((item) => {
           const { id, Icon } = item;
           return (
-            <TooltipProvider key={id}>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button variant="ghost">
-                    <Icon size={24} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{t(id)}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Button variant="ghost" title={t(id)} key={id}>
+              <Icon size={24} />
+            </Button>
           );
         })}
       </div>
