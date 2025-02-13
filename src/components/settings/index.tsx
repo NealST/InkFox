@@ -51,6 +51,11 @@ interface SettingsContextType {
   setModel: (model: Model) => void;
 }
 
+interface ISettingsProps {
+  open: boolean;
+  onOpenChange: () => void;
+}
+
 export const models: Model[] = [
   { label: 'gpt-4o-mini', value: 'gpt-4o-mini' },
   { label: 'gpt-4o', value: 'gpt-4o' },
@@ -98,11 +103,11 @@ export function useSettings() {
   );
 }
 
-export function SettingsDialog() {
+export function SettingsDialog(props: ISettingsProps) {
+  const { open, onOpenChange } = props;
   const { keys, model, setKey, setModel } = useSettings();
   const [tempKeys, setTempKeys] = useState(keys);
   const [showKey, setShowKey] = useState<Record<string, boolean>>({});
-  const [open, setOpen] = useState(false);
   const [openModel, setOpenModel] = useState(false);
 
   const { getOptions, setOption } = useEditorPlugin(CopilotPlugin);
@@ -192,7 +197,7 @@ export function SettingsDialog() {
   );
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button
           size="icon"
