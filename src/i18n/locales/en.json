@@ -12,7 +12,12 @@
   "remove": "Remove",
   "folders": "Folder Structure",
   "search": "Search",
-  "home": "Home",
+  "more": "More",
+  "settings": "Settings",
+  "introduction": "Introduction",
+  "changelog": "Changelog",
+  "download": "App Download",
+  "feedback": "Feedback",
   "doc": "Document",
   "directory": "Directory",
   "untitled": "Untitled",
@@ -38,4 +43,5 @@
   "aligncenter": "Align Center",
   "alignright": "Align Right",
   "alignjustify": "Align Justify"
+
 }

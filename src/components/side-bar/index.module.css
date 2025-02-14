@@ -4,6 +4,7 @@
 }
 
 .bar_cates {
+  position: relative;
   width: 200px;
   height: 100vh;
   border-right: 1px solid hsl(var(--border));
