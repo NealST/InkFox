@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { type ReactNode, createContext, useContext, useState } from 'react';
+import { type ReactNode, createContext, useContext, useState, useEffect } from "react";
 
-import { cn } from '@udecode/cn';
-import { useEditorPlugin } from '@udecode/plate/react';
-import { CopilotPlugin } from '@udecode/plate-ai/react';
+import { cn } from "@udecode/cn";
+import { useEditorPlugin } from "@udecode/plate/react";
+import { CopilotPlugin } from "@udecode/plate-ai/react";
 import {
   Check,
   ChevronsUpDown,
@@ -13,9 +13,20 @@ import {
   EyeOff,
   Settings,
   Wand2Icon,
-} from 'lucide-react';
+  Upload,
+  SunMoon,
+  BookA,
+  Type,
+} from "lucide-react";
 
-import { Button } from '@/components/plate-ui/button';
+import { Button } from "@/components/plate-ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Command,
   CommandEmpty,
@@ -23,7 +34,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/plate-ui/command';
+} from "@/components/plate-ui/command";
 import {
   Dialog,
   DialogContent,
@@ -31,13 +42,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/plate-ui/dialog';
-import { Input } from '@/components/plate-ui/input';
+} from "@/components/plate-ui/dialog";
+import { Input } from "@/components/plate-ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/plate-ui/popover';
+} from "@/components/plate-ui/popover";
+import { useTranslation } from "react-i18next";
+import { setConfig, getConfig } from '@/utils/store-config';
 
 interface Model {
   label: string;
@@ -57,12 +70,12 @@ interface ISettingsProps {
 }
 
 export const models: Model[] = [
-  { label: 'gpt-4o-mini', value: 'gpt-4o-mini' },
-  { label: 'gpt-4o', value: 'gpt-4o' },
-  { label: 'gpt-4-turbo', value: 'gpt-4-turbo' },
-  { label: 'gpt-4', value: 'gpt-4' },
-  { label: 'gpt-3.5-turbo', value: 'gpt-3.5-turbo' },
-  { label: 'gpt-3.5-turbo-instruct', value: 'gpt-3.5-turbo-instruct' },
+  { label: "gpt-4o-mini", value: "gpt-4o-mini" },
+  { label: "gpt-4o", value: "gpt-4o" },
+  { label: "gpt-4-turbo", value: "gpt-4-turbo" },
+  { label: "gpt-4", value: "gpt-4" },
+  { label: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
+  { label: "gpt-3.5-turbo-instruct", value: "gpt-3.5-turbo-instruct" },
 ];
 
 const SettingsContext = createContext<SettingsContextType | undefined>(
@@ -71,8 +84,8 @@ const SettingsContext = createContext<SettingsContextType | undefined>(
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [keys, setKeys] = useState({
-    openai: '',
-    uploadthing: '',
+    openai: "",
+    uploadthing: "",
   });
   const [model, setModel] = useState<Model>(models[0]);
 
@@ -93,8 +106,8 @@ export function useSettings() {
   return (
     context ?? {
       keys: {
-        openai: '',
-        uploadthing: '',
+        openai: "",
+        uploadthing: "",
       },
       model: models[0],
       setKey: () => {},
@@ -109,6 +122,7 @@ export function SettingsDialog(props: ISettingsProps) {
   const [tempKeys, setTempKeys] = useState(keys);
   const [showKey, setShowKey] = useState<Record<string, boolean>>({});
   const [openModel, setOpenModel] = useState(false);
+  const { t } = useTranslation();
 
   // const { getOptions, setOption } = useEditorPlugin(CopilotPlugin);
 
@@ -154,9 +168,9 @@ export function SettingsDialog(props: ISettingsProps) {
           <a
             className="flex items-center"
             href={
-              service === 'openai'
-                ? 'https://platform.openai.com/api-keys'
-                : 'https://uploadthing.com/dashboard'
+              service === "openai"
+                ? "https://platform.openai.com/api-keys"
+                : "https://uploadthing.com/dashboard"
             }
             rel="noopener noreferrer"
             target="_blank"
@@ -176,7 +190,7 @@ export function SettingsDialog(props: ISettingsProps) {
         }
         placeholder=""
         data-1p-ignore
-        type={showKey[service] ? 'text' : 'password'}
+        type={showKey[service] ? "text" : "password"}
       />
       <Button
         size="icon"
@@ -191,11 +205,78 @@ export function SettingsDialog(props: ISettingsProps) {
           <Eye className="size-4" />
         )}
         <span className="sr-only">
-          {showKey[service] ? 'Hide' : 'Show'} {label}
+          {showKey[service] ? "Hide" : "Show"} {label}
         </span>
       </Button>
     </div>
   );
+
+  const renderThemeMode = () => {
+    return (
+      <div className="group relative">
+        <label
+          className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-xs font-medium text-foreground group-has-[:disabled]:opacity-50"
+          htmlFor="select-theme"
+        >
+          {t("currentTheme")}
+        </label>
+        <Select>
+          <SelectTrigger id="select-theme" className="w-full">
+            <SelectValue className="w-full" role="combobox" />
+          </SelectTrigger>
+          <SelectContent className="w-full p-0">
+            <SelectItem value="light">{t("lightTheme")}</SelectItem>
+            <SelectItem value="dark">{t("darkTheme")}</SelectItem>
+            <SelectItem value="system">{t("systemTheme")}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    );
+  };
+
+  const renderLanguageMode = () => {
+    return (
+      <div className="group relative">
+        <label
+          className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-xs font-medium text-foreground group-has-[:disabled]:opacity-50"
+          htmlFor="select-language"
+        >
+          {t("currentLanguage")}
+        </label>
+        <Select>
+          <SelectTrigger id="select-language" className="w-full">
+            <SelectValue className="w-full" role="combobox" />
+          </SelectTrigger>
+          <SelectContent className="w-full p-0">
+            <SelectItem value="en">{t("en")}</SelectItem>
+            <SelectItem value="ch">{t("ch")}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    );
+  };
+
+  const renderFontFamilyMode = () => {
+    return (
+      <div className="group relative">
+        <label
+          className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-xs font-medium text-foreground group-has-[:disabled]:opacity-50"
+          htmlFor="select-fontfamily"
+        >
+          {t("currentFontFamily")}
+        </label>
+        <Select>
+          <SelectTrigger id="select-fontfamily" className="w-full">
+            <SelectValue className="w-full" role="combobox" />
+          </SelectTrigger>
+          <SelectContent className="w-full p-0">
+            <SelectItem value="en">{t("en")}</SelectItem>
+            <SelectItem value="ch">{t("ch")}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    );
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -204,9 +285,9 @@ export function SettingsDialog(props: ISettingsProps) {
           size="icon"
           variant="default"
           className={cn(
-            'group fixed bottom-4 right-4 z-50 size-10 overflow-hidden',
-            'rounded-full shadow-md hover:shadow-lg',
-            'transition-all duration-300 ease-in-out hover:w-[106px]'
+            "group fixed bottom-4 right-4 z-50 size-10 overflow-hidden",
+            "rounded-full shadow-md hover:shadow-lg",
+            "transition-all duration-300 ease-in-out hover:w-[106px]"
           )}
           data-block-hide
         >
@@ -214,25 +295,59 @@ export function SettingsDialog(props: ISettingsProps) {
             <Settings className="ml-1.5 size-4" />
             <span
               className={cn(
-                'whitespace-nowrap opacity-0 transition-all duration-300 ease-in-out',
-                'group-hover:translate-x-0 group-hover:opacity-100',
-                '-translate-x-2'
+                "whitespace-nowrap opacity-0 transition-all duration-300 ease-in-out",
+                "group-hover:translate-x-0 group-hover:opacity-100",
+                "-translate-x-2"
               )}
             >
-              Settings
+              {t("settings")}
             </span>
           </div>
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-xl">Settings</DialogTitle>
-          <DialogDescription>
-            Configure your API keys and preferences.
-          </DialogDescription>
+          <DialogTitle className="text-xl">{t("settings")}</DialogTitle>
+          <DialogDescription>{t("settingsTip")}</DialogDescription>
         </DialogHeader>
 
-        <form className="space-y-10" onSubmit={handleSubmit}>
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          {/* theme Settings Group */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="size-8 rounded-full bg-blue-100 p-2 dark:bg-blue-900">
+                <SunMoon className="size-4 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h4 className="font-semibold">{t("theme")}</h4>
+            </div>
+
+            <div className="space-y-4">{renderThemeMode()}</div>
+          </div>
+
+          {/* language Settings Group */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="size-8 rounded-full bg-orange-100 p-2 dark:bg-orange-900">
+                <BookA className="size-4 text-orange-600 dark:text-orange-400" />
+              </div>
+              <h4 className="font-semibold">{t("language")}</h4>
+            </div>
+
+            <div className="space-y-4">{renderLanguageMode()}</div>
+          </div>
+
+          {/* font family Settings Group */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="size-8 rounded-full bg-green-100 p-2 dark:bg-green-900">
+                <Type className="size-4 text-green-600 dark:text-green-400" />
+              </div>
+              <h4 className="font-semibold">{t("fontFamily")}</h4>
+            </div>
+
+            <div className="space-y-4">{renderFontFamilyMode()}</div>
+          </div>
+
           {/* AI Settings Group */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -243,14 +358,12 @@ export function SettingsDialog(props: ISettingsProps) {
             </div>
 
             <div className="space-y-4">
-              {renderApiKeyInput('openai', 'OpenAI API key')}
-
-              <div className="group relative">
+            <div className="group relative">
                 <label
                   className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-xs font-medium text-foreground group-has-[:disabled]:opacity-50"
                   htmlFor="select-model"
                 >
-                  Model
+                  {t('model')}
                 </label>
                 <Popover open={openModel} onOpenChange={setOpenModel}>
                   <PopoverTrigger id="select-model" asChild>
@@ -282,10 +395,10 @@ export function SettingsDialog(props: ISettingsProps) {
                             >
                               <Check
                                 className={cn(
-                                  'mr-2 size-4',
+                                  "mr-2 size-4",
                                   model.value === m.value
-                                    ? 'opacity-100'
-                                    : 'opacity-0'
+                                    ? "opacity-100"
+                                    : "opacity-0"
                                 )}
                               />
                               <code>{m.label}</code>
@@ -297,30 +410,31 @@ export function SettingsDialog(props: ISettingsProps) {
                   </PopoverContent>
                 </Popover>
               </div>
+              {renderApiKeyInput("openai", "API key")}
             </div>
           </div>
 
           {/* Upload Settings Group */}
-          {/* <div className="space-y-4">
+          <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="size-8 rounded-full bg-red-100 p-2 dark:bg-red-900">
                 <Upload className="size-4 text-red-600 dark:text-red-400" />
               </div>
-              <h4 className="font-semibold">Upload</h4>
+              <h4 className="font-semibold">{t('upload')}</h4>
             </div>
 
             <div className="space-y-4">
-              {renderApiKeyInput('uploadthing', 'Uploadthing API key')}
+              {renderApiKeyInput("uploadthing", "Uploadthing API key")}
             </div>
-          </div> */}
+          </div>
 
           <Button size="lg" className="w-full" type="submit">
-            Save changes
+            {t('saveChange')}
           </Button>
         </form>
 
         <p className="text-sm text-muted-foreground">
-          Not stored anywhere. Used only for current session requests.
+          {t('saveTips')}
         </p>
       </DialogContent>
     </Dialog>

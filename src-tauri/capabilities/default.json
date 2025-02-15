@@ -10,6 +10,7 @@
     "shell:allow-open",
     "fs:default",
     "fs:allow-home-read-recursive",
-    "fs:allow-home-write-recursive"
+    "fs:allow-home-write-recursive",
+    "store:default"
   ]
 }

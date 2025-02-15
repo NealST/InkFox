@@ -1,34 +1,36 @@
-use serde::{Serialize, Deserialize};
-use std::fs;
-use std::path::PathBuf;
-use walkdir::WalkDir;
-use std::fs::metadata;
 use chrono::{DateTime, Local};
+use serde::{Deserialize, Serialize};
+use std::fs;
+use std::fs::metadata;
+use std::path::PathBuf;
 use uuid::Uuid;
+use walkdir::WalkDir;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct FileInfo {
-  id: String,
-  name: String,
-  path: String,
-  metadata: MetadataInfo,
-  children: Option<Vec<FileInfo>>,
+    id: String,
+    name: String,
+    path: String,
+    metadata: MetadataInfo,
+    children: Option<Vec<FileInfo>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 struct MetadataInfo {
-  is_file: bool,
-  is_dir: bool,
-  len: u64,
-  created: Option<String>,
-  modified: Option<String>,
+    is_file: bool,
+    is_dir: bool,
+    len: u64,
+    created: Option<String>,
+    modified: Option<String>,
 }
 
 fn get_metadata_info(metadata: fs::Metadata) -> MetadataInfo {
-  let created = metadata.created()
+    let created = metadata
+        .created()
         .ok()
         .and_then(|time| DateTime::<Local>::from(time).to_rfc3339().parse().ok());
-    let modified = metadata.modified()
+    let modified = metadata
+        .modified()
         .ok()
         .and_then(|time| DateTime::<Local>::from(time).to_rfc3339().parse().ok());
 
@@ -67,7 +69,7 @@ fn build_file_tree(path: &PathBuf) -> FileInfo {
             .filter_map(|entry| entry.ok())
             .map(|entry| build_file_tree(&entry.path().to_path_buf()))
             .collect();
-        
+
         file_info.children = Some(children);
     }
 
