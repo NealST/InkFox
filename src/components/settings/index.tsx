@@ -1,13 +1,17 @@
 "use client";
 
-import { type ReactNode, createContext, useContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
 
 import { cn } from "@udecode/cn";
 import { useEditorPlugin } from "@udecode/plate/react";
 import { CopilotPlugin } from "@udecode/plate-ai/react";
 import {
-  Check,
-  ChevronsUpDown,
   ExternalLinkIcon,
   Eye,
   EyeOff,
@@ -28,14 +32,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/plate-ui/command";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -44,29 +40,30 @@ import {
   DialogTrigger,
 } from "@/components/plate-ui/dialog";
 import { Input } from "@/components/plate-ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/plate-ui/popover";
+import { setTheme, type Theme } from '@/utils/set-theme';
 import { useTranslation } from "react-i18next";
-import { setConfig, getConfig } from '@/utils/store-config';
+import { setConfig, getConfig } from "@/utils/store-config";
+import i18n from "@/i18n";
+
+export type Language = "en" | "zh";
 
 interface Model {
   label: string;
   value: string;
 }
 
-interface SettingsContextType {
-  keys: Record<string, string>;
-  model: Model;
-  setKey: (service: string, key: string) => void;
-  setModel: (model: Model) => void;
-}
-
 interface ISettingsProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+}
+
+export interface ISettings {
+  theme: Theme;
+  language: Language;
+  fontFamily: any;
+  model: string;
+  modelApiKey: string;
+  uploadThingApiKey: string;
 }
 
 export const models: Model[] = [
@@ -78,138 +75,180 @@ export const models: Model[] = [
   { label: "gpt-3.5-turbo-instruct", value: "gpt-3.5-turbo-instruct" },
 ];
 
-const SettingsContext = createContext<SettingsContextType | undefined>(
-  undefined
-);
+const languages = [
+  {
+    label: 'English', value: 'en'
+  },
+  {
+    label: '简体中文', value: 'zh'
+  }
+]
 
-export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [keys, setKeys] = useState({
-    openai: "",
-    uploadthing: "",
-  });
-  const [model, setModel] = useState<Model>(models[0]);
+export const defaultSettings = {
+  theme: "system" as Theme,
+  language: (window.navigator.language === 'zh-CN' ? 'zh' : 'en') as Language,
+  fontFamily: "",
+  model: "",
+  modelApiKey: "",
+  uploadThingApiKey: "",
+};
 
-  const setKey = (service: string, key: string) => {
-    setKeys((prev) => ({ ...prev, [service]: key }));
-  };
+type SettingsProviderState = {
+  settings: ISettings;
+  setSettings: (config: ISettings) => void;
+};
 
-  return (
-    <SettingsContext.Provider value={{ keys, model, setKey, setModel }}>
-      {children}
-    </SettingsContext.Provider>
-  );
-}
+const initialState: SettingsProviderState = {
+  settings: defaultSettings,
+  setSettings: () => null,
+};
 
-export function useSettings() {
-  const context = useContext(SettingsContext);
+export const SettingsProviderContext =
+  createContext<SettingsProviderState>(initialState);
 
-  return (
-    context ?? {
-      keys: {
-        openai: "",
-        uploadthing: "",
-      },
-      model: models[0],
-      setKey: () => {},
-      setModel: () => {},
-    }
-  );
-}
+export const useSettings = () => {
+  const context = useContext(SettingsProviderContext);
+
+  if (context === undefined)
+    throw new Error("useTheme must be used within a ThemeProvider");
+
+  return context;
+};
 
 export function SettingsDialog(props: ISettingsProps) {
   const { open, onOpenChange } = props;
-  const { keys, model, setKey, setModel } = useSettings();
-  const [tempKeys, setTempKeys] = useState(keys);
+  const { settings, setSettings } = useSettings();
   const [showKey, setShowKey] = useState<Record<string, boolean>>({});
-  const [openModel, setOpenModel] = useState(false);
   const { t } = useTranslation();
 
   // const { getOptions, setOption } = useEditorPlugin(CopilotPlugin);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    Object.entries(tempKeys).forEach(([service, key]) => {
-      setKey(service, key);
-    });
+  const handleThemeChange = function (value: Theme) {
+    setTheme(value);
+    const newSettings = {
+      ...settings,
+      theme: value,
+    };
+    setSettings(newSettings);
+    setConfig(JSON.stringify(newSettings));
+  };
 
-    onOpenChange(false);
+  const handleLanguageChange = function (value: Language) {
+    i18n.changeLanguage(value);
+    const newSettings = {
+      ...settings,
+      language: value,
+    };
+    setSettings(newSettings);
+    setConfig(JSON.stringify(newSettings));
+  };
 
-    // Update AI options if needed
-    //const completeOptions = getOptions().completeOptions ?? {};
-    // setOption('completeOptions', {
-    //   ...completeOptions,
-    //   body: {
-    //     ...completeOptions.body,
-    //     apiKey: tempKeys.openai,
-    //     model: model.value,
-    //   },
-    // });
+  const handleFontChange = function (value: string) {
+    const newSettings = {
+      ...settings,
+      fontFamily: value,
+    };
+    setSettings(newSettings);
+    setConfig(JSON.stringify(newSettings));
+  };
+
+  const handleModelChange = function (value: string) {
+    const newSettings = {
+      ...settings,
+      model: value,
+    };
+    setSettings(newSettings);
+    setConfig(JSON.stringify(newSettings));
+  };
+
+  const handleModelApiKeyChange = function (value: string) {
+    const newSettings = {
+      ...settings,
+      modelApiKey: value,
+    };
+    setSettings(newSettings);
+    setConfig(JSON.stringify(newSettings));
+  };
+
+  const handleUploadApiKeyChange = function (value: string) {
+    const newSettings = {
+      ...settings,
+      uploadThingApiKey: value,
+    };
+    setSettings(newSettings);
+    setConfig(JSON.stringify(newSettings));
   };
 
   const toggleKeyVisibility = (key: string) => {
     setShowKey((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const renderApiKeyInput = (service: string, label: string) => (
-    <div className="group relative">
-      <div className="flex items-center justify-between">
-        <label
-          className="absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm text-muted-foreground/70 transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-xs group-focus-within:font-medium group-focus-within:text-foreground has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-xs has-[+input:not(:placeholder-shown)]:font-medium has-[+input:not(:placeholder-shown)]:text-foreground"
-          htmlFor={label}
-        >
-          <span className="inline-flex bg-background px-2">{label}</span>
-        </label>
+  const renderApiKeyInput = (service: string, label: string) => {
+    const defaultValue =
+      settings[
+        service === "ai" ? "modelApiKey" : "uploadThingApiKey"
+      ];
+    const handleChange =
+      service === "ai" ? handleModelApiKeyChange : handleUploadApiKeyChange;
+    return (
+      <div className="group relative">
+        <div className="flex items-center justify-between">
+          <label
+            className="absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm text-muted-foreground/70 transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-xs group-focus-within:font-medium group-focus-within:text-foreground has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-xs has-[+input:not(:placeholder-shown)]:font-medium has-[+input:not(:placeholder-shown)]:text-foreground"
+            htmlFor={label}
+          >
+            <span className="inline-flex bg-background px-2">{label}</span>
+          </label>
+          <Button
+            asChild
+            size="icon"
+            variant="ghost"
+            className="absolute right-[28px] top-0 h-full"
+          >
+            <a
+              className="flex items-center"
+              href={
+                service === "openai"
+                  ? "https://platform.openai.com/api-keys"
+                  : "https://uploadthing.com/dashboard"
+              }
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <ExternalLinkIcon className="size-4" />
+              <span className="sr-only">Get {label}</span>
+            </a>
+          </Button>
+        </div>
+
+        <Input
+          id={label}
+          className="pr-10"
+          defaultValue={defaultValue}
+          onChange={(e) => handleChange(e.target.value)}
+          placeholder=""
+          data-1p-ignore
+          type={showKey[service] ? "text" : "password"}
+        />
         <Button
-          asChild
           size="icon"
           variant="ghost"
-          className="absolute right-[28px] top-0 h-full"
+          className="absolute right-0 top-0 h-full"
+          onClick={() => toggleKeyVisibility(service)}
+          type="button"
         >
-          <a
-            className="flex items-center"
-            href={
-              service === "openai"
-                ? "https://platform.openai.com/api-keys"
-                : "https://uploadthing.com/dashboard"
-            }
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <ExternalLinkIcon className="size-4" />
-            <span className="sr-only">Get {label}</span>
-          </a>
+          {showKey[service] ? (
+            <EyeOff className="size-4" />
+          ) : (
+            <Eye className="size-4" />
+          )}
+          <span className="sr-only">
+            {showKey[service] ? "Hide" : "Show"} {label}
+          </span>
         </Button>
       </div>
-
-      <Input
-        id={label}
-        className="pr-10"
-        value={tempKeys[service]}
-        onChange={(e) =>
-          setTempKeys((prev) => ({ ...prev, [service]: e.target.value }))
-        }
-        placeholder=""
-        data-1p-ignore
-        type={showKey[service] ? "text" : "password"}
-      />
-      <Button
-        size="icon"
-        variant="ghost"
-        className="absolute right-0 top-0 h-full"
-        onClick={() => toggleKeyVisibility(service)}
-        type="button"
-      >
-        {showKey[service] ? (
-          <EyeOff className="size-4" />
-        ) : (
-          <Eye className="size-4" />
-        )}
-        <span className="sr-only">
-          {showKey[service] ? "Hide" : "Show"} {label}
-        </span>
-      </Button>
-    </div>
-  );
+    );
+  };
 
   const renderThemeMode = () => {
     return (
@@ -220,7 +259,10 @@ export function SettingsDialog(props: ISettingsProps) {
         >
           {t("currentTheme")}
         </label>
-        <Select>
+        <Select
+          defaultValue={settings.theme}
+          onValueChange={handleThemeChange}
+        >
           <SelectTrigger id="select-theme" className="w-full">
             <SelectValue className="w-full" role="combobox" />
           </SelectTrigger>
@@ -243,13 +285,22 @@ export function SettingsDialog(props: ISettingsProps) {
         >
           {t("currentLanguage")}
         </label>
-        <Select>
+        <Select
+          defaultValue={settings.language}
+          onValueChange={handleLanguageChange}
+        >
           <SelectTrigger id="select-language" className="w-full">
             <SelectValue className="w-full" role="combobox" />
           </SelectTrigger>
           <SelectContent className="w-full p-0">
-            <SelectItem value="en">{t("en")}</SelectItem>
-            <SelectItem value="ch">{t("ch")}</SelectItem>
+            {
+              languages.map(item => {
+                const { label, value } = item;
+                return (
+                  <SelectItem key={value} value={value}>{label}</SelectItem>
+                )
+              })
+            }
           </SelectContent>
         </Select>
       </div>
@@ -265,7 +316,10 @@ export function SettingsDialog(props: ISettingsProps) {
         >
           {t("currentFontFamily")}
         </label>
-        <Select>
+        <Select
+          defaultValue={settings.fontFamily}
+          onValueChange={handleFontChange}
+        >
           <SelectTrigger id="select-fontfamily" className="w-full">
             <SelectValue className="w-full" role="combobox" />
           </SelectTrigger>
@@ -276,7 +330,38 @@ export function SettingsDialog(props: ISettingsProps) {
         </Select>
       </div>
     );
-  }
+  };
+
+  const renderModel = () => {
+    return (
+      <div className="group relative">
+        <label
+          className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-xs font-medium text-foreground group-has-[:disabled]:opacity-50"
+          htmlFor="select-model"
+        >
+          {t("model")}
+        </label>
+        <Select
+          defaultValue={settings.language}
+          onValueChange={handleModelChange}
+        >
+          <SelectTrigger id="select-model" className="w-full">
+            <SelectValue className="w-full" role="combobox" />
+          </SelectTrigger>
+          <SelectContent className="w-full p-0">
+            {models.map((item) => {
+              const { label, value } = item;
+              return (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+      </div>
+    );
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -311,7 +396,7 @@ export function SettingsDialog(props: ISettingsProps) {
           <DialogDescription>{t("settingsTip")}</DialogDescription>
         </DialogHeader>
 
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-5">
           {/* theme Settings Group */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -358,59 +443,8 @@ export function SettingsDialog(props: ISettingsProps) {
             </div>
 
             <div className="space-y-4">
-            <div className="group relative">
-                <label
-                  className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-xs font-medium text-foreground group-has-[:disabled]:opacity-50"
-                  htmlFor="select-model"
-                >
-                  {t('model')}
-                </label>
-                <Popover open={openModel} onOpenChange={setOpenModel}>
-                  <PopoverTrigger id="select-model" asChild>
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="w-full justify-between"
-                      aria-expanded={openModel}
-                      role="combobox"
-                    >
-                      <code>{model.label}</code>
-                      <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full p-0">
-                    <Command>
-                      <CommandInput placeholder="Search model..." />
-                      <CommandEmpty>No model found.</CommandEmpty>
-                      <CommandList>
-                        <CommandGroup>
-                          {models.map((m) => (
-                            <CommandItem
-                              key={m.value}
-                              value={m.value}
-                              onSelect={() => {
-                                setModel(m);
-                                setOpenModel(false);
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 size-4",
-                                  model.value === m.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              <code>{m.label}</code>
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-              </div>
-              {renderApiKeyInput("openai", "API key")}
+              {renderModel()}
+              {renderApiKeyInput("ai", "API key")}
             </div>
           </div>
 
@@ -420,22 +454,14 @@ export function SettingsDialog(props: ISettingsProps) {
               <div className="size-8 rounded-full bg-red-100 p-2 dark:bg-red-900">
                 <Upload className="size-4 text-red-600 dark:text-red-400" />
               </div>
-              <h4 className="font-semibold">{t('upload')}</h4>
+              <h4 className="font-semibold">{t("upload")}</h4>
             </div>
 
             <div className="space-y-4">
               {renderApiKeyInput("uploadthing", "Uploadthing API key")}
             </div>
           </div>
-
-          <Button size="lg" className="w-full" type="submit">
-            {t('saveChange')}
-          </Button>
         </form>
-
-        <p className="text-sm text-muted-foreground">
-          {t('saveTips')}
-        </p>
       </DialogContent>
     </Dialog>
   );

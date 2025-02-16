@@ -16,10 +16,12 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en',
+    lng: window.navigator.language,
     interpolation: {
       escapeValue: false
     }
   });
+
+console.log('system language', window.navigator.language);
 
 export default i18n;

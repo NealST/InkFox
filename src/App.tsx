@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import SideBar from "./components/side-bar";
 import CateInfoPanel from "./components/cate-info-panel";
-import { ThemeProvider } from "./theme-provider";
+import { SettingsProvider } from "./config-provider";
 import { SettingsDialog } from "./components/settings";
 import { emitter } from "@/utils/events";
 import "./App.css";
@@ -20,13 +20,13 @@ function App() {
   }, []);
 
   return (
-    <ThemeProvider>
+    <SettingsProvider>
       <main className="main-container">
         <SideBar />
         <CateInfoPanel />
         <SettingsDialog open={openSettings} onOpenChange={setOpenSettings} />
       </main>
-    </ThemeProvider>
+    </SettingsProvider>
   );
 }
 
