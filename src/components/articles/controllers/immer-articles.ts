@@ -32,8 +32,10 @@ export const appendChild = function (
 ) {
   // if newItem has an input action, it indicates that it's just need to change the display datasource
   const len = itemPaths.length;
-  const parentPaths = itemPaths.slice(0, len - 1);
+
   const { name, action, metadata } = newItem;
+  const parentPaths = itemPaths.slice(0, len - 1);
+
   if (action === "input") {
     return updateDataSource(dataSource, parentPaths, (parentChildren) => {
       parentChildren.unshift(newItem);
@@ -56,10 +58,16 @@ export const appendChild = function (
       } else {
         create(path);
       }
-      parentChildren[0] = {
+      const retNewItem = {
         ...newItem,
         path: path,
       };
+      // if the first element is an input item
+      if (parentChildren[0].action === 'input') {
+        parentChildren[0] = retNewItem;
+      } else {
+        parentChildren.unshift(retNewItem);
+      }
     },
     catePath
   );

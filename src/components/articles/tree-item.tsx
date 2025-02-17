@@ -55,7 +55,6 @@ const TreeItem = function ({
 }: TreeItemProps) {
   const isOpen = expandedIds.has(item.path);
   const itemRef = useRef<HTMLDivElement>(null);
-  const [selectionStyle, setSelectionStyle] = useState("");
   const [enterItem, setEnterItem] = useState({
     name: "",
     isEntering: false,

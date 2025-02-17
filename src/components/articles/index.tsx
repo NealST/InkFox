@@ -137,15 +137,15 @@ const Articles = function () {
           <HoverCardTrigger>
             <Button className={styles.header_add}>+</Button>
           </HoverCardTrigger>
-          <HoverCardContent className={styles.articles_add_hover}>
-            <div className={styles.articles_add_item} onClick={handleAddFile}>
+          <HoverCardContent className="w-40">
+            <Button className="w-full justify-start" variant="ghost" onClick={handleAddFile}>
               <File size={18} />
               <span className={styles.add_item_text}>{t("doc")}</span>
-            </div>
-            <div className={styles.articles_add_item} onClick={handleAddGroup}>
+            </Button>
+            <Button className="w-full justify-start" variant="ghost" onClick={handleAddGroup}>
               <Folder size={18} />
               <span className={styles.add_item_text}>{t("directory")}</span>
-            </div>
+            </Button>
           </HoverCardContent>
         </HoverCard>
       </div>
