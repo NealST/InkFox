@@ -6,15 +6,15 @@ import { useChat as useBaseChat } from 'ai/react';
 import { useSettings } from '@/components/settings';
 
 export const useChat = () => {
-  const { keys, model } = useSettings();
+  const { settings } = useSettings();
 
   return useBaseChat({
     id: 'editor',
     api: '/api/ai/command',
     body: {
       // !!! DEMO ONLY: don't use API keys client-side
-      apiKey: keys.openai,
-      model: model.value,
+      apiKey: settings.modelApiKey,
+      model: settings.model,
     },
     fetch: async (input, init) => {
       const res = await fetch(input, init);

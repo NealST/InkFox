@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useState,
-  useRef,
-  useMemo,
-  MouseEvent,
-} from "react";
+import { useEffect, useState, useRef, useMemo, MouseEvent } from "react";
 import {
   useSelectedCate,
   type ICateState,
@@ -31,9 +25,9 @@ import {
   IDataSourceState,
 } from "./controllers/datasource-state";
 import { appendChild } from "./controllers/immer-articles";
-import { GlobalDataContext } from './controllers/global-context';
+import { GlobalDataContext } from "./controllers/global-context";
 import { format } from "date-fns";
-import TreeView from "./tree-view";
+import TreeItem from "./tree-item";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { uid } from "uid";
@@ -53,7 +47,7 @@ const Articles = function () {
     () => ({
       dataSource,
       parentCatePath,
-      setDataSource
+      setDataSource,
     }),
     [dataSource, parentCatePath]
   );
@@ -74,11 +68,12 @@ const Articles = function () {
     });
   }, [selectedCate]);
 
-  function handleAddFile() {
+  function handleAddFile(itemPaths?: number[]) {
+    const usedItemPaths = itemPaths || curSelectedItemPathsRef.current;
     setDataSource(
       appendChild(
         dataSource,
-        curSelectedItemPathsRef.current,
+        usedItemPaths,
         {
           id: uid(),
           name: `${t("untitled")}.json`,
@@ -95,12 +90,13 @@ const Articles = function () {
     );
   }
 
-  function handleAddGroup() {
+  function handleAddGroup(itemPaths?: number[]) {
+    const usedItemPaths = itemPaths || curSelectedItemPathsRef.current;
     const defaultGroupName = t("newgroup");
     setDataSource(
       appendChild(
         dataSource,
-        curSelectedItemPathsRef.current,
+        usedItemPaths,
         {
           id: uid(),
           name: defaultGroupName,
@@ -138,11 +134,19 @@ const Articles = function () {
             <Button className={styles.header_add}>+</Button>
           </HoverCardTrigger>
           <HoverCardContent className="w-40">
-            <Button className="w-full justify-start" variant="ghost" onClick={handleAddFile}>
+            <Button
+              className="w-full justify-start"
+              variant="ghost"
+              onClick={() => handleAddFile()}
+            >
               <File size={18} />
               <span className={styles.add_item_text}>{t("doc")}</span>
             </Button>
-            <Button className="w-full justify-start" variant="ghost" onClick={handleAddGroup}>
+            <Button
+              className="w-full justify-start"
+              variant="ghost"
+              onClick={() => handleAddGroup()}
+            >
               <Folder size={18} />
               <span className={styles.add_item_text}>{t("directory")}</span>
             </Button>
@@ -166,7 +170,9 @@ const Articles = function () {
 
       <GlobalDataContext.Provider value={globalData}>
         <div className={styles.articles_tree} onClick={handleSelect}>
-          <TreeView data={dataSource} />
+          {dataSource.map((item, index) => (
+            <TreeItem key={item.id} item={item} itemPaths={[index]} onAddFile={handleAddFile} onAddGroup={handleAddGroup} />
+          ))}
         </div>
       </GlobalDataContext.Provider>
     </div>

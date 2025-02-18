@@ -21,13 +21,8 @@ export interface TreeItemProps {
   item: IArticleItem;
   depth?: number;
   itemPaths: number[];
-  selectedIds: Set<string>;
-  lastSelectedId: React.MutableRefObject<string | null>;
-  onSelect: (ids: Set<string>) => void;
-  expandedIds: Set<string>;
-  onToggleExpand: (id: string, isOpen: boolean) => void;
-  getIcon?: (item: IArticleItem, depth: number) => React.ReactNode;
-  onAction?: (action: string, item: IArticleItem) => void;
+  onAddFile: (paths: number[]) => void;
+  onAddGroup: (paths: number[]) => void;
 }
 
 export interface TreeViewProps {

@@ -5,6 +5,11 @@ import {
   CollapsibleContent,
 } from "@/components/ui/collapsible";
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -20,9 +25,11 @@ import {
   Folder,
   File,
   ChevronRight,
+  ChevronDown,
   FilePenLine,
   Pencil,
   Trash2,
+  Plus,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -45,15 +52,9 @@ const TreeItem = function ({
   item,
   depth = 0,
   itemPaths,
-  selectedIds,
-  lastSelectedId,
-  onSelect,
-  expandedIds,
-  onToggleExpand,
-  getIcon,
-  onAction,
+  onAddFile,
+  onAddGroup,
 }: TreeItemProps) {
-  const isOpen = expandedIds.has(item.path);
   const itemRef = useRef<HTMLDivElement>(null);
   const [enterItem, setEnterItem] = useState({
     name: "",
@@ -74,6 +75,9 @@ const TreeItem = function ({
   const isSelected = selectedArticle.id === item.id;
 
   const handleClickItem = () => {
+    if (isDir) {
+      return;
+    }
     setSelectedArticle(item);
   };
 
@@ -160,7 +164,7 @@ const TreeItem = function ({
         <div
           style={{
             color: "hsl(var(--foreground))",
-            marginRight: "6px",
+            marginRight: "8px",
           }}
           title={t("rename")}
         >
@@ -172,6 +176,37 @@ const TreeItem = function ({
             onClick={handleRename}
           />
         </div>
+        {isDir && (
+          <HoverCard>
+            <HoverCardTrigger>
+              <Plus
+                style={{
+                  color: "hsl(var(--foreground))",
+                  marginRight: "8px",
+                }}
+                size={14}
+              />
+            </HoverCardTrigger>
+            <HoverCardContent className="w-40">
+              <Button
+                className="w-full justify-start"
+                variant="ghost"
+                onClick={() => onAddFile(itemPaths.concat(0))}
+              >
+                <File size={18} />
+                <span className={styles.add_item_text}>{t("doc")}</span>
+              </Button>
+              <Button
+                className="w-full justify-start"
+                variant="ghost"
+                onClick={() => onAddGroup(itemPaths.concat(0))}
+              >
+                <Folder size={18} />
+                <span className={styles.add_item_text}>{t("directory")}</span>
+              </Button>
+            </HoverCardContent>
+          </HoverCard>
+        )}
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <div title={t("remove")}>
@@ -208,21 +243,20 @@ const TreeItem = function ({
         data-id={item.path}
         data-paths={itemPaths.join("-")}
         data-depth={depth}
-        data-folder-closed={isDir && !isOpen}
         className={`select-none cursor-pointer px-1`}
-        style={{ paddingLeft: `${depth * 20}px` }}
+        style={{ paddingLeft: `${depth * 22}px` }}
         onClick={handleClickItem}
       >
         <div
           className={cn(
             "flex items-center h-8 rounded",
             styles.tree_item_head,
-            isSelected ? styles.tree_item_head_selected : '',
+            isSelected ? styles.tree_item_head_selected : ""
           )}
         >
           {isDir ? (
             <div
-              className="flex items-center gap-2 flex-1 pl-6 group"
+              className="flex items-center gap-2 flex-1 pl-5 group"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
@@ -240,27 +274,12 @@ const TreeItem = function ({
                 <div className={styles.tree_item_dir}>
                   <div className={styles.dir_left}>
                     {item.children && item.children.length > 0 ? (
-                      <Collapsible
-                        open={isOpen}
-                        onOpenChange={(open) => onToggleExpand(item.path, open)}
-                      >
+                      <Collapsible>
                         <CollapsibleTrigger
                           asChild
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                          >
-                            <motion.div
-                              initial={false}
-                              animate={{ rotate: isOpen ? 90 : 0 }}
-                              transition={{ duration: 0.1 }}
-                            >
-                              <ChevronRight className="h-4 w-4" />
-                            </motion.div>
-                          </Button>
+                          <ChevronDown size={18} />
                         </CollapsibleTrigger>
                       </Collapsible>
                     ) : (
@@ -277,7 +296,7 @@ const TreeItem = function ({
           ) : (
             <div
               className={cn(
-                "flex items-center gap-2 flex-1 pl-6 group",
+                "flex items-center gap-2 flex-1 pl-5 group",
                 styles.tree_item_name
               )}
               onMouseEnter={handleMouseEnter}
@@ -305,37 +324,27 @@ const TreeItem = function ({
       </div>
 
       {isDir && (
-        <Collapsible
-          open={isOpen}
-          onOpenChange={(open) => onToggleExpand(item.path, open)}
-        >
+        <Collapsible>
           <AnimatePresence initial={false}>
-            {isOpen && (
-              <CollapsibleContent forceMount asChild>
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.05 }}
-                >
-                  {item.children?.map((child, index) => (
-                    <TreeItem
-                      key={child.path}
-                      item={child}
-                      depth={depth + 1}
-                      itemPaths={itemPaths.concat(index)}
-                      selectedIds={selectedIds}
-                      lastSelectedId={lastSelectedId}
-                      onSelect={onSelect}
-                      expandedIds={expandedIds}
-                      onToggleExpand={onToggleExpand}
-                      getIcon={getIcon}
-                      onAction={onAction}
-                    />
-                  ))}
-                </motion.div>
-              </CollapsibleContent>
-            )}
+            <CollapsibleContent forceMount asChild>
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.05 }}
+              >
+                {item.children?.map((child, index) => (
+                  <TreeItem
+                    key={child.id}
+                    item={child}
+                    depth={depth + 1}
+                    itemPaths={itemPaths.concat(index)}
+                    onAddFile={onAddFile}
+                    onAddGroup={onAddGroup}
+                  />
+                ))}
+              </motion.div>
+            </CollapsibleContent>
           </AnimatePresence>
         </Collapsible>
       )}

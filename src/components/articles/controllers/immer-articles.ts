@@ -63,7 +63,7 @@ export const appendChild = function (
         path: path,
       };
       // if the first element is an input item
-      if (parentChildren[0].action === 'input') {
+      if (parentChildren[0]?.action === 'input') {
         parentChildren[0] = retNewItem;
       } else {
         parentChildren.unshift(retNewItem);
@@ -103,6 +103,6 @@ export const removeChild = function (
     // call the remove async
     remove(parentChildren[itemIndex].path);
 
-    parentChildren.slice(itemIndex, 1);
+    parentChildren.splice(itemIndex, 1);
   });
 };
