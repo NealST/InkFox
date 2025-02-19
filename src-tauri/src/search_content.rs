@@ -3,7 +3,6 @@ use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
 use regex::Regex;
-use tokio::task;
 use futures::stream::{self, StreamExt};
 use serde::{Serialize, Deserialize};
 use std::sync::{Arc};
@@ -16,7 +15,7 @@ struct SearchResult {
     line_content: String,
 }
 
-async fn search_files(path: &str, pattern: &str) -> io::Result<Vec<SearchResult>> {
+pub async fn search_files(path: &str, pattern: &str) -> io::Result<Vec<SearchResult>> {
     let regex = Regex::new(pattern).unwrap();
     let mut entries = Vec::new();
 
