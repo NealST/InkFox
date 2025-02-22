@@ -3,6 +3,7 @@
   height: 100vh;
   padding-left: 10px;
   padding-right: 10px;
+  border-right: 1px solid hsl(var(--border));
 }
 
 .articles_header {
@@ -176,4 +177,17 @@
   flex-direction: row;
   align-items: center;
   padding-right: 6px;
+}
+
+.empty {
+  padding-top: 160px;
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 14px;
+}
+
+.add_empty {
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 14px;
 }

@@ -70,13 +70,14 @@ const Articles = function () {
 
   function handleAddFile(itemPaths?: number[]) {
     const usedItemPaths = itemPaths || curSelectedItemPathsRef.current;
+
     setDataSource(
       appendChild(
         dataSource,
         usedItemPaths,
         {
           id: uid(),
-          name: '',
+          name: "",
           action: "input",
           path: "",
           metadata: {
@@ -99,7 +100,7 @@ const Articles = function () {
         usedItemPaths,
         {
           id: uid(),
-          name: '',
+          name: "",
           action: "input",
           path: "",
           children: [] as IArticleItem[],
@@ -134,22 +135,30 @@ const Articles = function () {
             <Button className={styles.header_add}>+</Button>
           </HoverCardTrigger>
           <HoverCardContent className="w-40">
-            <Button
-              className="w-full justify-start"
-              variant="ghost"
-              onClick={() => handleAddFile()}
-            >
-              <File size={18} />
-              <span className={styles.add_item_text}>{t("doc")}</span>
-            </Button>
-            <Button
-              className="w-full justify-start"
-              variant="ghost"
-              onClick={() => handleAddGroup()}
-            >
-              <Folder size={18} />
-              <span className={styles.add_item_text}>{t("directory")}</span>
-            </Button>
+            {selectedCate ? (
+              <>
+                <Button
+                  className="w-full justify-start"
+                  variant="ghost"
+                  onClick={() => handleAddFile()}
+                >
+                  <File size={18} />
+                  <span className={styles.add_item_text}>{t("doc")}</span>
+                </Button>
+                <Button
+                  className="w-full justify-start"
+                  variant="ghost"
+                  onClick={() => handleAddGroup()}
+                >
+                  <Folder size={18} />
+                  <span className={styles.add_item_text}>{t("directory")}</span>
+                </Button>
+              </>
+            ) : (
+              <div className={styles.add_empty}>
+                {t("emptySelectedCategory")}
+              </div>
+            )}
           </HoverCardContent>
         </HoverCard>
       </div>
@@ -168,13 +177,25 @@ const Articles = function () {
         </div>
       </div>
 
-      <GlobalDataContext.Provider value={globalData}>
-        <div className={styles.articles_tree} onClick={handleSelect}>
-          {dataSource.map((item, index) => (
-            <TreeItem key={item.id} item={item} itemPaths={[index]} onAddFile={handleAddFile} onAddGroup={handleAddGroup} />
-          ))}
+      {dataSource.length > 0 ? (
+        <GlobalDataContext.Provider value={globalData}>
+          <div className={styles.articles_tree} onClick={handleSelect}>
+            {dataSource.map((item, index) => (
+              <TreeItem
+                key={item.id}
+                item={item}
+                itemPaths={[index]}
+                onAddFile={handleAddFile}
+                onAddGroup={handleAddGroup}
+              />
+            ))}
+          </div>
+        </GlobalDataContext.Provider>
+      ) : (
+        <div className={styles.empty}>
+          {t(selectedCate ? "emptyFolders" : "emptySelectedCategory")}
         </div>
-      </GlobalDataContext.Provider>
+      )}
     </div>
   );
 };

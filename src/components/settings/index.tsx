@@ -253,12 +253,6 @@ export function SettingsDialog(props: ISettingsProps) {
   const renderThemeMode = () => {
     return (
       <div className="group relative">
-        <label
-          className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-xs font-medium text-foreground group-has-[:disabled]:opacity-50"
-          htmlFor="select-theme"
-        >
-          {t("currentTheme")}
-        </label>
         <Select
           defaultValue={settings.theme}
           onValueChange={handleThemeChange}
@@ -279,12 +273,6 @@ export function SettingsDialog(props: ISettingsProps) {
   const renderLanguageMode = () => {
     return (
       <div className="group relative">
-        <label
-          className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-xs font-medium text-foreground group-has-[:disabled]:opacity-50"
-          htmlFor="select-language"
-        >
-          {t("currentLanguage")}
-        </label>
         <Select
           defaultValue={settings.language}
           onValueChange={handleLanguageChange}
@@ -422,7 +410,7 @@ export function SettingsDialog(props: ISettingsProps) {
           </div>
 
           {/* font family Settings Group */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="size-8 rounded-full bg-green-100 p-2 dark:bg-green-900">
                 <Type className="size-4 text-green-600 dark:text-green-400" />
@@ -431,7 +419,7 @@ export function SettingsDialog(props: ISettingsProps) {
             </div>
 
             <div className="space-y-4">{renderFontFamilyMode()}</div>
-          </div>
+          </div> */}
 
           {/* AI Settings Group */}
           <div className="space-y-4">

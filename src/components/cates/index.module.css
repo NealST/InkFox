@@ -10,7 +10,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  height: 40px;
+  height: 50px;
   border-bottom: 1px solid hsl(var(--border));
   color: hsl(var(--foreground));
   margin-bottom: 10px;
@@ -80,4 +80,11 @@
   flex-direction: row;
   align-items: center;
   padding-right: 6px;
+}
+
+.empty {
+  padding-top: 160px;
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 14px;
 }

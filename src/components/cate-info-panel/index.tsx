@@ -1,4 +1,4 @@
-import DefaultContent from './default-content';
+import Empty from './empty';
 import Editor from '../editor';
 import { useSelectedCate, type ICateState } from '../cates/controllers/selected-cate';
 import { useSelectedArticle, type IArticleState } from '../articles/controllers/selected-article';
@@ -16,7 +16,7 @@ const MainPanel = function() {
         showEditor ? (
           <Editor />
         ) : (
-          <DefaultContent />
+          <Empty />
         )
       }
     </div>

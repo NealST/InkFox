@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "../ui/input";
 import { Button } from "@/components/ui/button";
+import Empty from "./empty";
 import cn from "classnames";
 import { produce } from "immer";
 import styles from "./index.module.css";
@@ -182,7 +183,8 @@ const Cates = function () {
         </Button>
       </div>
       <div className={styles.cates_list}>
-        {dataSource.length > 0 &&
+        {
+        dataSource.length > 0 ?
           dataSource.map((item, index) => {
             const { name, type } = item;
             const isSelected = name === selectedCate;
@@ -267,7 +269,10 @@ const Cates = function () {
                 )}
               </div>
             );
-          })}
+          }) : (
+            <Empty />
+          )
+        }
       </div>
     </div>
   );

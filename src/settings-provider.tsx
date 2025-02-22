@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { getConfig } from './utils/store-config';
 import type { ISettings } from './components/settings';
 import { defaultSettings, SettingsProviderContext } from './components/settings';
@@ -14,7 +14,7 @@ export function SettingsProvider({
 }: ConfigProviderProps) {
   const [settings, setSettings] = useState<ISettings>(defaultSettings);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     getConfig().then((config: ISettings) => {
       if (config.theme) {
         i18n.changeLanguage(config.language);

@@ -4,13 +4,34 @@
   height: 100vh;
 }
 
-.default_content {
-  background-color: hsl(var(--accent));
-  padding: 40px 30px 0;
+.empty {
+  background-color: hsl(var(--background));
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.content_container {
-  flex: 1;
-  background-color: hsl(var(--background));
-  border-radius: var(--radius);
+.empty_welcome {
+  text-align: center;
+}
+
+.welcome_brand {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.brand_logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+
+.brand_text {
+  margin-left: 8px;
+}
+
+.welcom_text {
+  margin-top: 20px;
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import SideBar from "./components/side-bar";
 import CateInfoPanel from "./components/cate-info-panel";
-import { SettingsProvider } from "./config-provider";
+import { SettingsProvider } from "./settings-provider";
 import { SettingsDialog } from "./components/settings";
 import { emitter } from "@/utils/events";
 import "./App.css";
