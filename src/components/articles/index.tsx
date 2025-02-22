@@ -76,7 +76,8 @@ const Articles = function () {
         usedItemPaths,
         {
           id: uid(),
-          name: `${t("untitled")}.json`,
+          name: '',
+          action: "input",
           path: "",
           metadata: {
             is_dir: false,
@@ -92,14 +93,13 @@ const Articles = function () {
 
   function handleAddGroup(itemPaths?: number[]) {
     const usedItemPaths = itemPaths || curSelectedItemPathsRef.current;
-    const defaultGroupName = t("newgroup");
     setDataSource(
       appendChild(
         dataSource,
         usedItemPaths,
         {
           id: uid(),
-          name: defaultGroupName,
+          name: '',
           action: "input",
           path: "",
           children: [] as IArticleItem[],
