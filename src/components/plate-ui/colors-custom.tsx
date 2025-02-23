@@ -1,6 +1,6 @@
 'use client';
 
-import React, { type ComponentPropsWithoutRef } from 'react';
+import { type ComponentPropsWithoutRef } from 'react';
 
 import { cn } from '@udecode/cn';
 import {
@@ -15,7 +15,7 @@ import {
   ColorDropdownMenuItems,
 } from './color-dropdown-menu-items';
 import { ColorInput } from './color-input';
-
+import { useTranslation } from 'react-i18next';
 // import { ColorInput } from './color-input';
 import { DropdownMenuItem } from './dropdown-menu';
 
@@ -43,7 +43,7 @@ export function ColorCustom({
     updateCustomColor,
   });
   const { inputProps, menuItemProps } = useColorsCustom(state);
-
+  const { t } = useTranslation();
   return (
     <div className={cn('relative flex flex-col gap-4', className)} {...props}>
       <ColorDropdownMenuItems
@@ -63,7 +63,7 @@ export function ColorCustom({
             )}
             {...menuItemProps}
           >
-            <span className="sr-only">Custom</span>
+            <span className="sr-only">{t('custom')}</span>
             <PlusIcon />
           </DropdownMenuItem>
         </ColorInput>

@@ -9,7 +9,7 @@ import { withHOC } from '@udecode/plate/react';
 import { parseTwitterUrl, parseVideoUrl } from '@udecode/plate-media';
 import { MediaEmbedPlugin, useMediaState } from '@udecode/plate-media/react';
 import { ResizableProvider, useResizableStore } from '@udecode/plate-resizable';
-
+import { useTranslation } from 'react-i18next';
 import { Caption, CaptionTextarea } from './caption';
 import { MediaPopover } from './media-popover';
 import { PlateElement } from './plate-element';
@@ -36,7 +36,7 @@ export const MediaEmbedElement = withHOC(
     });
     const width = useResizableStore().get.width();
     const provider = embed?.provider;
-
+    const { t } = useTranslation();
     return (
       <MediaPopover plugin={MediaEmbedPlugin}>
         <PlateElement ref={ref} className={cn(className, 'py-2.5')} {...props}>
@@ -95,7 +95,7 @@ export const MediaEmbedElement = withHOC(
                         isVideo && 'border-0',
                         focused && selected && 'ring-2 ring-ring ring-offset-2'
                       )}
-                      title="embed"
+                      title={t("embed")}
                       src={embed!.url}
                       allowFullScreen
                     />
@@ -123,7 +123,7 @@ export const MediaEmbedElement = withHOC(
             </Resizable>
 
             <Caption style={{ width }} align={align}>
-              <CaptionTextarea placeholder="Write a caption..." />
+              <CaptionTextarea placeholder={t("writeCaption")} />
             </Caption>
           </figure>
 

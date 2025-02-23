@@ -1,7 +1,4 @@
 'use client';
-
-import React from 'react';
-
 import { cn } from '@udecode/cn';
 import {
   useCommentDeleteButton,
@@ -10,7 +7,7 @@ import {
   useCommentEditButtonState,
 } from '@udecode/plate-comments/react';
 import { MoreHorizontal } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { Button } from './button';
 import {
   DropdownMenu,
@@ -25,7 +22,7 @@ export function CommentMoreDropdown() {
   const { props: editProps } = useCommentEditButton(editButtonState);
   const deleteButtonState = useCommentDeleteButtonState();
   const { props: deleteProps } = useCommentDeleteButton(deleteButtonState);
-
+  const { t } = useTranslation();
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -35,8 +32,8 @@ export function CommentMoreDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          <DropdownMenuItem {...editProps}>Edit comment</DropdownMenuItem>
-          <DropdownMenuItem {...deleteProps}>Delete comment</DropdownMenuItem>
+          <DropdownMenuItem {...editProps}>{t('editComment')}</DropdownMenuItem>
+          <DropdownMenuItem {...deleteProps}>{t('deleteComment')}</DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

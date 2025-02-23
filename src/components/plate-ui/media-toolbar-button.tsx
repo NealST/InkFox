@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFilePicker } from 'use-file-picker';
-
+import i18n from '@/i18n';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,6 +47,7 @@ import {
   ToolbarSplitButtonSecondary,
 } from './toolbar';
 
+const t = i18n.t;
 const MEDIA_CONFIG: Record<
   string,
   {
@@ -59,25 +60,25 @@ const MEDIA_CONFIG: Record<
   [AudioPlugin.key]: {
     accept: ['audio/*'],
     icon: <AudioLinesIcon className="size-4" />,
-    title: 'Insert Audio',
+    title: t('insertAudio'),
     tooltip: 'Audio',
   },
   [FilePlugin.key]: {
     accept: ['*'],
     icon: <FileUpIcon className="size-4" />,
-    title: 'Insert File',
+    title: t('insertFile'),
     tooltip: 'File',
   },
   [ImagePlugin.key]: {
     accept: ['image/*'],
     icon: <ImageIcon className="size-4" />,
-    title: 'Insert Image',
+    title: t('insertImage'),
     tooltip: 'Image',
   },
   [VideoPlugin.key]: {
     accept: ['video/*'],
     icon: <FilmIcon className="size-4" />,
-    title: 'Insert Video',
+    title: t('insertVideo'),
     tooltip: 'Video',
   },
 };
@@ -132,11 +133,11 @@ export function MediaToolbarButton({
             <DropdownMenuGroup>
               <DropdownMenuItem onSelect={() => openFilePicker()}>
                 {currentConfig.icon}
-                Upload from computer
+                {t('uploadFromLocal')}
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setDialogOpen(true)}>
                 <LinkIcon />
-                Insert via URL
+                {t('insertViaUrl')}
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
@@ -174,7 +175,7 @@ function MediaUrlDialogContent({
   const [url, setUrl] = useState('');
 
   const embedMedia = useCallback(() => {
-    if (!isUrl(url)) return toast.error('Invalid URL');
+    if (!isUrl(url)) return toast.error(t('invalidUrl'));
 
     setOpen(false);
     editor.tf.insertNodes({
@@ -208,14 +209,14 @@ function MediaUrlDialogContent({
       </AlertDialogDescription>
 
       <AlertDialogFooter>
-        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
         <AlertDialogAction
           onClick={(e) => {
             e.preventDefault();
             embedMedia();
           }}
         >
-          Accept
+          {t('accept')}
         </AlertDialogAction>
       </AlertDialogFooter>
     </>

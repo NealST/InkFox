@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
-
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { withRef } from '@udecode/cn';
 import { useEditorPlugin } from '@udecode/plate/react';
 import { EmojiInlineIndexSearch, insertEmoji } from '@udecode/plate-emoji';
@@ -27,7 +27,7 @@ export const EmojiInputElement = withRef<typeof PlateElement>(
     const [value, setValue] = useState('');
     const debouncedValue = useDebounce(value, 100);
     const isPending = value !== debouncedValue;
-
+    const { t } = useTranslation();
     const filteredEmojis = useMemo(() => {
       if (debouncedValue.trim().length === 0) return [];
 
@@ -56,7 +56,7 @@ export const EmojiInputElement = withRef<typeof PlateElement>(
 
           <InlineComboboxContent>
             {!isPending && (
-              <InlineComboboxEmpty>No results</InlineComboboxEmpty>
+              <InlineComboboxEmpty>{t('noResults')}</InlineComboboxEmpty>
             )}
 
             <InlineComboboxGroup>

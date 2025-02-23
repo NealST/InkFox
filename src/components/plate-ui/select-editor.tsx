@@ -19,7 +19,7 @@ import {
 } from '@udecode/plate-tag/react';
 import { Fzf } from 'fzf';
 import { PlusIcon } from 'lucide-react';
-
+import i18n from '@/i18n';
 import { Command, CommandGroup, CommandItem, CommandList } from './command';
 import { Editor, EditorContainer } from './editor';
 import { Popover, PopoverAnchor, PopoverContent } from './popover';
@@ -38,6 +38,8 @@ type SelectEditorContextValue = {
   value?: SelectItem[];
   onValueChange?: (items: SelectItem[]) => void;
 };
+
+const t = i18n.t;
 
 const SelectEditorContext = React.createContext<
   SelectEditorContextValue | undefined
@@ -200,7 +202,7 @@ export function SelectEditorCombobox() {
                 {item.isNew ? (
                   <div className="flex items-center gap-1">
                     <PlusIcon className="size-4 text-foreground" />
-                    Create new label:
+                    {t('createNewLabel')}:
                     <span className="text-gray-600">"{item.value}"</span>
                   </div>
                 ) : (

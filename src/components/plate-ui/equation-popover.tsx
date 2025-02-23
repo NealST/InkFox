@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import TextareaAutosize, {
   type TextareaAutosizeProps,
 } from 'react-textarea-autosize';
-
+import { useTranslation } from 'react-i18next';
 import type { TEquationElement } from '@udecode/plate-math';
 
 import { cn } from '@udecode/cn';
@@ -39,6 +39,7 @@ const EquationPopoverContent = ({
   const editor = useEditorRef();
   const readOnly = useReadOnly();
   const element = useElement<TEquationElement>();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (isInline && open) {
@@ -76,7 +77,7 @@ const EquationPopoverContent = ({
       />
 
       <Button variant="secondary" className="px-3" onClick={onClose}>
-        Done <CornerDownLeftIcon className="size-3.5" />
+        {t('done')} <CornerDownLeftIcon className="size-3.5" />
       </Button>
     </PopoverContent>
   );

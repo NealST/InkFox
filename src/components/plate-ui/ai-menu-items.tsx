@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo } from 'react';
-
+import i18n from '@/i18n';
 import { type SlateEditor, NodeApi } from '@udecode/plate';
 import { type PlateEditor, useEditorPlugin } from '@udecode/plate/react';
 import { AIChatPlugin, AIPlugin } from '@udecode/plate-ai/react';
@@ -23,6 +23,8 @@ import {
 
 import { CommandGroup, CommandItem } from './command';
 
+const t = i18n.t;
+
 export type EditorChatState =
   | 'cursorCommand'
   | 'cursorSuggestion'
@@ -32,7 +34,7 @@ export type EditorChatState =
 export const aiChatItems = {
   accept: {
     icon: <Check />,
-    label: 'Accept',
+    label: t('accept'),
     value: 'accept',
     onSelect: ({ editor }) => {
       editor.getTransforms(AIChatPlugin).aiChat.accept();
@@ -41,7 +43,7 @@ export const aiChatItems = {
   },
   continueWrite: {
     icon: <PenLine />,
-    label: 'Continue writing',
+    label: t('continueWrite'),
     value: 'continueWrite',
     onSelect: ({ editor }) => {
       const ancestorNode = editor.api.block({ highest: true });
@@ -63,7 +65,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   discard: {
     icon: <X />,
-    label: 'Discard',
+    label: t('discard'),
     shortcut: 'Escape',
     value: 'discard',
     onSelect: ({ editor }) => {
@@ -73,7 +75,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   emojify: {
     icon: <SmileIcon />,
-    label: 'Emojify',
+    label: t('emojify'),
     value: 'emojify',
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
@@ -83,7 +85,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   explain: {
     icon: <BadgeHelp />,
-    label: 'Explain',
+    label: t('explain'),
     value: 'explain',
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
@@ -96,7 +98,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   fixSpelling: {
     icon: <Check />,
-    label: 'Fix spelling & grammar',
+    label: t('fixSpelling'),
     value: 'fixSpelling',
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
@@ -106,7 +108,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   improveWriting: {
     icon: <Wand />,
-    label: 'Improve writing',
+    label: t('improveWriting'),
     value: 'improveWriting',
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
@@ -116,7 +118,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   insertBelow: {
     icon: <ListEnd />,
-    label: 'Insert below',
+    label: t('insertBelow'),
     value: 'insertBelow',
     onSelect: ({ aiEditor, editor }) => {
       void editor.getTransforms(AIChatPlugin).aiChat.insertBelow(aiEditor);
@@ -124,7 +126,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   makeLonger: {
     icon: <ListPlus />,
-    label: 'Make longer',
+    label: t('makeLonger'),
     value: 'makeLonger',
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
@@ -134,7 +136,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   makeShorter: {
     icon: <ListMinus />,
-    label: 'Make shorter',
+    label: t('makeShorter'),
     value: 'makeShorter',
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
@@ -144,7 +146,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   replace: {
     icon: <Check />,
-    label: 'Replace selection',
+    label: t('replaceSelection'),
     value: 'replace',
     onSelect: ({ aiEditor, editor }) => {
       void editor.getTransforms(AIChatPlugin).aiChat.replaceSelection(aiEditor);
@@ -152,7 +154,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   simplifyLanguage: {
     icon: <FeatherIcon />,
-    label: 'Simplify language',
+    label: t('simplifyLanguage'),
     value: 'simplifyLanguage',
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
@@ -162,7 +164,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   summarize: {
     icon: <Album />,
-    label: 'Add a summary',
+    label: t('summarize'),
     value: 'summarize',
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.submit({
@@ -176,7 +178,7 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
   },
   tryAgain: {
     icon: <CornerUpLeft />,
-    label: 'Try again',
+    label: t('tryAgain'),
     value: 'tryAgain',
     onSelect: ({ editor }) => {
       void editor.getApi(AIChatPlugin).aiChat.reload();

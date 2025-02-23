@@ -53,7 +53,7 @@ import {
   insertBlock,
   insertInlineElement,
 } from '@/components/editor/transforms';
-
+import i18n from '@/i18n';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -77,48 +77,50 @@ interface Item {
   label?: string;
 }
 
+const t = i18n.t;
+
 const groups: Group[] = [
   {
     group: 'Basic blocks',
     items: [
       {
         icon: <PilcrowIcon />,
-        label: 'Paragraph',
+        label: t('paragraph'),
         value: ParagraphPlugin.key,
       },
       {
         icon: <Heading1Icon />,
-        label: 'Heading 1',
+        label: t('heading1'),
         value: HEADING_KEYS.h1,
       },
       {
         icon: <Heading2Icon />,
-        label: 'Heading 2',
+        label: t('heading2'),
         value: HEADING_KEYS.h2,
       },
       {
         icon: <Heading3Icon />,
-        label: 'Heading 3',
+        label: t('heading3'),
         value: HEADING_KEYS.h3,
       },
       {
         icon: <TableIcon />,
-        label: 'Table',
+        label: t('table'),
         value: TablePlugin.key,
       },
       {
         icon: <FileCodeIcon />,
-        label: 'Code',
+        label: t('codeBlock'),
         value: CodeBlockPlugin.key,
       },
       {
         icon: <QuoteIcon />,
-        label: 'Quote',
+        label: t('quote'),
         value: BlockquotePlugin.key,
       },
       {
         icon: <MinusIcon />,
-        label: 'Divider',
+        label: t('divider'),
         value: HorizontalRulePlugin.key,
       },
     ].map((item) => ({
@@ -133,22 +135,22 @@ const groups: Group[] = [
     items: [
       {
         icon: <ListIcon />,
-        label: 'Bulleted list',
+        label: t('bulletedList'),
         value: ListStyleType.Disc,
       },
       {
         icon: <ListOrderedIcon />,
-        label: 'Numbered list',
+        label: t('orderedList'),
         value: ListStyleType.Decimal,
       },
       {
         icon: <SquareIcon />,
-        label: 'To-do list',
+        label: t('todoList'),
         value: INDENT_LIST_KEYS.todo,
       },
       {
         icon: <ChevronRightIcon />,
-        label: 'Toggle list',
+        label: t('toggleList'),
         value: TogglePlugin.key,
       },
     ].map((item) => ({
@@ -163,17 +165,17 @@ const groups: Group[] = [
     items: [
       {
         icon: <ImageIcon />,
-        label: 'Image',
+        label: t('image'),
         value: ImagePlugin.key,
       },
       {
         icon: <FilmIcon />,
-        label: 'Embed',
+        label: t('embed'),
         value: MediaEmbedPlugin.key,
       },
       {
         icon: <PenToolIcon />,
-        label: 'Excalidraw',
+        label: t('excalidraw'),
         value: ExcalidrawPlugin.key,
       },
     ].map((item) => ({
@@ -188,18 +190,18 @@ const groups: Group[] = [
     items: [
       {
         icon: <TableOfContentsIcon />,
-        label: 'Table of contents',
+        label: t('tableOfContents'),
         value: TocPlugin.key,
       },
       {
         icon: <Columns3Icon />,
-        label: '3 columns',
+        label: t('threeColumns'),
         value: 'action_three_columns',
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Equation',
+        label: t('equation'),
         value: EquationPlugin.key,
       },
     ].map((item) => ({
@@ -214,19 +216,19 @@ const groups: Group[] = [
     items: [
       {
         icon: <Link2Icon />,
-        label: 'Link',
+        label: t('link'),
         value: LinkPlugin.key,
       },
       {
         focusEditor: true,
         icon: <CalendarIcon />,
-        label: 'Date',
+        label: t('date'),
         value: DatePlugin.key,
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Inline Equation',
+        label: t('inlineEquation'),
         value: InlineEquationPlugin.key,
       },
     ].map((item) => ({
@@ -245,7 +247,7 @@ export function InsertDropdownMenu(props: DropdownMenuProps) {
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
-        <ToolbarButton pressed={openState.open} tooltip="Insert" isDropdown>
+        <ToolbarButton pressed={openState.open} tooltip={t('insert')} isDropdown>
           <PlusIcon />
         </ToolbarButton>
       </DropdownMenuTrigger>

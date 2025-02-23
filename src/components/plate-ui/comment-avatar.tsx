@@ -1,7 +1,4 @@
 'use client';
-
-import React from 'react';
-
 import { useEditorPlugin } from '@udecode/plate/react';
 import { CommentsPlugin } from '@udecode/plate-comments/react';
 

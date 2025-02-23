@@ -1,7 +1,4 @@
 'use client';
-
-import React from 'react';
-
 import { useEditorPlugin } from '@udecode/plate/react';
 import {
   CommentProvider,
@@ -9,7 +6,7 @@ import {
   useCommentItemContentState,
 } from '@udecode/plate-comments/react';
 import { formatDistance } from 'date-fns';
-
+import { useTranslation } from 'react-i18next';
 import { CommentAvatar } from './comment-avatar';
 import { CommentMoreDropdown } from './comment-more-dropdown';
 import { CommentResolveButton } from './comment-resolve-button';
@@ -28,7 +25,7 @@ function CommentItemContent() {
     isReplyComment,
     user,
   } = useCommentItemContentState();
-
+  const { t } = useTranslation();
   return (
     <div>
       <div className="relative flex items-center gap-2">
@@ -37,7 +34,7 @@ function CommentItemContent() {
         <h4 className="text-sm font-semibold leading-none">{user?.name}</h4>
 
         <div className="text-xs leading-none text-muted-foreground">
-          {formatDistance(comment.createdAt, Date.now())} ago
+          {formatDistance(comment.createdAt, Date.now())} {t('ago')}
         </div>
 
         {isMyComment && (

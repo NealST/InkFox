@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
 import { useEditorRef, useSelectionFragmentProp } from '@udecode/plate/react';
@@ -12,7 +10,7 @@ import {
   AlignLeftIcon,
   AlignRightIcon,
 } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { STRUCTURAL_TYPES } from '@/components/editor/transforms';
 
 import {
@@ -51,7 +49,7 @@ export function AlignDropdownMenu({ children, ...props }: DropdownMenuProps) {
     getProp: (node) => node.align,
     structuralTypes: STRUCTURAL_TYPES,
   });
-
+  const { t } = useTranslation();
   const openState = useOpenState();
   const IconValue =
     items.find((item) => item.value === value)?.icon ?? AlignLeftIcon;
@@ -59,7 +57,7 @@ export function AlignDropdownMenu({ children, ...props }: DropdownMenuProps) {
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
-        <ToolbarButton pressed={openState.open} tooltip="Align" isDropdown>
+        <ToolbarButton pressed={openState.open} tooltip={t("align")} isDropdown>
           <IconValue />
         </ToolbarButton>
       </DropdownMenuTrigger>

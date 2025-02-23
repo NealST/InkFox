@@ -1,7 +1,4 @@
 'use client';
-
-import React from 'react';
-
 import { cn } from '@udecode/cn';
 import { PortalBody } from '@udecode/plate/react';
 import {

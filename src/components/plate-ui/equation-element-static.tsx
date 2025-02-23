@@ -1,7 +1,5 @@
-import React from 'react';
-
 import type { TEquationElement } from '@udecode/plate-math';
-
+import { useTranslation } from 'react-i18next';
 import { cn } from '@udecode/cn';
 import { type SlateElementProps, SlateElement } from '@udecode/plate';
 import { getEquationHtml } from '@udecode/plate-math';
@@ -13,7 +11,7 @@ export function EquationElementStatic({
   ...props
 }: SlateElementProps) {
   const element = props.element as TEquationElement;
-
+  const { t } = useTranslation();
   const html = getEquationHtml({
     element,
     options: {
@@ -46,7 +44,7 @@ export function EquationElementStatic({
         ) : (
           <div className="flex h-7 w-full items-center gap-2 whitespace-nowrap text-sm text-muted-foreground">
             <RadicalIcon className="size-6 text-muted-foreground/80" />
-            <div>Add a Tex equation</div>
+            <div>{t('addTexEquation')}</div>
           </div>
         )}
       </div>

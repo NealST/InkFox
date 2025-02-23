@@ -18,12 +18,13 @@ import {
 } from '@udecode/plate-media/react';
 import { AudioLines, FileUp, Film, ImageIcon } from 'lucide-react';
 import { useFilePicker } from 'use-file-picker';
-
+import i18n from '@/i18n';
 import { useUploadFile } from '@/lib/uploadthing';
 
 import { PlateElement } from './plate-element';
 import { Spinner } from './spinner';
 
+const t = i18n.t;
 const CONTENT: Record<
   string,
   {
@@ -34,22 +35,22 @@ const CONTENT: Record<
 > = {
   [AudioPlugin.key]: {
     accept: ['audio/*'],
-    content: 'Add an audio file',
+    content: t('addAudioFile'),
     icon: <AudioLines />,
   },
   [FilePlugin.key]: {
     accept: ['*'],
-    content: 'Add a file',
+    content: t('addFile'),
     icon: <FileUp />,
   },
   [ImagePlugin.key]: {
     accept: ['image/*'],
-    content: 'Add an image',
+    content: t('addImage'),
     icon: <ImageIcon />,
   },
   [VideoPlugin.key]: {
     accept: ['video/*'],
-    content: 'Add a video',
+    content: t('addVideo'),
     icon: <Film />,
   },
 };

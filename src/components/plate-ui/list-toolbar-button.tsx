@@ -9,7 +9,7 @@ import {
   useListToolbarButtonState,
 } from '@udecode/plate-list/react';
 import { List, ListOrdered } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { ToolbarButton } from './toolbar';
 
 export const ListToolbarButton = withRef<
@@ -20,12 +20,12 @@ export const ListToolbarButton = withRef<
 >(({ nodeType = BulletedListPlugin.key, ...rest }, ref) => {
   const state = useListToolbarButtonState({ nodeType });
   const { props } = useListToolbarButton(state);
-
+  const { t } = useTranslation();
   return (
     <ToolbarButton
       ref={ref}
       tooltip={
-        nodeType === BulletedListPlugin.key ? 'Bulleted List' : 'Numbered List'
+        t(nodeType === BulletedListPlugin.key ? 'bulletedList' : 'orderedList')
       }
       {...props}
       {...rest}

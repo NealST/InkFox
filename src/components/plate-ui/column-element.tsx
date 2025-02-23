@@ -11,7 +11,7 @@ import { useDraggable, useDropLine } from '@udecode/plate-dnd';
 import { ResizableProvider } from '@udecode/plate-resizable';
 import { BlockSelectionPlugin } from '@udecode/plate-selection/react';
 import { GripHorizontal } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { Button } from './button';
 import { PlateElement } from './plate-element';
 import {
@@ -31,7 +31,6 @@ export const ColumnElement = withHOC(
       BlockSelectionPlugin,
       'isSelectionAreaVisible'
     );
-
     const { isDragging, previewRef, handleRef } = useDraggable({
       canDropNode: ({ dragEntry, dropEntry }) =>
         PathApi.equals(
@@ -84,6 +83,7 @@ export const ColumnElement = withHOC(
 );
 
 const ColumnDragHandle = React.memo(() => {
+  const { t } = useTranslation();
   return (
     <TooltipProvider>
       <Tooltip>
@@ -99,7 +99,7 @@ const ColumnDragHandle = React.memo(() => {
           </Button>
         </TooltipTrigger>
         <TooltipPortal>
-          <TooltipContent>Drag to move column</TooltipContent>
+          <TooltipContent>{t('drag2moveColumn')}</TooltipContent>
         </TooltipPortal>
       </Tooltip>
     </TooltipProvider>

@@ -3,7 +3,7 @@
 import React from 'react';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import ReactPlayer from 'react-player';
-
+import { useTranslation } from 'react-i18next';
 import { cn, withRef } from '@udecode/cn';
 import { useEditorMounted, withHOC } from '@udecode/plate/react';
 import { useDraggable } from '@udecode/plate-dnd';
@@ -34,7 +34,7 @@ export const MediaVideoElement = withHOC(
         urlParsers: [parseTwitterUrl, parseVideoUrl],
       });
       const width = useResizableStore().get.width();
-
+      const { t } = useTranslation();
       const isEditorMounted = useEditorMounted();
 
       const isTweet = true;
@@ -113,7 +113,7 @@ export const MediaVideoElement = withHOC(
             <Caption style={{ width }} align={align}>
               <CaptionTextarea
                 readOnly={readOnly}
-                placeholder="Write a caption..."
+                placeholder={t('writeCaption')}
               />
             </Caption>
           </figure>

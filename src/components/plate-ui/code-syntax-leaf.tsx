@@ -1,7 +1,4 @@
 'use client';
-
-import React from 'react';
-
 import { withRef } from '@udecode/cn';
 import { PlateLeaf } from '@udecode/plate/react';
 import { useCodeSyntaxLeaf } from '@udecode/plate-code-block/react';

@@ -34,7 +34,7 @@ import {
 } from '@udecode/plate-table/react';
 import { TogglePlugin } from '@udecode/plate-toggle/react';
 import { GripVertical } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { STRUCTURAL_TYPES } from '@/components/editor/transforms';
 
 import { TooltipButton } from './tooltip';
@@ -213,7 +213,7 @@ const Gutter = React.forwardRef<
 const DragHandle = React.memo(() => {
   const editor = useEditorRef();
   const element = useElement();
-
+  const { t } = useTranslation();
   return (
     <TooltipButton
       variant="ghost"
@@ -224,7 +224,7 @@ const DragHandle = React.memo(() => {
           .blockSelection.set(element.id as string);
       }}
       data-plate-prevent-deselect
-      tooltip="Drag to move"
+      tooltip={t('drag2move')}
     >
       <GripVertical className="text-muted-foreground" />
     </TooltipButton>

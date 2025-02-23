@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { cn } from '@udecode/cn';
 import {
@@ -8,7 +8,7 @@ import {
   useCodeBlockComboboxState,
 } from '@udecode/plate-code-block/react';
 import { Check, ChevronsUpDown } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 // Prism must be imported before all language files
 import Prism from 'prismjs';
 
@@ -136,7 +136,7 @@ const languages: { label: string; value: string }[] = [
 export function CodeBlockCombobox() {
   const state = useCodeBlockComboboxState();
   const { commandItemProps } = useCodeBlockCombobox(state);
-
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
@@ -171,9 +171,9 @@ export function CodeBlockCombobox() {
           <CommandInput
             value={value}
             onValueChange={(value) => setValue(value)}
-            placeholder="Search language..."
+            placeholder={t('searchLanguage')}
           />
-          <CommandEmpty>No language found.</CommandEmpty>
+          <CommandEmpty>{t('noLanguage')}</CommandEmpty>
 
           <CommandList>
             {items.map((language) => (
