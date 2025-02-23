@@ -11,7 +11,7 @@ import {
   isHeading,
 } from '@udecode/plate-heading';
 import { cva } from 'class-variance-authority';
-
+import { useTranslation } from 'react-i18next';
 import { Button } from './button';
 
 const headingItemVariants = cva(
@@ -34,7 +34,7 @@ export function TocElementStatic({
 }: SlateElementProps) {
   const { editor } = props;
   const headingList = getHeadingList(editor);
-
+  const { t } = useTranslation();
   return (
     <SlateElement className={cn(className, 'mb-1 p-0')} {...props}>
       <div>
@@ -50,7 +50,7 @@ export function TocElementStatic({
           ))
         ) : (
           <div className="text-sm text-gray-500">
-            Create a heading to display the table of contents.
+            {t('createHeadingForToc')}
           </div>
         )}
       </div>

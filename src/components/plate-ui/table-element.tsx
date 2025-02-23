@@ -55,6 +55,7 @@ import {
   BorderRight,
   BorderTop,
 } from './table-icons';
+import { useTranslation } from 'react-i18next';
 import { Toolbar, ToolbarButton, ToolbarGroup } from './toolbar';
 
 export const TableElement = withHOC(
@@ -116,7 +117,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(
       (editor) => !editor.api.isExpanded(),
       []
     );
-
+    const { t } = useTranslation();
     const { canMerge, canSplit } = useTableMergeState();
 
     return (
@@ -138,7 +139,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(
                 <ToolbarButton
                   onClick={() => tf.table.merge()}
                   onMouseDown={(e) => e.preventDefault()}
-                  tooltip="Merge cells"
+                  tooltip={t("mergeCells")}
                 >
                   <CombineIcon />
                 </ToolbarButton>
@@ -147,7 +148,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(
                 <ToolbarButton
                   onClick={() => tf.table.split()}
                   onMouseDown={(e) => e.preventDefault()}
-                  tooltip="Split cell"
+                  tooltip={t("splitCell")}
                 >
                   <SquareSplitHorizontalIcon />
                 </ToolbarButton>
@@ -155,7 +156,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(
 
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                  <ToolbarButton tooltip="Cell borders">
+                  <ToolbarButton tooltip={t('cellBorders')}>
                     <Grid2X2Icon />
                   </ToolbarButton>
                 </DropdownMenuTrigger>
@@ -167,7 +168,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(
 
               {collapsed && (
                 <ToolbarGroup>
-                  <ToolbarButton tooltip="Delete table" {...buttonProps}>
+                  <ToolbarButton tooltip={t('deleteTable')} {...buttonProps}>
                     <Trash2Icon />
                   </ToolbarButton>
                 </ToolbarGroup>
@@ -181,7 +182,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(
                     tf.insert.tableRow({ before: true });
                   }}
                   onMouseDown={(e) => e.preventDefault()}
-                  tooltip="Insert row before"
+                  tooltip={t('insertRowBefore')}
                 >
                   <ArrowUp />
                 </ToolbarButton>
@@ -190,7 +191,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(
                     tf.insert.tableRow();
                   }}
                   onMouseDown={(e) => e.preventDefault()}
-                  tooltip="Insert row after"
+                  tooltip={t('insertRowAfter')}
                 >
                   <ArrowDown />
                 </ToolbarButton>
@@ -199,7 +200,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(
                     tf.remove.tableRow();
                   }}
                   onMouseDown={(e) => e.preventDefault()}
-                  tooltip="Delete row"
+                  tooltip={t('deleteRow')}
                 >
                   <XIcon />
                 </ToolbarButton>
@@ -213,7 +214,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(
                     tf.insert.tableColumn({ before: true });
                   }}
                   onMouseDown={(e) => e.preventDefault()}
-                  tooltip="Insert column before"
+                  tooltip={t('insertColumnBefore')}
                 >
                   <ArrowLeft />
                 </ToolbarButton>
@@ -222,7 +223,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(
                     tf.insert.tableColumn();
                   }}
                   onMouseDown={(e) => e.preventDefault()}
-                  tooltip="Insert column after"
+                  tooltip={t('insertColumnAfter')}
                 >
                   <ArrowRight />
                 </ToolbarButton>
@@ -231,7 +232,7 @@ export const TableFloatingToolbar = withRef<typeof PopoverContent>(
                     tf.remove.tableColumn();
                   }}
                   onMouseDown={(e) => e.preventDefault()}
-                  tooltip="Delete column"
+                  tooltip={t('deleteColumn')}
                 >
                   <XIcon />
                 </ToolbarButton>

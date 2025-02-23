@@ -35,7 +35,7 @@ import {
   Table,
   TableOfContentsIcon,
 } from 'lucide-react';
-
+import i18n from '@/i18n';
 import {
   insertBlock,
   insertInlineElement,
@@ -69,6 +69,8 @@ interface Item {
   label?: string;
 }
 
+const t = i18n.t;
+
 const groups: Group[] = [
   {
     group: 'AI',
@@ -89,66 +91,66 @@ const groups: Group[] = [
       {
         icon: <PilcrowIcon />,
         keywords: ['paragraph'],
-        label: 'Text',
+        label: t('text'),
         value: ParagraphPlugin.key,
       },
       {
         icon: <Heading1Icon />,
         keywords: ['title', 'h1'],
-        label: 'Heading 1',
+        label: t('heading1'),
         value: HEADING_KEYS.h1,
       },
       {
         icon: <Heading2Icon />,
         keywords: ['subtitle', 'h2'],
-        label: 'Heading 2',
+        label: t('heading2'),
         value: HEADING_KEYS.h2,
       },
       {
         icon: <Heading3Icon />,
         keywords: ['subtitle', 'h3'],
-        label: 'Heading 3',
+        label: t('heading3'),
         value: HEADING_KEYS.h3,
       },
       {
         icon: <ListIcon />,
         keywords: ['unordered', 'ul', '-'],
-        label: 'Bulleted list',
+        label: t('bulletedList'),
         value: ListStyleType.Disc,
       },
       {
         icon: <ListOrdered />,
         keywords: ['ordered', 'ol', '1'],
-        label: 'Numbered list',
+        label: t('orderedList'),
         value: ListStyleType.Decimal,
       },
       {
         icon: <Square />,
         keywords: ['checklist', 'task', 'checkbox', '[]'],
-        label: 'To-do list',
+        label: t('todoList'),
         value: INDENT_LIST_KEYS.todo,
       },
       {
         icon: <ChevronRightIcon />,
         keywords: ['collapsible', 'expandable'],
-        label: 'Toggle',
+        label: t('toggle'),
         value: TogglePlugin.key,
       },
       {
         icon: <Code2 />,
         keywords: ['```'],
-        label: 'Code Block',
+        label: t('codeBlock'),
         value: CodeBlockPlugin.key,
       },
       {
         icon: <Table />,
-        label: 'Table',
+        label: t('table'),
         value: TablePlugin.key,
       },
       {
         icon: <Quote />,
         keywords: ['citation', 'blockquote', 'quote', '>'],
-        label: 'Blockquote',
+        label: t('blockquote'),
         value: BlockquotePlugin.key,
       },
     ].map((item) => ({
@@ -164,18 +166,18 @@ const groups: Group[] = [
       {
         icon: <TableOfContentsIcon />,
         keywords: ['toc'],
-        label: 'Table of contents',
+        label: t('tableOfContents'),
         value: TocPlugin.key,
       },
       {
         icon: <Columns3Icon />,
-        label: '3 columns',
+        label: t('threeColumns'),
         value: 'action_three_columns',
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Equation',
+        label: t('equation'),
         value: EquationPlugin.key,
       },
     ].map((item) => ({
@@ -192,13 +194,13 @@ const groups: Group[] = [
         focusEditor: true,
         icon: <CalendarIcon />,
         keywords: ['time'],
-        label: 'Date',
+        label: t('date'),
         value: DatePlugin.key,
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Inline Equation',
+        label: t('inlineEquation'),
         value: InlineEquationPlugin.key,
       },
     ].map((item) => ({
@@ -226,7 +228,7 @@ export const SlashInputElement = withRef<typeof PlateElement>(
           <InlineComboboxInput />
 
           <InlineComboboxContent>
-            <InlineComboboxEmpty>No results</InlineComboboxEmpty>
+            <InlineComboboxEmpty>{t('noResults')}</InlineComboboxEmpty>
 
             {groups.map(({ group, items }) => (
               <InlineComboboxGroup key={group}>
