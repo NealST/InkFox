@@ -39,6 +39,7 @@
   "wordcount": "字数",
   "presentation": "演示",
   "focusmode": "专注模式",
+  "unFocusmode": "退出专注模式",
   "export": "导出",
   "delete": "删除",
   "accept": "接受",

@@ -31,7 +31,7 @@ import {
   Trash2,
   Plus,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { Input } from "@/components/ui/input";
 import cn from "classnames";
 import { useTranslation } from "react-i18next";
@@ -325,27 +325,16 @@ const TreeItem = function ({
 
       {isDir && (
         <Collapsible>
-          <AnimatePresence initial={false}>
-            <CollapsibleContent forceMount asChild>
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.05 }}
-              >
-                {item.children?.map((child, index) => (
-                  <TreeItem
-                    key={child.id}
-                    item={child}
-                    depth={depth + 1}
-                    itemPaths={itemPaths.concat(index)}
-                    onAddFile={onAddFile}
-                    onAddGroup={onAddGroup}
-                  />
-                ))}
-              </motion.div>
-            </CollapsibleContent>
-          </AnimatePresence>
+          {item.children?.map((child, index) => (
+            <TreeItem
+              key={child.id}
+              item={child}
+              depth={depth + 1}
+              itemPaths={itemPaths.concat(index)}
+              onAddFile={onAddFile}
+              onAddGroup={onAddGroup}
+            />
+          ))}
         </Collapsible>
       )}
     </div>

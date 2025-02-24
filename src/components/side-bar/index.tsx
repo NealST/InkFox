@@ -1,12 +1,18 @@
-import Cates from '../cates';
-import Articles from '../articles';
-import More from '../more';
-import styles from './index.module.css';
+import Cates from "../cates";
+import Articles from "../articles";
+import More from "../more";
+import useFocusMode from "../editor/controllers/focus-mode";
+import { motion } from "motion/react";
+import styles from "./index.module.css";
 
-const SideBar = function() {
-  
+const SideBar = function () {
+  const isFocusMode = useFocusMode((state) => state.isFocusMode);
+
   return (
-    <aside className={styles.side_bar}>
+    <motion.div
+      className={styles.side_bar}
+      animate={{display: isFocusMode ? "none" : "flex"}}
+    >
       <section className={styles.bar_cates}>
         <Cates />
         <More />
@@ -14,9 +20,8 @@ const SideBar = function() {
       <section className={styles.bar_articles}>
         <Articles />
       </section>
-    </aside>
-  )
-
+    </motion.div>
+  );
 };
 
 export default SideBar;

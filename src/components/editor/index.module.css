@@ -1,5 +1,4 @@
 .editor {
-  width: 100%;
   position: relative;
   height: 100%;
   background-color: hsl(var(--background));
@@ -14,6 +13,3 @@
   flex-direction: row;
 }
 
-.editor_container {
-  width: calc(100vw - 460px) !important;
-}

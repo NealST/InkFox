@@ -33,7 +33,7 @@ const MainEditor = function() {
         editor={editor}
         onChange={debounce(handleChange, DELAY_TIME)}
       >
-        <EditorContainer className={styles.editor_container}>
+        <EditorContainer>
           <Editor variant="demo" ref={editorRef} />
         </EditorContainer>
       </Plate>
