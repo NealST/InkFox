@@ -5,12 +5,7 @@ import {
 } from "@/components/articles/controllers/selected-article";
 import { useTranslation } from "react-i18next";
 import { Focus, ArrowRightFromLine, Trash2 } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import useTextCount from "../controllers/text-count";
 import { Button } from "@/components/ui/button";
 import styles from "./index.module.css";
 
@@ -19,7 +14,7 @@ const Header = function () {
     (state: IArticleState) => state.selectedArticle
   );
   const { t } = useTranslation();
-
+  const textCount = useTextCount(state => state.count);
   const actions = useMemo(
     () => [
       {
@@ -44,8 +39,7 @@ const Header = function () {
         <span className={styles.info_title}>
           {selectedArticle.name}
         </span>
-        <span className={styles.info_savetime}></span>
-        <span className={styles.info_count}>{t("wordcount")}: 0</span>
+        <span className={styles.info_count}>{t("wordcount")}: {textCount}</span>
       </div>
       <div className={styles.header_action}>
         {actions.map((item) => {

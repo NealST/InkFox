@@ -6,10 +6,7 @@ const Editor = function() {
   return (
     <div className={styles.editor}>
       <Header />
-      {/* <Toolbar /> */}
       <div className={styles.editor_main}>
-        {/* <Content /> */}
-        {/* <Outline /> */}
         <MainEditor />
       </div>
     </div>
