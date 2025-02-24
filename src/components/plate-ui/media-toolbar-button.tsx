@@ -61,25 +61,25 @@ const MEDIA_CONFIG: Record<
     accept: ['audio/*'],
     icon: <AudioLinesIcon className="size-4" />,
     title: t('insertAudio'),
-    tooltip: 'Audio',
+    tooltip: t('audio'),
   },
   [FilePlugin.key]: {
     accept: ['*'],
     icon: <FileUpIcon className="size-4" />,
     title: t('insertFile'),
-    tooltip: 'File',
+    tooltip: t('file'),
   },
   [ImagePlugin.key]: {
     accept: ['image/*'],
     icon: <ImageIcon className="size-4" />,
     title: t('insertImage'),
-    tooltip: 'Image',
+    tooltip: t('image'),
   },
   [VideoPlugin.key]: {
     accept: ['video/*'],
     icon: <FilmIcon className="size-4" />,
     title: t('insertVideo'),
-    tooltip: 'Video',
+    tooltip: t('video'),
   },
 };
 

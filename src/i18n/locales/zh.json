@@ -61,7 +61,7 @@
   "align": "对齐",
   "askAi": "咨询 AI",
   "duplicate": "复制",
-  "turnInto": "变成",
+  "turnInto": "切换",
   "paragraph": "段落",
   "heading1": "一级标题",
   "heading2": "二级标题",
@@ -80,6 +80,7 @@
   "custom": "自定义",
   "drag2moveColumn": "拖动列",
   "comment": "评论",
+  "commentShortup": "评论 (⌘+⇧+M)",
   "ago": "之前",
   "editComment": "编辑评论",
   "deleteComment": "删除评论",
@@ -130,6 +131,7 @@
   "tableOfContents": "内容目录",
   "threeColumns": "3 列布局",
   "equation": "方程式",
+  "lineHeight": "行高",
   "link": "链接",
   "date": "日期",
   "inlineEquation": "内联方程式",
@@ -156,7 +158,7 @@
   "typeParagraph": "输入",
   "createNewLabel": "创建新标签",
   "text": "文本",
-  "toggle": "折叠",
+  "toggle": "折叠或展开",
   "cell": "单元格",
   "mergeCells": "合并单元格",
   "splitCell": "分割单元格",
@@ -170,5 +172,8 @@
   "deleteColumn": "删除该列",
   "deleteTable": "删除表格",
   "cellBorders": "单元格边框",
-  "createHeadingForToc": "创建一个标题以展示内容目录"
+  "createHeadingForToc": "创建一个标题以展示内容目录",
+  "audio": "音频",
+  "file": "文件",
+  "video": "视频"
 }

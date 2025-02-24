@@ -136,7 +136,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
         <ToolbarButton
           className="min-w-[125px]"
           pressed={openState.open}
-          tooltip="Turn into"
+          tooltip={t("turnInto")}
           isDropdown
         >
           {selectedItem.label}

@@ -80,6 +80,7 @@
   "custom": "Custom",
   "drag2moveColumn": "Drag to move column",
   "comment": "Comment",
+  "commentShortup": "comment (⌘+⇧+M)",
   "ago": "ago",
   "editComment": "Edit comment",
   "deleteComment": "Delete comment",
@@ -130,6 +131,7 @@
   "tableOfContents": "Table of contents",
   "threeColumns": "3 columns layout",
   "equation": "Equation",
+  "lineHeight": "Line Height",
   "link": "Link",
   "date": "Date",
   "inlineEquation": "Inline Equation",
@@ -170,5 +172,8 @@
   "deleteColumn": "Delete column",
   "deleteTable": "Delete table",
   "cellBorders": "Cell borders",
-  "createHeadingForToc": "Create a heading to display the table of contents."
+  "createHeadingForToc": "Create a heading to display the table of contents.",
+  "audio": "Audio",
+  "file": "File",
+  "video": "Video"
 }
