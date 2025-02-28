@@ -30,4 +30,6 @@ tauri-plugin-store = "2"
 regex = "1.11.1"
 futures = "0.3.31"
 parking_lot = "0.12.3"
+async-openai = "0.27.2"
+tokio = "1.43.0"
 

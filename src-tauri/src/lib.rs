@@ -1,12 +1,9 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 mod read_dir_recursive;
 mod search_content;
+mod chat_stream;
 use read_dir_recursive::read_dir_recursive;
-use tauri::Emitter;
-use tauri::{
-    menu::{AboutMetadata, MenuBuilder, MenuItemBuilder, SubmenuBuilder},
-    Manager,
-};
+use chat_stream::chat_stream;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -29,6 +26,7 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![greet])
         .invoke_handler(tauri::generate_handler![get_dir_info])
+        .invoke_handler(tauri::generate_handler![chat_stream])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
