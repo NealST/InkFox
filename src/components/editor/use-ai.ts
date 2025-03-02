@@ -46,7 +46,7 @@ const useAI = function() {
           config: {
             provider: 'deepseek',
             model_name: 'deepseek-chat',
-            api_key: 'sk-01df8dbdbf5f41b68fe84fabd3fe4505',
+            api_key: '',
           }
         },
         onEvent
