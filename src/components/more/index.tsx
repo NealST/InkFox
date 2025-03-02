@@ -14,6 +14,7 @@ import {
   MessageSquareShare,
 } from "lucide-react";
 import { emitter } from '@/utils/events';
+import useAI from "../editor/use-ai";
 import styles from "./index.module.css";
 
 const actionList = [
@@ -41,6 +42,7 @@ const actionList = [
 
 const More = function () {
   const { t } = useTranslation();
+  const { handleSubmit } = useAI();
   const strategies = {
     settings: () => {
       emitter.emit('openSettings');
@@ -75,6 +77,7 @@ const More = function () {
               </Button>
             );
           })}
+          <Button onClick={handleSubmit}>测试AI</Button>
         </HoverCardContent>
       </HoverCard>
     </div>
