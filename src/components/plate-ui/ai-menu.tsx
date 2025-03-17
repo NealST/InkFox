@@ -15,8 +15,8 @@ import {
 } from '@udecode/plate-selection/react';
 import { Loader2Icon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useChat } from '@/components/editor/use-chat';
-
+//import { useChat } from '@/components/editor/use-chat';
+import useAI from '../editor/use-ai';
 import { AIChatEditor } from './ai-chat-editor';
 import { AIMenuItems } from './ai-menu-items';
 import { Command, CommandList, InputCommand } from './command';
@@ -30,7 +30,7 @@ export function AIMenu() {
 
   const [value, setValue] = React.useState('');
 
-  const chat = useChat();
+  const chat = useAI();
 
   const { input, isLoading, messages, setInput } = chat;
   const [anchorElement, setAnchorElement] = React.useState<HTMLElement | null>(

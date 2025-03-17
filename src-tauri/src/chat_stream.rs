@@ -102,7 +102,7 @@ async fn create_client(config: &ModelConfig) -> Result<Client<OpenAIConfig>, Str
 }
 
 #[tauri::command]
-pub async fn chat_stream(app: AppHandle, request: ChatRequest, on_event: Channel<StreamChunk>) -> Result<(), String> {
+pub async fn chat_stream(request: ChatRequest, on_event: Channel<StreamChunk>) -> Result<(), String> {
     let (tx, mut rx) = mpsc::channel(32);
     let model_name = request.config.model_name.clone();
     
