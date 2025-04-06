@@ -24,8 +24,7 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![chat_stream])
-        .invoke_handler(tauri::generate_handler![get_dir_info])
+        .invoke_handler(tauri::generate_handler![chat_stream, get_dir_info])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
