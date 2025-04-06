@@ -5,10 +5,10 @@ import * as React from 'react';
 import { type NodeEntry, isHotkey } from '@udecode/plate';
 import { useEditorPlugin, useHotkeys } from '@udecode/plate/react';
 import {
-  AIChatPlugin,
   useEditorChat,
   useLastAssistantMessage,
 } from '@udecode/plate-ai/react';
+import AIChatPlugin from '../editor/custom-plugins/ai-chat-plugin';
 import {
   BlockSelectionPlugin,
   useIsSelecting,

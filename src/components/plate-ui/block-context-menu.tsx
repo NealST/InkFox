@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ParagraphPlugin, useEditorPlugin } from '@udecode/plate/react';
-import { AIChatPlugin } from '@udecode/plate-ai/react';
+import AIChatPlugin from '../editor/custom-plugins/ai-chat-plugin';
 import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
 import { HEADING_KEYS } from '@udecode/plate-heading';
 import { IndentListPlugin } from '@udecode/plate-indent-list/react';

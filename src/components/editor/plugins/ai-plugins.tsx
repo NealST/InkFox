@@ -1,6 +1,7 @@
 'use client';
 
-import { AIChatPlugin, AIPlugin } from '@udecode/plate-ai/react';
+import { AIPlugin } from '@udecode/plate-ai/react';
+import AIChatPlugin from '../custom-plugins/ai-chat-plugin';
 import { MarkdownPlugin } from '@udecode/plate-markdown';
 
 import { AIMenu } from '@/components/plate-ui/ai-menu';

@@ -2,7 +2,7 @@
 
 import { withRef } from '@udecode/cn';
 import { useEditorPlugin } from '@udecode/plate/react';
-import { AIChatPlugin } from '@udecode/plate-ai/react';
+import AIChatPlugin from '../editor/custom-plugins/ai-chat-plugin';
 
 import { ToolbarButton } from './toolbar';
 

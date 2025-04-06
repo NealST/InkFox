@@ -1,10 +1,8 @@
 'use client';
 
-import React from 'react';
-
 import { withRef } from '@udecode/cn';
 import { type PlateEditor, ParagraphPlugin } from '@udecode/plate/react';
-import { AIChatPlugin } from '@udecode/plate-ai/react';
+import AIChatPlugin from '../editor/custom-plugins/ai-chat-plugin';
 import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
 import { CodeBlockPlugin } from '@udecode/plate-code-block/react';
 import { DatePlugin } from '@udecode/plate-date/react';

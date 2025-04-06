@@ -4,7 +4,8 @@ import { useEffect, useMemo } from 'react';
 import i18n from '@/i18n';
 import { type SlateEditor, NodeApi } from '@udecode/plate';
 import { type PlateEditor, useEditorPlugin } from '@udecode/plate/react';
-import { AIChatPlugin, AIPlugin } from '@udecode/plate-ai/react';
+import { AIPlugin } from '@udecode/plate-ai/react';
+import AIChatPlugin from '../editor/custom-plugins/ai-chat-plugin';
 import { useIsSelecting } from '@udecode/plate-selection/react';
 import {
   Album,
