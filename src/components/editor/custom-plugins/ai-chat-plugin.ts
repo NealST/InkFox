@@ -24,6 +24,7 @@ const submitAIChat = (editor, { mode, options, prompt, system } = {}) => {
   if (!prompt) {
     prompt = chat.input;
   }
+  console.log('promt', prompt);
   if (!mode) {
     mode = isSelecting(editor) ? "chat" : "insert";
   }
@@ -32,6 +33,7 @@ const submitAIChat = (editor, { mode, options, prompt, system } = {}) => {
   }
   setOption("mode", mode);
   chat.setInput?.("");
+  console.log('prompt', prompt);
   void chat.append?.(
     {
       content:

@@ -1,6 +1,6 @@
 // custom hook for ai use
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSettings } from "@/components/settings";
 import { invoke, Channel } from "@tauri-apps/api/core";
 import { uid } from 'uid';
@@ -31,16 +31,20 @@ const useAI = function () {
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const receivedMsgRef = useRef('');
 
   useEffect(() => {
     onEvent.onmessage = function (msg: StreamChunk) {
       console.log("get message from ai", msg.content);
       setLoading(false);
-      setMessages(pre => {
-        const len = pre.length;
-        const lastContent = pre[len - 1].content;
-        pre[len - 1].content = lastContent + msg.content;
-        return pre;
+      receivedMsgRef.current = receivedMsgRef.current + msg.content;
+      requestAnimationFrame(() => {
+        setMessages(pre => {
+          const newMsgs = [].concat(pre);
+          const len = newMsgs.length;
+          newMsgs[len - 1].content = receivedMsgRef.current;
+          return newMsgs;
+        });
       });
     };
   }, []);
@@ -96,6 +100,7 @@ const useAI = function () {
       ...messageItem,
       id: newMsgId,
     };
+    console.log('newMsgItem', newMsgItem);
     console.log("system", system);
     setMessages(pre => {
       return pre.concat([newMsgItem, {
@@ -111,7 +116,7 @@ const useAI = function () {
             {
               id: uid(),
               role: 'system',
-              content: system
+              content: system.body.system
             },
             newMsgItem
           ],
