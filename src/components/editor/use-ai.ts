@@ -55,6 +55,7 @@ const useAI = function () {
     }
     setLoading(true);
     setInput("");
+    receivedMsgRef.current = '';
     setMessages(pre => {
       return pre.concat([
         {
@@ -88,6 +89,7 @@ const useAI = function () {
         onEvent,
       });
     } catch (e) {
+      receivedMsgRef.current = '';
       setError(e);
       setLoading(false);
     }
@@ -95,6 +97,7 @@ const useAI = function () {
 
   const append = async function(messageItem: Message, system: string) {
     setLoading(true);
+    receivedMsgRef.current = '';
     const newMsgId = uid();
     const newMsgItem = {
       ...messageItem,
@@ -130,6 +133,7 @@ const useAI = function () {
       });
     } catch (e) {
       console.log('e', e);
+      receivedMsgRef.current = '';
       setError(e);
       setLoading(false);
     }
