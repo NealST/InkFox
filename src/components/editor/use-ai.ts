@@ -1,6 +1,6 @@
 // custom hook for ai use
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useSettings } from "@/components/settings";
 import { invoke, Channel } from "@tauri-apps/api/core";
 import { uid } from 'uid';
@@ -32,22 +32,20 @@ const useAI = function () {
   const [error, setError] = useState(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const receivedMsgRef = useRef('');
-
-  useEffect(() => {
-    onEvent.onmessage = function (msg: StreamChunk) {
-      console.log("get message from ai", msg.content);
-      setLoading(false);
-      receivedMsgRef.current = receivedMsgRef.current + msg.content;
-      requestAnimationFrame(() => {
-        setMessages(pre => {
-          const newMsgs = [].concat(pre);
-          const len = newMsgs.length;
-          newMsgs[len - 1].content = receivedMsgRef.current;
-          return newMsgs;
-        });
+  const handleChannelMsg = useCallback((msg: StreamChunk) => {
+    console.log("get message from ai", msg.content);
+    setLoading(false);
+    receivedMsgRef.current = receivedMsgRef.current + msg.content;
+    requestAnimationFrame(() => {
+      setMessages(pre => {
+        const newMsgs = [].concat(pre);
+        const len = newMsgs.length;
+        newMsgs[len - 1].content = receivedMsgRef.current;
+        return newMsgs;
       });
-    };
+    });
   }, []);
+  onEvent.onmessage = handleChannelMsg;
 
   const handleSubmit = async function () {
     if (!input.trim() || isLoading) {
