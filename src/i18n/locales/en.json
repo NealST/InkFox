@@ -176,5 +176,9 @@
   "createHeadingForToc": "Create a heading to display the table of contents.",
   "audio": "Audio",
   "file": "File",
-  "video": "Video"
+  "video": "Video",
+  "export2Html": "Export as HTML",
+  "export2Pdf": "Export as PDF",
+  "export2Image": "Export as Image",
+  "export2Markdown": "Export as Markdown"
 }

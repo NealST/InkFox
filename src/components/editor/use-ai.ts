@@ -38,7 +38,7 @@ const useAI = function () {
     receivedMsgRef.current = receivedMsgRef.current + msg.content;
     requestAnimationFrame(() => {
       setMessages(pre => {
-        const newMsgs = [].concat(pre);
+        const newMsgs = ([] as Message[]).concat(pre);
         const len = newMsgs.length;
         newMsgs[len - 1].content = receivedMsgRef.current;
         return newMsgs;

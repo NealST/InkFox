@@ -27,7 +27,6 @@
   color: hsl(var(--foreground));
   font-weight: 500;
   max-width: 400px;
-  min-width: 100px;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;

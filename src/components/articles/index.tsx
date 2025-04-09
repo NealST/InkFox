@@ -61,8 +61,14 @@ const Articles = function () {
         getArticles(selectedCatePath).then((retStr) => {
           const searchResult = JSON.parse(retStr);
           console.log("searchResult", searchResult);
+          const cateFiles: IArticleItem[] = searchResult.children || [];
           // setDataSource(articles);
-          setDataSource(searchResult.children || []);
+          setDataSource(cateFiles.map(item => {
+            return {
+              ...item,
+              name: item.name.replace('.json', '')
+            }
+          }));
         });
       }
     });

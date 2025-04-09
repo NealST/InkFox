@@ -176,5 +176,9 @@
   "createHeadingForToc": "创建一个标题以展示内容目录",
   "audio": "音频",
   "file": "文件",
-  "video": "视频"
+  "video": "视频",
+  "export2Html": "导出为 HTML",
+  "export2Pdf": "导出为 PDF",
+  "export2Image": "导出为图片",
+  "export2Markdown": "导出为 Markdown"
 }

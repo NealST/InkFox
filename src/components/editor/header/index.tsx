@@ -6,7 +6,16 @@ import {
 import { useTranslation } from "react-i18next";
 import { Focus, ArrowRightFromLine, Trash2, Minimize } from "lucide-react";
 import useTextCount from "../controllers/text-count";
-import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  useOpenState,
+} from "@/components/plate-ui/dropdown-menu";
+import { TooltipButton } from "@/components/plate-ui/tooltip";
+import { emitter } from "@/utils/events";
 import styles from "./index.module.css";
 
 interface IProps {
@@ -16,23 +25,26 @@ interface IProps {
 
 const Header = function (props: IProps) {
   const { isFocusMode, onToggleFocusMode } = props;
+  const openState = useOpenState();
   const selectedArticle = useSelectedArticle(
     (state: IArticleState) => state.selectedArticle
   );
   const { t } = useTranslation();
   const textCount = useTextCount((state) => state.count);
   const actions = useMemo(() => {
-    const result = isFocusMode ? [
-      {
-        id: "unFocusmode",
-        Icon: Minimize,
-      }
-    ] : [
-      {
-        id: "focusmode",
-        Icon: Focus,
-      }
-    ];
+    const result = isFocusMode
+      ? [
+          {
+            id: "unFocusmode",
+            Icon: Minimize,
+          },
+        ]
+      : [
+          {
+            id: "focusmode",
+            Icon: Focus,
+          },
+        ];
     return result.concat([
       {
         id: "export",
@@ -44,18 +56,24 @@ const Header = function (props: IProps) {
       },
     ]);
   }, [isFocusMode]);
-  
-  const actionStrategy = {
-    focusmode: () => onToggleFocusMode(!isFocusMode),
-    unFocusmode: () => onToggleFocusMode(!isFocusMode),
-    export: () => {},
-    delete: () => {}
-  }
+
+  const displayedArticleName = selectedArticle.name.replace(".json", "");
+  const actionStrategy = useMemo(
+    () => ({
+      focusmode: () => onToggleFocusMode(!isFocusMode),
+      unFocusmode: () => onToggleFocusMode(!isFocusMode),
+      export: (type: string) => {
+        emitter.emit("export", type);
+      },
+      delete: () => {},
+    }),
+    [isFocusMode]
+  );
 
   return (
     <div className={styles.header}>
       <div className={styles.header_info}>
-        <span className={styles.info_title}>{selectedArticle.name}</span>
+        <span className={styles.info_title}>{displayedArticleName}</span>
         <span className={styles.info_count}>
           {t("wordcount")}: {textCount}
         </span>
@@ -63,10 +81,47 @@ const Header = function (props: IProps) {
       <div className={styles.header_action}>
         {actions.map((item) => {
           const { id, Icon } = item;
+          const action = actionStrategy[id as keyof typeof actionStrategy];
+          if (id === "export") {
+            return (
+              <DropdownMenu modal={false} {...openState} {...props}>
+                <DropdownMenuTrigger asChild>
+                  <TooltipButton
+                    variant="ghost"
+                    tooltip={t("export")}
+                  >
+                    <Icon size={24} />
+                  </TooltipButton>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end" side="bottom">
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem onSelect={() => action('html')}>
+                      {t("export2Html")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => action('pdf')}>
+                      {t("export2Pdf")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => action('image')}>
+                      {t("export2Image")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => action('markdown')}>
+                      {t("export2Markdown")}
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            );
+          }
           return (
-            <Button variant="ghost" title={t(id)} key={id} onClick={() => actionStrategy[id as keyof typeof actionStrategy]()}>
+            <TooltipButton
+              variant="ghost"
+              tooltip={t(id)}
+              key={id}
+              onClick={() => action('done')}
+            >
               <Icon size={24} />
-            </Button>
+            </TooltipButton>
           );
         })}
       </div>

@@ -1,5 +1,5 @@
 'use client';
-
+import { useEffect } from 'react';
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
 import { withProps } from '@udecode/cn';
@@ -119,12 +119,15 @@ import { EditorStatic } from './editor-static';
 import { EquationElementStatic } from './equation-element-static';
 import { InlineEquationElementStatic } from './inline-equation-element-static';
 import { ToolbarButton } from './toolbar';
+import { useTranslation } from 'react-i18next';
+import { emitter } from '@/utils/events';
 
 const siteUrl = 'https://platejs.org';
 
 export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
   const editor = useEditorRef();
   const openState = useOpenState();
+  const { t } = useTranslation();
 
   const getCanvas = async () => {
     const { default: html2canvas } = await import('html2canvas');
@@ -364,30 +367,56 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
     await downloadFile(url, 'plate.md');
   };
 
-  return (
-    <DropdownMenu modal={false} {...openState} {...props}>
-      <DropdownMenuTrigger asChild>
-        <ToolbarButton pressed={openState.open} tooltip="Export" isDropdown>
-          <ArrowDownToLineIcon className="size-4" />
-        </ToolbarButton>
-      </DropdownMenuTrigger>
+  useEffect(() => {
+    const handleExport = function(type: string) {
+      console.log('type', type);
+      switch(type) {
+        case 'html':
+          exportToHtml();
+          break;
+        case 'pdf':
+          exportToPdf();
+          break;
+        case 'image':
+          exportToImage();
+          break;
+        case 'markdown':
+          exportToMarkdown();
+          break;
+      }
+    };
+    emitter.on('export', handleExport);
+    return () => {
+      emitter.off('export', handleExport);
+    }
+  }, []);
 
-      <DropdownMenuContent align="start">
-        <DropdownMenuGroup>
-          <DropdownMenuItem onSelect={exportToHtml}>
-            Export as HTML
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={exportToPdf}>
-            Export as PDF
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={exportToImage}>
-            Export as Image
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={exportToMarkdown}>
-            Export as Markdown
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+  return null;
+
+  // return (
+  //   <DropdownMenu modal={false} {...openState} {...props}>
+  //     <DropdownMenuTrigger asChild>
+  //       <ToolbarButton pressed={openState.open} tooltip={t("export")} isDropdown>
+  //         <ArrowDownToLineIcon className="size-4" />
+  //       </ToolbarButton>
+  //     </DropdownMenuTrigger>
+
+  //     <DropdownMenuContent align="start">
+  //       <DropdownMenuGroup>
+  //         <DropdownMenuItem onSelect={exportToHtml}>
+  //           {t('export2Html')}
+  //         </DropdownMenuItem>
+  //         <DropdownMenuItem onSelect={exportToPdf}>
+  //           {t('export2Pdf')}
+  //         </DropdownMenuItem>
+  //         <DropdownMenuItem onSelect={exportToImage}>
+  //           {t('export2Image')}
+  //         </DropdownMenuItem>
+  //         <DropdownMenuItem onSelect={exportToMarkdown}>
+  //           {t('export2Markdown')}
+  //         </DropdownMenuItem>
+  //       </DropdownMenuGroup>
+  //     </DropdownMenuContent>
+  //   </DropdownMenu>
+  // );
 }
