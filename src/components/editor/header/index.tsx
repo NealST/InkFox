@@ -87,7 +87,7 @@ const Header = function (props: IProps) {
           const action = actionStrategy[id as keyof typeof actionStrategy];
           if (id === "export") {
             return (
-              <DropdownMenu modal={false} {...openState} {...props}>
+              <DropdownMenu modal={false} {...openState} {...props} key={id}>
                 <DropdownMenuTrigger asChild>
                   <TooltipButton
                     variant="ghost"
