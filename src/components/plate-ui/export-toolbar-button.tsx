@@ -164,7 +164,6 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
 
   const exportToPdf = async (name: string) => {
     const canvas = await getCanvas();
-
     const PDFLib = await import('pdf-lib');
     const pdfDoc = await PDFLib.PDFDocument.create();
     const page = pdfDoc.addPage([canvas.width, canvas.height]);
@@ -179,17 +178,18 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
     // 获取 unit8Array
     const pdfBytes = await pdfDoc.save();
     const path = await save({
+      title: '导出 pdf',
       filters: [
         {
           name,
-          extensions: ['html']
+          extensions: ['pdf']
         }
       ]
     });
     if (path) {
       await writeFile(path, pdfBytes);
       await message('pdf 导出成功', {
-        title: '提示',
+        title: '系统提示',
         kind: 'info'
       });
     }
@@ -200,7 +200,28 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
 
   const exportToImage = async (name: string) => {
     const canvas = await getCanvas();
-    await downloadFile(canvas.toDataURL('image/png'), 'plate.png');
+    canvas.toBlob(async (blob) => {
+      try {
+        const filePath = await save({
+          title: '导出图片',
+          filters: [
+            {
+              name,
+              extensions: ['png']
+            }
+          ]
+        });
+        if (filePath && blob) {
+          const arrayBuffer = await blob.arrayBuffer();
+          await writeFile(filePath, new Uint8Array(arrayBuffer));
+          await message('图片导出成功', { title: '系统提示', kind: 'info' });
+        }
+      } catch(e) {
+        console.log('e', e);
+        await message('图片导出失败', {title: '系统提示', kind:'error'})
+      }
+    }, 'image/png');
+    // await downloadFile(canvas.toDataURL('image/png'), 'plate.png');
   };
 
   const exportToHtml = async (name: string) => {
@@ -373,14 +394,30 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
         ${editorHtml}
       </body>
     </html>`;
+    
+    const filePath = await save({
+      title: '导出 html',
+      filters: [{ name, extensions: ['html'] }]
+    });
+    if (filePath) {
+      await writeTextFile(filePath, html);
+      await message('html 导出成功', { title: '系统提示', kind: 'info' });
+    }
+    //const url = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
 
-    const url = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
-
-    await downloadFile(url, 'plate.html');
+    //await downloadFile(url, 'plate.html');
   };
 
   const exportToMarkdown = async (name: string) => {
     const md = editor.getApi(MarkdownPlugin).markdown.serialize();
+    const filePath = await save({
+      title: '导出 markdown',
+      filters: [{ name, extensions: ['md'] }]
+    });
+    if (filePath) {
+      await writeTextFile(filePath, md);
+      await message('markdown 导出成功', { title: '系统提示', kind: 'info' });
+    }
     // const url = `data:text/markdown;charset=utf-8,${encodeURIComponent(md)}`;
     //await downloadFile(url, 'plate.md');
     return md;
