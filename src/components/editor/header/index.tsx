@@ -63,11 +63,14 @@ const Header = function (props: IProps) {
       focusmode: () => onToggleFocusMode(!isFocusMode),
       unFocusmode: () => onToggleFocusMode(!isFocusMode),
       export: (type: string) => {
-        emitter.emit("export", type);
+        emitter.emit("export", {
+          type,
+          name: displayedArticleName
+        });
       },
       delete: () => {},
     }),
-    [isFocusMode]
+    [isFocusMode, displayedArticleName]
   );
 
   return (

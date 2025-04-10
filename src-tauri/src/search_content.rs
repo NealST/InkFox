@@ -1,12 +1,12 @@
-use walkdir::WalkDir;
+use futures::stream::{self, StreamExt};
+use parking_lot::Mutex;
+use regex::Regex;
+use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
-use regex::Regex;
-use futures::stream::{self, StreamExt};
-use serde::{Serialize, Deserialize};
-use std::sync::{Arc};
-use parking_lot::Mutex;
+use std::sync::Arc;
+use walkdir::WalkDir;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct SearchResult {
@@ -48,11 +48,16 @@ pub async fn search_files(path: &str, pattern: &str) -> io::Result<Vec<SearchRes
         })
         .await;
 
-    let results = Arc::try_unwrap(results).expect("Arc unwrap failed").into_inner();
+    let results = Arc::try_unwrap(results)
+        .expect("Arc unwrap failed")
+        .into_inner();
     Ok(results)
 }
 
-async fn search_in_file<P: AsRef<Path>>(path: P, regex: &Regex) -> io::Result<Option<(String, usize)>> {
+async fn search_in_file<P: AsRef<Path>>(
+    path: P,
+    regex: &Regex,
+) -> io::Result<Option<(String, usize)>> {
     let file = File::open(path)?;
     let reader = io::BufReader::new(file);
 

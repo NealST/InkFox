@@ -34,4 +34,5 @@ async-openai = "0.27.2"
 tokio = "1.43.0"
 url = "2.5.4"
 tokio-stream = "0.1.17"
+tauri-plugin-dialog = "2"
 

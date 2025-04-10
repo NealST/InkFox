@@ -1,9 +1,9 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+mod chat_stream;
 mod read_dir_recursive;
 mod search_content;
-mod chat_stream;
-use read_dir_recursive::read_dir_recursive;
 use chat_stream::chat_stream;
+use read_dir_recursive::read_dir_recursive;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -21,6 +21,7 @@ fn get_dir_info(path: &str) -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())

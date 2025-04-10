@@ -1,7 +1,8 @@
 'use client';
 import { useEffect } from 'react';
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-
+import { save, message } from '@tauri-apps/plugin-dialog';
+import { writeFile, writeTextFile } from '@tauri-apps/plugin-fs';
 import { withProps } from '@udecode/cn';
 import {
   BaseParagraphPlugin,
@@ -161,7 +162,7 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
     window.URL.revokeObjectURL(blobUrl);
   };
 
-  const exportToPdf = async () => {
+  const exportToPdf = async (name: string) => {
     const canvas = await getCanvas();
 
     const PDFLib = await import('pdf-lib');
@@ -175,17 +176,34 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
       x: 0,
       y: 0,
     });
-    const pdfBase64 = await pdfDoc.saveAsBase64({ dataUri: true });
-
-    await downloadFile(pdfBase64, 'plate.pdf');
+    // 获取 unit8Array
+    const pdfBytes = await pdfDoc.save();
+    const path = await save({
+      filters: [
+        {
+          name,
+          extensions: ['html']
+        }
+      ]
+    });
+    if (path) {
+      await writeFile(path, pdfBytes);
+      await message('pdf 导出成功', {
+        title: '提示',
+        kind: 'info'
+      });
+    }
+    //const pdfBase64 = await pdfDoc.saveAsBase64({ dataUri: true });
+    
+    //await downloadFile(pdfBase64, 'plate.pdf');
   };
 
-  const exportToImage = async () => {
+  const exportToImage = async (name: string) => {
     const canvas = await getCanvas();
     await downloadFile(canvas.toDataURL('image/png'), 'plate.png');
   };
 
-  const exportToHtml = async () => {
+  const exportToHtml = async (name: string) => {
     const components = {
       [BaseAudioPlugin.key]: MediaAudioElementStatic,
       [BaseBlockquotePlugin.key]: BlockquoteElementStatic,
@@ -361,28 +379,33 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
     await downloadFile(url, 'plate.html');
   };
 
-  const exportToMarkdown = async () => {
+  const exportToMarkdown = async (name: string) => {
     const md = editor.getApi(MarkdownPlugin).markdown.serialize();
-    const url = `data:text/markdown;charset=utf-8,${encodeURIComponent(md)}`;
-    await downloadFile(url, 'plate.md');
+    // const url = `data:text/markdown;charset=utf-8,${encodeURIComponent(md)}`;
+    //await downloadFile(url, 'plate.md');
+    return md;
   };
 
   useEffect(() => {
-    const handleExport = function(type: string) {
+    const handleExport = async function({type, name}: {type: string, name: string}) {
       console.log('type', type);
-      switch(type) {
-        case 'html':
-          exportToHtml();
-          break;
-        case 'pdf':
-          exportToPdf();
-          break;
-        case 'image':
-          exportToImage();
-          break;
-        case 'markdown':
-          exportToMarkdown();
-          break;
+      try {
+        switch(type) {
+          case 'html':
+            await exportToHtml(name);
+            break;
+          case 'pdf':
+            await exportToPdf(name);
+            break;
+          case 'image':
+            await exportToImage(name);
+            break;
+          case 'markdown':
+            await exportToMarkdown(name);
+            break;
+        }
+      } catch(e) {
+        console.log("export error", e);
       }
     };
     emitter.on('export', handleExport);
