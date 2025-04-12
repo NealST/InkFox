@@ -38,6 +38,7 @@ export function AIMenu() {
   );
 
   const content = useLastAssistantMessage()?.content;
+  console.log("last assist content", content);
   const { t } = useTranslation();
   const setOpen = (open: boolean) => {
     if (open) {
@@ -114,7 +115,7 @@ export function AIMenu() {
           value={value}
           onValueChange={setValue}
         >
-          {mode === 'chat' && isSelecting && content && (
+          {mode === 'chat' && content && (
             <AIChatEditor content={content} />
           )}
 

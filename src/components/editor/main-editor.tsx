@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { Plate } from '@udecode/plate/react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -20,20 +20,20 @@ const MainEditor = function() {
   const editorRef = useRef<HTMLDivElement>(null);
   const setTextCount = useTextCount(state => state.setCount);
   const articlePath = selectedArticle.path;
-  const handleChange = function({value}) {
+  const handleChange = useCallback(({value}) => {
     console.log("editor value", value);
     console.log("editor text content", editorRef.current?.textContent);
     // count the character number of editor
     setTextCount(editorRef.current?.textContent?.length || 0);
     // write edit content to file path automatically
     writeToFile(value, articlePath);
-  };
+  }, [articlePath]);
 
   useEffect(() => {
     console.log('articlePath', articlePath);
     readArticle(articlePath).then(articleContent => {
       console.log('articleContent', articleContent);
-      editor.tf.setValue(JSON.parse(articleContent));
+      editor.tf.setValue(JSON.parse(articleContent || '[]'));
     });
   }, [articlePath]);
 

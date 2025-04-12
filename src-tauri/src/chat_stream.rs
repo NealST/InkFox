@@ -122,7 +122,7 @@ pub async fn chat_stream(
     request: ChatRequest,
     on_event: Channel<StreamChunk>,
 ) -> Result<(), String> {
-    let (tx, mut rx) = mpsc::channel(32);
+    let (tx, mut rx) = mpsc::channel::<StreamChunk>(32);
     let model_name = request.config.model_name.clone();
 
     // Build messages
@@ -157,7 +157,7 @@ pub async fn chat_stream(
         }
     };
 
-    let on_event_clone = on_event.clone();
+    //let on_event_clone = on_event.clone();
 
     // Spawn streaming task
     tokio::spawn(async move {
@@ -171,9 +171,11 @@ pub async fn chat_stream(
                                 .content
                                 .clone()
                                 .unwrap_or_default();
-
+                            println!("ai stream content, {}", content);
+                            println!("ai stream content is empty, {}", content.is_empty());
+                            println!("ai stream on_event, {}", on_event.id());
                             if !content.is_empty() {
-                                on_event_clone
+                                on_event
                                     .send(StreamChunk {
                                         content,
                                         is_final: false,
@@ -184,7 +186,7 @@ pub async fn chat_stream(
                         }
                         Err(e) => {
                             println!("ai stream error, {}", e.to_string());
-                            on_event_clone
+                            on_event
                                 .send(StreamChunk {
                                     content: String::new(),
                                     is_final: true,
@@ -195,7 +197,7 @@ pub async fn chat_stream(
                         }
                     }
                 }
-                on_event_clone
+                on_event
                     .send(StreamChunk {
                         content: String::new(),
                         is_final: true,
@@ -205,7 +207,7 @@ pub async fn chat_stream(
             }
             Err(e) => {
                 println!("create stream error, {}", e.to_string());
-                on_event_clone
+                on_event
                     .send(StreamChunk {
                         content: String::new(),
                         is_final: true,
@@ -217,9 +219,10 @@ pub async fn chat_stream(
     });
 
     // Forward chunks to frontend
-    while let Some(chunk) = rx.recv().await {
-        on_event.send(chunk).unwrap()
-    }
+    // while let Some(chunk) = rx.recv().await {
+    //     println!("chunk content, {}", chunk.content);
+    //     on_event.send(chunk).unwrap()
+    // }
 
     Ok(())
 }
